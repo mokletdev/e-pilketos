@@ -1,0 +1,80 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+enum role {
+  SISWA
+  GURU
+  ADMIN
+}
+
+model User {
+  id                  Int                  @id @default(autoincrement())
+  email               String               @unique
+  password            String?
+  name                String
+  role                role
+  angkatan            String?
+  Candidates          Candidates?
+  User_vote           User_vote?
+  vote_session_access vote_session_access?
+}
+
+model Candidates {
+  id            Int        @id @default(autoincrement())
+  img           String
+  name          String
+  kelas         String?
+  visi          String
+  misi          String
+  pengalaman    String
+  motto         String
+  progja        String
+  video_profile String
+  user_id       Int        @unique
+  user          User       @relation(fields: [user_id], references: [id])
+  User_vote     User_vote?
+}
+
+model Vote_session {
+  id                     Int                     @id @default(autoincrement())
+  title                  String
+  openedAt               DateTime
+  closeAt                DateTime
+  isPublic               Boolean
+  max_vote               Int
+  User_vote              User_vote?
+  Vote_session_candidate Vote_session_candidate?
+  vote_session_access    vote_session_access?
+}
+
+model User_vote {
+  id              Int          @id @default(autoincrement())
+  vote_session_id Int          @unique
+  candidate_id    Int          @unique
+  user_id         Int          @unique
+  vote_session    Vote_session @relation(fields: [vote_session_id], references: [id])
+  candidate       Candidates   @relation(fields: [candidate_id], references: [id])
+  user            User         @relation(fields: [user_id], references: [id])
+}
+
+model Vote_session_candidate {
+  id              Int          @id @default(autoincrement())
+  vote_session_id Int          @unique
+  candidate_id    Int          @unique
+  vote_session    Vote_session @relation(fields: [vote_session_id], references: [id])
+  number          Int
+}
+
+model vote_session_access {
+  id              Int          @id @default(autoincrement())
+  vote_session_id Int          @unique
+  user_id         Int          @unique
+  vote_session    Vote_session @relation(fields: [vote_session_id], references: [id])
+  user            User         @relation(fields: [user_id], references: [id])
+}
