@@ -5,6 +5,7 @@ import { Toaster } from "react-hot-toast";
 import InitialTransition from "@/lib/InitialTransition";
 import NextAuthProviders from "@/lib/NextAuthProvider";
 import ProgressBarProvider from "@/lib/ProgressBar";
+import { AdminDisablePathname } from "@/lib/disablePathNames";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -29,6 +30,7 @@ export default function RootLayout({
   return (
     <html lang="en" className="scroll-smooth">
       <InitialTransition>
+        <AdminDisablePathname />
         <body className={`${inter.className}`}>
           <NextAuthProviders>
             <ProgressBarProvider>{children}</ProgressBarProvider>
