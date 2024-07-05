@@ -37,7 +37,7 @@ npm start
 - [Tailwind CSS](https://tailwindcss.com/) - CSS Framework yang digunakan pada frontend.
 - [MySql](https://www.mongodb.com/) - Projek ini menggunakan database SQL yaitu MySql.
 - [Prisma](https://prisma.io/) - Library ORM yang digunakan untuk mengintegrasikan MongoDB dengan projek ini.
-- [NextAuth](https://next-auth.js.org/) - Library untuk sistem Authentication.
+- [NextAuth](https://next-auth.js.org/) - Library untuk system Authentication.
 - [Vercel](https://vercel.com) - Deployment serverless untuk mendeploy website ini.
 
 ## Developer
