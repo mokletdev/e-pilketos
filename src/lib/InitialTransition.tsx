@@ -11,6 +11,7 @@ export default function InitialTransition({ children }: AOSProops) {
   useEffect(() => {
     AOS.init({
       duration: 500,
+      easing: "ease-out",
       once: true,
     });
   });
