@@ -46,3 +46,14 @@ export const deleteUser = async (id: number) => {
     },
   });
 };
+
+export const CountUserAngkatanbyVoteCandidate = async (id_candidate: number, angkatan: string) => {
+  return await client.user.count({
+    where: {
+      Candidates: {
+        id: id_candidate,
+      },
+      angkatan: angkatan,
+    },
+  });
+}
