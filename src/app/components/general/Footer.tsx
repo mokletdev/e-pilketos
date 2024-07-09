@@ -1,4 +1,5 @@
 import React from "react";
+import SectionsGap from "./SectionsGap";
 
 interface FooterProops {
   title: string;
@@ -6,8 +7,14 @@ interface FooterProops {
   logo?: string;
 }
 
-function Footer() {
-  return <></>;
+export default function Footer() {
+  return (
+    <>
+      <main className="bg-white w-full h-full">
+        <SectionsGap>
+          <footer>{/* place content here */}</footer>
+        </SectionsGap>
+      </main>
+    </>
+  );
 }
-
-export default Footer;

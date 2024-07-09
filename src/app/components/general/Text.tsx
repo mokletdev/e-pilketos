@@ -53,7 +53,8 @@ interface BodyTextProops extends TextProops {
   variant: "REGULAR" | "MEDIUM" | "SEMIBOLD" | "BOLD";
 }
 
-export function P_Large({
+// Body Large Text
+export function Large_Text({
   children,
   className,
   variant,
@@ -100,6 +101,165 @@ export function P_Large({
         <h1
           className={clsx(
             "text-[18px] font-normal leading-[26px]",
+            className,
+            variant,
+          )}
+        >
+          {children}
+        </h1>
+      );
+    default:
+      return <></>;
+  }
+}
+
+// Body Medium Text
+
+export function Medium_Text({
+  children,
+  className,
+  variant,
+}: Readonly<BodyTextProops>) {
+  switch (variant) {
+    case "BOLD":
+      return (
+        <h1
+          className={clsx(
+            "text-[16px] font-bold leading-[24px]",
+            className,
+            variant,
+          )}
+        >
+          {children}
+        </h1>
+      );
+    case "SEMIBOLD":
+      return (
+        <h1
+          className={clsx(
+            "text-[16px] font-semibold leading-[24px]",
+            className,
+            variant,
+          )}
+        >
+          {children}
+        </h1>
+      );
+    case "MEDIUM":
+      return (
+        <h1
+          className={clsx(
+            "text-[16px] font-medium leading-[24px]",
+            className,
+            variant,
+          )}
+        >
+          {children}
+        </h1>
+      );
+    case "REGULAR":
+      return (
+        <h1
+          className={clsx(
+            "text-[16px] font-normal leading-[24px]",
+            className,
+            variant,
+          )}
+        >
+          {children}
+        </h1>
+      );
+    default:
+      return <></>;
+  }
+}
+
+// Body Small Text
+
+export function Small_Text({
+  children,
+  className,
+  variant,
+}: Readonly<BodyTextProops>) {
+  switch (variant) {
+    case "BOLD":
+      return (
+        <h1
+          className={clsx(
+            "text-[14px] font-bold leading-[22px]",
+            className,
+            variant,
+          )}
+        >
+          {children}
+        </h1>
+      );
+    case "SEMIBOLD":
+      return (
+        <h1
+          className={clsx(
+            "text-[14px] font-semibold leading-[22px]",
+            className,
+            variant,
+          )}
+        >
+          {children}
+        </h1>
+      );
+    case "MEDIUM":
+      return (
+        <h1
+          className={clsx(
+            "text-[14px] font-medium leading-[22px]",
+            className,
+            variant,
+          )}
+        >
+          {children}
+        </h1>
+      );
+    case "REGULAR":
+      return (
+        <h1
+          className={clsx(
+            "text-[14px] font-normal leading-[22px]",
+            className,
+            variant,
+          )}
+        >
+          {children}
+        </h1>
+      );
+    default:
+      return <></>;
+  }
+}
+
+// Body Extra Small Text
+
+export function ExtraSmall_Text({
+  children,
+  className,
+  variant,
+}: Readonly<BodyTextProops>) {
+  switch (variant) {
+    case "MEDIUM":
+      return (
+        <h1
+          className={clsx(
+            "text-[12px] font-medium leading-[20px]",
+            className,
+            variant,
+          )}
+        >
+          {children}
+        </h1>
+      );
+    case "REGULAR":
+      return (
+        <h1
+          className={clsx(
+            "text-[12px] font-normal leading-[20px]",
             className,
             variant,
           )}
