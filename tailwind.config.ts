@@ -8,6 +8,14 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      boxShadow: {
+        "shadow-1": "0 1px 3px 0 rgba(166, 175, 195, 0.4)",
+        "shadow-2": "0 5px 12px 0 rgba(0, 0, 0, 0.1)",
+        "shadow-3": "0 4px 12px 0 rgba(13, 10, 44, 0.06)",
+        "shadow-4": "0 10px 15px 0 rgba(5, 13, 29, 0.18)",
+        "shadow-5": "0 32px 60px 0 rgba(13, 10, 44, 0.13)",
+        "shadow-6": "0 20px 20px 0 rgba(5, 13, 29, 0.2)",
+      },
       colors: {
         // base
         "primary-color": "#B6252A",

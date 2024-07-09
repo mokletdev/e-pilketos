@@ -1,1 +1,3 @@
-// create middleware in here
+export const config = {
+  matcher: ["/admin/:path*", "/admin"],
+};
