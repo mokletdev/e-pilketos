@@ -55,12 +55,6 @@ const config: Config = {
         // "gray-4": "#DEE2E6",
       },
     },
-    screens: {
-      "2xl": "1440px",
-      xl: "1332px",
-      lg: "821px",
-      sm: "480px",
-    },
   },
   plugins: [],
 };
