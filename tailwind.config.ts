@@ -8,6 +8,12 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      screens: {
+        "2xl": "1440px",
+        xl: "1332px",
+        lg: "821px",
+        sm: "480px",
+      },
       boxShadow: {
         "shadow-1": "0 1px 3px 0 rgba(166, 175, 195, 0.4)",
         "shadow-2": "0 5px 12px 0 rgba(0, 0, 0, 0.1)",
