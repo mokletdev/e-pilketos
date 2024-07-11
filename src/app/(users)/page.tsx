@@ -1,3 +1,4 @@
+import { FormButton, LinkButton } from "../components/general/Button";
 import Galeri from "../components/home/Galeri";
 import Header from "../components/home/Header";
 import Panduan from "../components/home/Panduan";
