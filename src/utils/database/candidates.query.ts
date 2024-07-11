@@ -5,7 +5,7 @@ export const getAllCandidates = async () => {
   return await client.candidates.findMany();
 };
 
-export const getCandidates = async (id: number) => {
+export const getCandidates = async (id: string) => {
   return await client.candidates.findUnique({
     where: {
       id: id,
@@ -19,7 +19,10 @@ export const createCandidate = async (data: Prisma.CandidatesCreateInput) => {
   });
 };
 
-export const updateCandidate = async (id: number, data: Prisma.CandidatesUpdateInput) => {
+export const updateCandidate = async (
+  id: string,
+  data: Prisma.CandidatesUpdateInput,
+) => {
   return await client.candidates.update({
     where: {
       id: id,
@@ -28,7 +31,7 @@ export const updateCandidate = async (id: number, data: Prisma.CandidatesUpdateI
   });
 };
 
-export const deleteCandidate = async (id: number) => {
+export const deleteCandidate = async (id: string) => {
   return await client.candidates.delete({
     where: {
       id: id,
@@ -36,19 +39,24 @@ export const deleteCandidate = async (id: number) => {
   });
 };
 
-export const CountCandidatesbyId = async (CadidateId : number, vote_session_id : number) => {
+export const CountCandidatesbyId = async (
+  CadidateId: string,
+  vote_session_id: string,
+) => {
   return await client.user_vote.count({
     where: {
-      candidate_id : CadidateId,
-      vote_session_id : vote_session_id
-    }
-  })
-}
+      candidate_id: CadidateId,
+      vote_session_id: vote_session_id,
+    },
+  });
+};
 
-export const getAllCandidatesByVoteSession = async (vote_session_id : number) => {
+export const getAllCandidatesByVoteSession = async (
+  vote_session_id: string,
+) => {
   return await client.user_vote.findMany({
     where: {
-      vote_session_id : vote_session_id
-    }
-  })
-}
+      vote_session_id: vote_session_id,
+    },
+  });
+};
