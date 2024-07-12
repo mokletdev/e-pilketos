@@ -94,12 +94,18 @@ export const authOptions: AuthOptions = {
     },
     async signIn({ user, profile, account }) {
       try {
+        if (account?.provider === "credentials") {
+          if (user.email) {
+            return true;
+          }
+        }
         if (
           account?.provider === "google" &&
           !profile?.email?.endsWith("smktelkom-mlg.sch.id")
         ) {
           return false;
         }
+
         if (user.email) {
           const userDatabase = await findUser({ email: user.email });
           if (!userDatabase) {
