@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import SectionsGap from "./SectionsGap";
 import Link from "next/link";
 import LogoMPK from "@/../public/images/logoMPK.png";
@@ -16,6 +16,7 @@ interface NavbarProps {
 export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [sectionActive, setSectionActive] = useState("home");
+  const [isMounted, setIsMounted] = useState(false);
 
   const handleScroll = () => {
     const sections: NodeListOf<HTMLElement> =
@@ -33,12 +34,23 @@ export default function Navbar() {
       }
     });
 
-    if (window.scrollY > 300) {
+    if (window.scrollY > 100) {
       setIsScrolled(true);
     } else {
       setIsScrolled(false);
     }
   };
+
+  useEffect(() => {
+    window.addEventListener("scroll", handleScroll);
+    setIsMounted(true);
+
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  if (!isMounted) {
+    return null;
+  }
 
   const link: NavbarProps[] = [
     { title: "Beranda", href: "/#" },
