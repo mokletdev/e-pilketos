@@ -1,4 +1,4 @@
-import { Candidates, Prisma, User } from "@prisma/client";
+import { Prisma } from "@prisma/client";
 
 export const voteCount = async (
   totalVote: number,
