@@ -57,10 +57,10 @@ export default function Navbar() {
             data-aos="fade-down"
             data-aos-delay="500"
             data-aos-duration="500"
-            className={`fixed transition-all duration-300 bg-white ease-in-out right-4 left-4   ${
+            className={`fixed transition-all duration-300 bg-red-500 ease-in-out    ${
               isScrolled
                 ? "top-8 w-[90%] xl:max-w-[1300px] lg:max-w-[1000px] md:max-w-[720px] sm:max-w-[620px] rounded-[64px]"
-                : "top-5 max-w-full "
+                : "pt-5 max-w-full top-0 pb-5 pr-4 pl-4 right-0 left-0"
             }`}
           >
             <div className="flex items-center justify-between">
