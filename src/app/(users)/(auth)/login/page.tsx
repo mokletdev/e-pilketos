@@ -3,12 +3,12 @@ import { FormButton } from "@/app/components/general/Button";
 import { signIn } from "next-auth/react";
 import React from "react";
 
-export default function userLogin() {
+export default function UserLogin() {
   return (
     <>
       <FormButton
         variant="PRIMARY"
-        onClick={() => signIn("google", { callbackUrl: "/" })}
+        onClick={() => signIn("google", { callbackUrl: "/vote" })}
       >
         Signin
       </FormButton>
