@@ -34,7 +34,7 @@ export default function Navbar() {
       }
     });
 
-    if (window.scrollY > 100) {
+    if (window.scrollY > 200) {
       setIsScrolled(true);
     } else {
       setIsScrolled(false);
@@ -69,11 +69,12 @@ export default function Navbar() {
             data-aos="fade-down"
             data-aos-delay="500"
             data-aos-duration="500"
-            className={`fixed transition-all duration-300 bg-white ease-in-out    ${
+            className={`fixed transition-transform bg-white duration-500    ${
               isScrolled
-                ? "top-8 w-[90%] xl:max-w-[1300px] lg:max-w-[1000px] md:max-w-[720px] sm:max-w-[620px] rounded-[64px]"
-                : "pt-5 max-w-full top-0 pb-5 pr-4 pl-4 right-0 left-0"
+                ? "top-8 w-[90%] xl:max-w-[1300px] lg:max-w-[1000px] md:max-w-[720px] sm:max-w-[620px] rounded-[64px] shadow-shadow-2 justify-center items-center p-4 mx-auto"
+                : "pt-5 max-w-full top-0 pb-5 pr-4 pl-4 right-0 left-0 mx-auto"
             }`}
+            style={{ transition: "all 0.8s ease-in-out" }}
           >
             <div className="flex items-center justify-between">
               <Link href="/">
