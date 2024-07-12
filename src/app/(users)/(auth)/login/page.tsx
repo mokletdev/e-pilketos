@@ -10,7 +10,7 @@ export default function UserLogin() {
   return (
     <>
       <main className="w-full h-screen mt-20">
-        <div className="bg-white max-w-[624px] w-full py-[92px] px-[88px] flex-col items-center mx-auto shadow-shadow-2">
+        <div className="bg-white max-w-[624px] w-full py-[72px] md:py-[92px] px-[24px] md:px-[88px] flex-col items-center mx-auto shadow-shadow-2">
           <H2 className="text-center text-primary-text-color">
             Yuk Login untuk Memulai Vote
           </H2>
