@@ -51,7 +51,7 @@ export default function Panduan() {
 
   return (
     <>
-      <main className="bg-white w-full h-full flex my-24">
+      <main className="bg-white w-full h-full flex my-24" id="panduan">
         <SectionsGap>
           <div className="flex flex-col mx-auto my-auto gap-[50px]">
             <div className="text-center flex-col flex gap-[28px]">
@@ -64,7 +64,7 @@ export default function Panduan() {
                 nih..
               </Large_Text>
             </div>
-            <div className="flex gap-[200px]">
+            <div className="flex 2xl:gap-[200px] flex-col 2xl:flex-row gap-[50px]">
               <div className="grid grid-cols-1 gap-[50px]">
                 {panduanR.map((item, index) => (
                   <PanduanCardR
