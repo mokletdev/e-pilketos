@@ -8,42 +8,72 @@ interface TextProops {
 
 export function H1({ children, className }: Readonly<TextProops>) {
   return (
-    <h1 className={clsx("text-[60px] font-bold leading-[72px]", className)}>
+    <h1
+      className={clsx(
+        "text-[48px] md:text-[60px] font-bold leading-[72px]",
+        className,
+      )}
+    >
       {children}
     </h1>
   );
 }
 export function H2({ children, className }: Readonly<TextProops>) {
   return (
-    <h1 className={clsx("text-[48px] font-bold leading-[58px]", className)}>
+    <h1
+      className={clsx(
+        "text-[40px] md:text-[48px] font-bold leading-[58px]",
+        className,
+      )}
+    >
       {children}
     </h1>
   );
 }
 export function H3({ children, className }: Readonly<TextProops>) {
   return (
-    <h1 className={clsx("text-[40px] font-bold leading-[48px]", className)}>
+    <h1
+      className={clsx(
+        "text-[30px] md:text-[40px] font-bold leading-[48px]",
+        className,
+      )}
+    >
       {children}
     </h1>
   );
 }
 export function H4({ children, className }: Readonly<TextProops>) {
   return (
-    <h1 className={clsx("text-[30px] font-bold leading-[38px]", className)}>
+    <h1
+      className={clsx(
+        "text-[28px] md:text-[30px] font-bold leading-[38px]",
+        className,
+      )}
+    >
       {children}
     </h1>
   );
 }
 export function H5({ children, className }: Readonly<TextProops>) {
   return (
-    <h1 className={clsx("text-[28px] font-semibold leading-[40px]", className)}>
+    <h1
+      className={clsx(
+        "text-[24px] md:text-[28px] font-semibold leading-[40px]",
+        className,
+      )}
+    >
       {children}
     </h1>
   );
 }
 export function H6({ children, className }: Readonly<TextProops>) {
   return (
-    <h1 className={clsx("text-[24px] font-semibold leading-[30px]", className)}>
+    <h1
+      className={clsx(
+        "text-[20px] md:text-[24px] font-semibold leading-[30px]",
+        className,
+      )}
+    >
       {children}
     </h1>
   );
@@ -64,7 +94,7 @@ export function Large_Text({
       return (
         <h1
           className={clsx(
-            "text-[18px] font-bold leading-[26px]",
+            "text-[16px] md:text-[18px] font-bold leading-[26px]",
             className,
             variant,
           )}
@@ -76,7 +106,7 @@ export function Large_Text({
       return (
         <h1
           className={clsx(
-            "text-[18px] font-semibold leading-[26px]",
+            "text-[16px] md:text-[18px] font-semibold leading-[26px]",
             className,
             variant,
           )}
@@ -88,7 +118,7 @@ export function Large_Text({
       return (
         <h1
           className={clsx(
-            "text-[18px] font-medium leading-[26px]",
+            "text-[16px] md:text-[18px] font-medium leading-[26px]",
             className,
             variant,
           )}
@@ -100,7 +130,7 @@ export function Large_Text({
       return (
         <h1
           className={clsx(
-            "text-[18px] font-normal leading-[26px]",
+            "text-[16px] md:text-[18px] font-normal leading-[26px]",
             className,
             variant,
           )}
@@ -125,7 +155,7 @@ export function Medium_Text({
       return (
         <h1
           className={clsx(
-            "text-[16px] font-bold leading-[24px]",
+            "text-[14px] md:text-[16px] font-bold leading-[24px]",
             className,
             variant,
           )}
@@ -137,7 +167,7 @@ export function Medium_Text({
       return (
         <h1
           className={clsx(
-            "text-[16px] font-semibold leading-[24px]",
+            "text-[14px] md:text-[16px] font-semibold leading-[24px]",
             className,
             variant,
           )}
@@ -149,7 +179,7 @@ export function Medium_Text({
       return (
         <h1
           className={clsx(
-            "text-[16px] font-medium leading-[24px]",
+            "text-[14px] md:text-[16px] font-medium leading-[24px]",
             className,
             variant,
           )}
@@ -161,7 +191,7 @@ export function Medium_Text({
       return (
         <h1
           className={clsx(
-            "text-[16px] font-normal leading-[24px]",
+            "text-[14px] md:text-[16px] font-normal leading-[24px]",
             className,
             variant,
           )}
@@ -186,7 +216,7 @@ export function Small_Text({
       return (
         <h1
           className={clsx(
-            "text-[14px] font-bold leading-[22px]",
+            "text-[12px] md:text-[14px] font-bold leading-[22px]",
             className,
             variant,
           )}
@@ -198,7 +228,7 @@ export function Small_Text({
       return (
         <h1
           className={clsx(
-            "text-[14px] font-semibold leading-[22px]",
+            "text-[12px] md:text-[14px] font-semibold leading-[22px]",
             className,
             variant,
           )}
@@ -210,7 +240,7 @@ export function Small_Text({
       return (
         <h1
           className={clsx(
-            "text-[14px] font-medium leading-[22px]",
+            "text-[12px] md:text-[14px] font-medium leading-[22px]",
             className,
             variant,
           )}
@@ -222,7 +252,7 @@ export function Small_Text({
       return (
         <h1
           className={clsx(
-            "text-[14px] font-normal leading-[22px]",
+            "text-[12px] md:text-[14px] font-normal leading-[22px]",
             className,
             variant,
           )}
@@ -247,7 +277,7 @@ export function ExtraSmall_Text({
       return (
         <h1
           className={clsx(
-            "text-[12px] font-medium leading-[20px]",
+            "text-[10px] md:text-[12px] font-medium leading-[20px]",
             className,
             variant,
           )}
@@ -259,7 +289,7 @@ export function ExtraSmall_Text({
       return (
         <h1
           className={clsx(
-            "text-[12px] font-normal leading-[20px]",
+            "text-[10px] md:text-[12px] font-normal leading-[20px]",
             className,
             variant,
           )}
