@@ -8,11 +8,11 @@ import ProsedurNumber from "./home-components/ProsedurNumber";
 export default function Prosedur() {
   return (
     <>
-      <main className="bg-red-light-6 w-full h-full py-24 flex">
+      <main className="bg-red-light-6 w-full h-full py-24 flex" id="prosedur">
         <SectionsGap>
-          <div className="flex mx-auto gap-[50px]">
+          <div className="flex mx-auto gap-[50px] flex-col 2xl:flex-row">
             <Image src={ProsedurSect} alt="ProsedurSection" />
-            <div className="gap-7 flex-col flex">
+            <div className="gap-7 flex-col flex text-center lg:text-start">
               <H2>Prosedur</H2>
               <Large_Text
                 variant="REGULAR"
