@@ -17,7 +17,7 @@ export default function Footer() {
     <>
       <main className="bg-white w-full h-full">
         <SectionsGap>
-          <footer className="">
+          <footer>
             <div className="flex justify-center items-center gap-x-[52px] py-[52px]">
               <div>
                 <Image src={logoMPK} alt="Logo MPK" className="w-[63px]" />

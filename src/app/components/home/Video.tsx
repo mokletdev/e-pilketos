@@ -15,7 +15,7 @@ export default function Video() {
                 </h1>
               </div>
               <div className="mb-[40px]">
-                <p className="text-[18px]">
+                <p className="text-[18px] text-secondary-text-color">
                   Lorem ipsum dolor sit amet consectetur adipisicing elit.
                   Reiciendis placeat autem ab quasi vero, provident tempore
                   ipsum, magnam officiis modi harum consectetur. Rem, vitae
