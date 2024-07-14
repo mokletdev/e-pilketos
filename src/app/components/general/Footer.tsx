@@ -88,7 +88,7 @@ export default function Footer() {
                         </Link>
                       </div>
                       <Link
-                        href="https://www.instagram.com/smktelkommalang/"
+                        href="https://www.youtube.com/@smktsmalang"
                         className="font-medium text-[16px] text-secondary-text-color group-hover:text-primary-color items-center flex group-hover:underline duration-200"
                         target="_blank"
                       >
@@ -115,7 +115,7 @@ export default function Footer() {
                         </Link>
                       </div>
                       <Link
-                        href="https://www.instagram.com/smktelkommalang/"
+                        href="https://www.tiktok.com/@smktelkommalang"
                         className="font-medium text-[16px] text-secondary-text-color group-hover:text-primary-color items-center flex group-hover:underline duration-200"
                         target="_blank"
                       >
@@ -178,7 +178,7 @@ export default function Footer() {
               </div>
 
               {/* Border */}
-              <div className="py-[52px] mx-[88px]">
+              <div className="py-[52px] mx-[22px]">
                 <div className="w-full border-[1.5px] rounded-full"></div>
               </div>
 

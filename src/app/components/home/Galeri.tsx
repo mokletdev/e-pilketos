@@ -15,9 +15,9 @@ import gambar6 from "/public/gambar6.jpg";
 export default function Galeri() {
   return (
     <>
-      <main className="bg-white w-full h-full py-[92px]" id="galeri">
+      <main className="bg-white w-full h-full" id="galeri">
         <SectionsGap>
-          <div className="py-[72px] 2xl:py-[92px] mx-[22px]">
+          <div className="py-[72px] 2xl:py-[92px] 2xl:mx-[88px] mx-[22px]">
             <div className="text-center">
               <h1 className="font-bold mb-[28px] text-[40px] 2xl:text-[48px]">
                 Galeri
@@ -29,6 +29,7 @@ export default function Galeri() {
               </p>
             </div>
 
+            {/* Slides */}
             <div></div>
           </div>
         </SectionsGap>
