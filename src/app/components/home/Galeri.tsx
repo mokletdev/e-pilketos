@@ -11,6 +11,7 @@ import gambar3 from "/public/gambar3.jpg";
 import gambar4 from "/public/gambar4.jpg";
 import gambar5 from "/public/gambar5.jpg";
 import gambar6 from "/public/gambar6.jpg";
+import GaleriCarousel from "./home-components/Carousel";
 
 function Arrow(props: {
   disabled: boolean;
@@ -92,68 +93,7 @@ export default function Galeri() {
             </p>
 
             {/* Carousel */}
-            <div className="navigation-wrapper">
-              <div
-                ref={sliderRef}
-                className="keen-slider flex items-center zoom-out"
-              >
-                {images.map((src, idx) => (
-                  <div key={idx} className="keen-slider__slide zoom-out__slide">
-                    <div
-                      style={scaleStyle(idx)}
-                      className="max-w-[270px] max-h-[203px] rounded-[20px] shadow-md overflow-hidden"
-                    >
-                      <Image
-                        src={src}
-                        alt={`Slide ${idx + 1}`}
-                        className="rounded-[20px]"
-                      />
-                    </div>
-                  </div>
-                ))}
-              </div>
-              {loaded && instanceRef.current && (
-                <>
-                  <Arrow
-                    left
-                    onClick={(e: any) =>
-                      e.stopPropagation() || instanceRef.current?.prev()
-                    }
-                    disabled={currentSlide === 0}
-                  />
-                  <Arrow
-                    onClick={(e: any) =>
-                      e.stopPropagation() || instanceRef.current?.next()
-                    }
-                    disabled={
-                      currentSlide ===
-                      instanceRef.current.track.details.slides.length - 1
-                    }
-                  />
-                </>
-              )}
-            </div>
-            {loaded && instanceRef.current && (
-              <div className="dots">
-                {[
-                  ...Array(
-                    instanceRef.current.track.details.slides.length,
-                  ).keys(),
-                ].map((idx) => {
-                  return (
-                    <button
-                      key={idx}
-                      onClick={() => {
-                        instanceRef.current?.moveToIdx(idx);
-                      }}
-                      className={
-                        "dot" + (currentSlide === idx ? " active" : "")
-                      }
-                    ></button>
-                  );
-                })}
-              </div>
-            )}
+            <GaleriCarousel />
           </div>
         </SectionsGap>
       </main>
