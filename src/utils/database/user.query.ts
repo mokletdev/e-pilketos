@@ -54,16 +54,22 @@ export const deleteUser = async (id: string) => {
   });
 };
 
-export const CountUserAngkatanbyVoteCandidate = async (
-  id_candidate: string,
-  angkatan: string,
-) => {
+export const CountUserbyVoteSession = async (id_session: string) => {
   return await client.user.count({
     where: {
-      Candidates: {
-        id: id_candidate,
+      User_vote: {
+        vote_session_id: id_session,
       },
-      angkatan: angkatan,
+    },
+  });
+};
+
+export const UserbyVoteSession = async (id_session: string) => {
+  return await client.user.findMany({
+    where: {
+      User_vote: {
+        vote_session_id: id_session,
+      },
     },
   });
 };

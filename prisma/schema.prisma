@@ -26,7 +26,6 @@ model User {
   email               String               @unique
   name                String
   role                role
-  angkatan            String?
   Candidates          Candidates?
   User_vote           User_vote?
   vote_session_access vote_session_access?
