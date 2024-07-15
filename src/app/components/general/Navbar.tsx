@@ -69,7 +69,7 @@ export default function Navbar() {
   ];
   return (
     <>
-      <main className={`relative w-full h-[60px] my-[24px] flex flex-col z-20`}>
+      <main className={`relative w-full h-[60px] flex flex-col z-20`}>
         <SectionsGap>
           <nav
             data-aos="fade-down"
