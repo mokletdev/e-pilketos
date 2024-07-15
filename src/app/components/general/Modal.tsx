@@ -6,6 +6,6 @@ interface ModalProops {
   children?: React.ReactNode;
 }
 
-export function Modal() {
+export function AddUserModal() {
   return <div></div>;
 }
