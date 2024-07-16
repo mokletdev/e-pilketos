@@ -30,7 +30,9 @@ export default function Galeri() {
             </div>
 
             {/* Slides */}
-            <div></div>
+            <div>
+              
+            </div>
           </div>
         </SectionsGap>
       </main>
