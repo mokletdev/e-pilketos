@@ -12,6 +12,7 @@ import gambar4 from "/public/gambar4.jpg";
 import gambar5 from "/public/gambar5.jpg";
 import gambar6 from "/public/gambar6.jpg";
 
+
 export default function Galeri() {
   return (
     <>

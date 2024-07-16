@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import SectionsGap from "./SectionsGap";
 import Link from "next/link";
-import LogoMPK from "@/../public/images/logoMPK.png";
+import LogoMPK from "@/../public/images/LogoMPK.png";
 import { Large_Text } from "./Text";
 import Image from "next/image";
 import { FormButton } from "./Button";
@@ -69,7 +69,7 @@ export default function Navbar() {
   ];
   return (
     <>
-      <main className={`relative w-full h-[60px] my-[24px] flex flex-col z-20`}>
+      <main className={`relative w-full h-[60px] flex flex-col z-20`}>
         <SectionsGap>
           <nav
             data-aos="fade-down"
