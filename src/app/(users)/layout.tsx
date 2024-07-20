@@ -8,7 +8,7 @@ export default function MainLayout({
 }>) {
   return (
     <>
-      <main>
+      <main className="bg-red-light-6">
         <Navbar />
         {children}
         <Footer />

@@ -11,7 +11,11 @@ export default function Header() {
       <main className="bg-red-light-6 w-full h-auto flex pb-[92px]">
         <SectionsGap>
           <div className="flex 2xl:flex-row-reverse flex-col items-center mx-auto gap-[50px]">
-            <Image src={HeaderSect} alt="HeaderSection" />
+            <Image
+              src={HeaderSect}
+              alt="HeaderSection"
+              className="-mt-40 lg:-mt-0"
+            />
             <div className="max-w-[600px] flex-col flex gap-[28px] text-center 2xl:text-start">
               <H1>Pemilihan Ketua Osis SMK Telkom Malang 2024</H1>
               <Large_Text

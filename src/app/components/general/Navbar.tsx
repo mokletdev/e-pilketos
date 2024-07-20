@@ -69,7 +69,7 @@ export default function Navbar() {
   ];
   return (
     <>
-      <main className={`relative w-full h-[60px] flex flex-col z-20`}>
+      <main className={`relative w-full h-auto lg:h-[60px] flex flex-col z-40`}>
         <SectionsGap>
           <nav
             data-aos="fade-down"
@@ -83,9 +83,9 @@ export default function Navbar() {
             style={{ transition: "all 0.8s ease-in-out" }}
           >
             <div className="flex items-center justify-between">
-              <div className="flex items-center gap-7">
+              <div className="flex items-center gap-x-7">
                 <div className="block xl:hidden 2xl:hidden">
-                  <button onClick={handleClick} title="Hamburg">
+                  <button onClick={handleClick} title="Hamburger">
                     <svg
                       width="24"
                       height="24"
@@ -99,22 +99,22 @@ export default function Navbar() {
                             id="Vector"
                             d="M3 7H21"
                             stroke="#111928"
-                            stroke-width="1.2"
-                            stroke-linecap="round"
+                            strokeWidth="1.2"
+                            strokeLinecap="round"
                           />
                           <path
                             id="Vector_2"
                             d="M3 12H21"
                             stroke="#111928"
-                            stroke-width="1.2"
-                            stroke-linecap="round"
+                            strokeWidth="1.2"
+                            strokeLinecap="round"
                           />
                           <path
                             id="Vector_3"
                             d="M3 17H21"
                             stroke="#111928"
-                            stroke-width="1.2"
-                            stroke-linecap="round"
+                            strokeWidth="1.2"
+                            strokeLinecap="round"
                           />
                         </g>
                       </g>
@@ -147,7 +147,11 @@ export default function Navbar() {
                   </div>
                 )}
                 <Link href="/">
-                  <Image src={LogoMPK} alt="LogoMPK" width={60} height={60} />
+                  <Image
+                    src={LogoMPK}
+                    alt="LogoMPK"
+                    className="lg:size-[60px] size-[40px]"
+                  />
                 </Link>
               </div>
               <ul className="flex gap-[36px] ">
