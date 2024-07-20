@@ -77,7 +77,7 @@ export const authOptions: AuthOptions = {
             name: findUser.name,
             password: findUser.User_Auth?.password,
             role: findUser.role,
-            userpic: findUser.user_pic,
+            picture: findUser.user_pic,
           };
           return user;
         } catch (error) {
@@ -116,9 +116,6 @@ export const authOptions: AuthOptions = {
               email: user.email,
               name: user.name || "",
               role: "SISWA",
-              user_pic:
-                user.image ||
-                "https://res.cloudinary.com/dvwhepqbd/image/upload/v1720580914/pgfrhzaobzcajvugl584.png",
               User_Auth: {
                 create: {
                   last_login: new Date(),
@@ -140,7 +137,6 @@ export const authOptions: AuthOptions = {
           if (userDatabase) {
             token.email = userDatabase.email;
             token.role = userDatabase.role;
-            token.picture = userDatabase.user_pic;
           }
         }
         return token;
