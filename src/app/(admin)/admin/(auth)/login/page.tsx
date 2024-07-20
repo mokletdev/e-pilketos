@@ -31,7 +31,6 @@ export default function AdminLogin() {
         email: data.email,
         password: data.password,
       });
-      console.log(email);
 
       if (!response?.ok && response?.status === 401) {
         toast.error("Login Gagal");
