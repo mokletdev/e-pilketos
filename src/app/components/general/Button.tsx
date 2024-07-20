@@ -4,7 +4,7 @@ import { HTMLAttributeAnchorTarget, MouseEventHandler, ReactNode } from "react";
 
 interface ButtonProops {
   children: ReactNode;
-  variant: "PRIMARY" | "SECONDARY" | "DISABLE";
+  variant: "PRIMARY" | "SECONDARY" | "DISABLE" | "BLACK";
   className?: string;
 }
 
@@ -14,7 +14,7 @@ interface LinkButtonProops extends ButtonProops {
 }
 
 interface FormButtonProps extends ButtonProops {
-  onClick?: MouseEventHandler<HTMLButtonElement | HTMLAnchorElement>;
+  onClick?: MouseEventHandler<HTMLButtonElement>;
   type?: "button" | "reset" | "submit";
   isDisabled?: boolean;
 }
@@ -72,6 +72,7 @@ export const FormButton = ({
   const primary = variant === "PRIMARY";
   const secondary = variant === "SECONDARY";
   const disable = variant === "DISABLE";
+  const black = variant === "BLACK";
 
   if (primary) {
     return (
@@ -97,10 +98,10 @@ export const FormButton = ({
         disabled={isDisabled === true}
         type={type}
         className={clsx(
-          "px-6 py-3 bg-secondary-color border-2 border-secondary-color text-white rounded-full",
+          "px-6 py-3 bg-transparent border-2 border-primary-color text-primary-color rounded-full",
           className,
           "transition-all duration-300 ease-in-out",
-          "hover:bg-transparent hover:text-primary-color",
+          "hover:bg-primary-color hover:text-white",
         )}
       >
         {children}
@@ -115,6 +116,23 @@ export const FormButton = ({
         type={type}
         className={clsx(
           "px-6 py-3 bg-dark-6 border-2 border-dark-6 text-white rounded-full",
+          className,
+          "transition-all duration-300 ease-in-out",
+        )}
+      >
+        {children}
+      </button>
+    );
+  }
+  if (black) {
+    return (
+      <button
+        onClick={onClick}
+        disabled={isDisabled === true}
+        type={type}
+        className={clsx(
+          "px-6 py-3 bg-transparent border-2 border-black text-black rounded-full",
+          "hover:text-white hover:bg-black",
           className,
           "transition-all duration-300 ease-in-out",
         )}
