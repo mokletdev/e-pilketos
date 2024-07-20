@@ -11,89 +11,28 @@ import gambar3 from "/public/gambar3.jpg";
 import gambar4 from "/public/gambar4.jpg";
 import gambar5 from "/public/gambar5.jpg";
 import gambar6 from "/public/gambar6.jpg";
-import GaleriCarousel from "./home-components/Carousel";
-
-function Arrow(props: {
-  disabled: boolean;
-  left?: boolean;
-  onClick: (e: any) => void;
-}) {
-  const disabled = props.disabled ? " arrow--disabled" : "";
-  return (
-    <svg
-      onClick={props.onClick}
-      className={`arrow ${
-        props.left ? "arrow--left" : "arrow--right"
-      } ${disabled}`}
-      xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 24 24"
-    >
-      {props.left && (
-        <path d="M16.67 0l2.83 2.829-9.339 9.175 9.339 9.167-2.83 2.829-12.17-11.996z" />
-      )}
-      {!props.left && (
-        <path d="M5 3l3.057-3 11.943 12-11.943 12-3.057-3 9-9z" />
-      )}
-    </svg>
-  );
-}
 
 export default function Galeri() {
-  const [details, setDetails] = useState<TrackDetails | null>(null);
-  const [currentSlide, setCurrentSlide] = useState(0);
-  const [loaded, setLoaded] = useState(false);
-
-  const [sliderRef, instanceRef] = useKeenSlider<HTMLDivElement>({
-    loop: true,
-    detailsChanged(s) {
-      setDetails(s.track.details);
-    },
-    initial: 2,
-    slideChanged(slider) {
-      setCurrentSlide(slider.track.details.rel);
-    },
-    created() {
-      setLoaded(true);
-    },
-    breakpoints: {
-      "(min-width: 400px)": {
-        slides: { perView: 2, spacing: 2 },
-      },
-      "(min-width: 1000px)": {
-        slides: { perView: 3, spacing: 2 },
-      },
-    },
-    slides: { perView: 1, spacing: 2 },
-  });
-
-  function scaleStyle(idx: number) {
-    if (!details) return {};
-    const slide = details.slides[idx];
-    const scale_size = 0.7;
-    const scale = 1 - (scale_size - scale_size * slide.portion);
-    return {
-      transform: `scale(${scale})`,
-      WebkitTransform: `scale(${scale})`,
-    };
-  }
-
-  const images = [gambar1, gambar2, gambar3, gambar4, gambar5, gambar6];
-
   return (
     <>
-      <main className="bg-white w-full h-full py-[92px]" id="galeri">
+      <main className="bg-white w-full h-full" id="galeri">
         <SectionsGap>
-          <div className="text-center mx-[88px]">
-            <h1 className="text-[48px] font-bold text-primary-text-color mb-[28px]">
-              Galeri
-            </h1>
-            <p className="text-secondary-text-color mb-[52px]">
-              Lihat para Mokleters sedang menggunakan hak suaranya untuk memilih
-              siapa yang akan menjadi Ketua OSIS SMK Telkom berikutnya!
-            </p>
+          <div className="py-[72px] 2xl:py-[92px] 2xl:mx-[88px] mx-[22px]">
+            <div className="text-center">
+              <h1 className="font-bold mb-[28px] text-[40px] 2xl:text-[48px]">
+                Galeri
+              </h1>
+              <p className="text-secondary-text-color text-[14px] 2xl:text-[18px] mb-[42px] 2xl:mb-[52px] ">
+                Lihat para Mokleters sedang menggunakan hak suaranya untuk
+                memilih siapa yang akan menjadi Ketua OSIS SMK Telkom
+                berikutnya!
+              </p>
+            </div>
 
-            {/* Carousel */}
-            <GaleriCarousel />
+            {/* Slides */}
+            <div>
+              
+            </div>
           </div>
         </SectionsGap>
       </main>

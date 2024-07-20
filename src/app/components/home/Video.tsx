@@ -5,17 +5,20 @@ import { LinkButton } from "../general/Button";
 export default function Video() {
   return (
     <>
-      <main className="bg-red-light-6 w-full h-full py-[92px]" id="video">
+      <main
+        className="bg-red-light-6 w-full h-full py-[72px] 2xl:py-[92px]"
+        id="video"
+      >
         <SectionsGap>
-          <div className="flex 2xl:justify-between 2xl:flex-row flex-col items-center gap-x-[172px] gap-y-16 h-full mx-[88px]">
+          <div className="flex 2xl:justify-between 2xl:flex-row flex-col items-center gap-x-[172px] gap-y-16 h-full mx-[22px] 2xl:mx-[88px]">
             <div className="max-w-[400px] grid-rows-3 2xl:text-start text-center">
               <div className="mb-[28px]">
-                <h1 className="text-[48px] font-bold text-primary-text-color">
+                <h1 className="text-[40px] 2xl:text-[48px] font-bold text-primary-text-color">
                   Selain Foto Ada Juga Videonya
                 </h1>
               </div>
               <div className="mb-[40px]">
-                <p className="text-[18px] text-secondary-text-color">
+                <p className="text-[14px] 2xl:text-[18px] text-secondary-text-color">
                   Lorem ipsum dolor sit amet consectetur adipisicing elit.
                   Reiciendis placeat autem ab quasi vero, provident tempore
                   ipsum, magnam officiis modi harum consectetur. Rem, vitae
