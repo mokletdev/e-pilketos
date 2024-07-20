@@ -1,9 +1,11 @@
+"use client";
 import React from "react";
 import SectionsGap from "../general/SectionsGap";
 import Image from "next/image";
 import HeaderSect from "@/../public/images/headersection.png";
 import { H1, Large_Text } from "../general/Text";
 import { FormButton } from "../general/Button";
+import { signIn } from "next-auth/react";
 
 export default function Header() {
   return (
@@ -26,7 +28,11 @@ export default function Header() {
                 Malang. Ayo gunakan hak suara kalian!
               </Large_Text>
               <div className="flex justify-center 2xl:justify-normal">
-                <FormButton variant="PRIMARY" className="max-w-[210px]">
+                <FormButton
+                  onClick={() => signIn()}
+                  variant="PRIMARY"
+                  className="max-w-[210px]"
+                >
                   Yuk Vote Sekarang !
                 </FormButton>
               </div>
