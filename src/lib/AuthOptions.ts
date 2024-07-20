@@ -15,6 +15,7 @@ declare module "next-auth" {
       password: string;
       name: string;
       role: string;
+      user_pic: string;
     };
   }
 }
@@ -26,6 +27,7 @@ declare module "next-auth/jwt" {
     email: string;
     password: string;
     role: string;
+    user_pic: string;
   }
 }
 
@@ -75,6 +77,7 @@ export const authOptions: AuthOptions = {
             name: findUser.name,
             password: findUser.User_Auth?.password,
             role: findUser.role,
+            userpic: findUser.user_pic,
           };
           return user;
         } catch (error) {
@@ -113,6 +116,9 @@ export const authOptions: AuthOptions = {
               email: user.email,
               name: user.name || "",
               role: "SISWA",
+              user_pic:
+                user.image ||
+                "https://res.cloudinary.com/dvwhepqbd/image/upload/v1720580914/pgfrhzaobzcajvugl584.png",
               User_Auth: {
                 create: {
                   last_login: new Date(),
@@ -134,6 +140,7 @@ export const authOptions: AuthOptions = {
           if (userDatabase) {
             token.email = userDatabase.email;
             token.role = userDatabase.role;
+            token.picture = userDatabase.user_pic;
           }
         }
         return token;
@@ -149,6 +156,9 @@ export const authOptions: AuthOptions = {
           session.user.email = token.email || "";
           session.user.name = token.name || "";
           session.user.password = token.password || "";
+          session.user.user_pic =
+            token.picture ||
+            "https://res.cloudinary.com/dvwhepqbd/image/upload/v1720580914/pgfrhzaobzcajvugl584.png";
           session.user.role = token.role || "SISWA";
           await updateUser(
             { email: token.email },
