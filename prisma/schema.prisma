@@ -25,6 +25,7 @@ model User {
   id                  String               @id @default(uuid()) @map("user_id") @db.Char(36)
   email               String               @unique
   name                String
+  user_pic            String?
   role                role
   Candidates          Candidates?
   User_vote           User_vote?
