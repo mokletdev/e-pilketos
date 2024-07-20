@@ -131,26 +131,30 @@ export default function Footer() {
 
                   <div className="grid grid-rows-4 gap-y-[12px]">
                     <a
-                      href="#"
+                      href="https://www.moklet.org/organisasi/2023-2024/OSIS"
                       className="font-medium text-[16px] text-secondary-text-color hover:text-primary-color hover:underline duration-200"
+                      target="_blank"
                     >
                       OSIS
                     </a>
                     <a
-                      href="#"
+                      href="https://www.moklet.org/organisasi/2023-2024/MPK"
                       className="font-medium text-[16px] text-secondary-text-color hover:text-primary-color hover:underline duration-200"
+                      target="_blank"
                     >
                       MPK
                     </a>
                     <a
-                      href="#"
+                      href="https://www.moklet.org/organisasi/2023-2024/METIC"
                       className="font-medium text-[16px] text-secondary-text-color hover:text-primary-color hover:underline duration-200"
+                      target="_blank"
                     >
                       Metic
                     </a>
                     <a
-                      href="#"
+                      href="https://mokletdev.vercel.app/"
                       className="font-medium text-[16px] text-secondary-text-color hover:text-primary-color hover:underline duration-200"
+                      target="_blank"
                     >
                       Moklet Dev
                     </a>
@@ -162,14 +166,16 @@ export default function Footer() {
                   <p className="font-semibold mb-[28px]">Didukung Oleh</p>
                   <div className="grid grid-rows-2 gap-y-[12px]">
                     <a
-                      href="#"
+                      href="https://www.moklet.org/organisasi/2023-2024/METIC"
                       className="font-medium text-[16px] text-secondary-text-color hover:text-primary-color hover:underline duration-200"
+                      target="_blank"
                     >
                       Metic
                     </a>
                     <a
-                      href="#"
+                      href="https://mokletdev.vercel.app/"
                       className="font-medium text-[16px] text-secondary-text-color hover:text-primary-color hover:underline duration-200"
+                      target="_blank"
                     >
                       Moklet Dev
                     </a>
