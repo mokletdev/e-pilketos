@@ -1,11 +1,13 @@
-import React, { MouseEventHandler } from "react";
+import React, { FormEvent, MouseEventHandler } from "react";
 import { FormButton } from "./Button";
-import { Large_Text, Medium_Text } from "./Text";
+import { H2, Large_Text, Medium_Text } from "./Text";
+import clsx from "clsx";
 
 interface ModalProops {
   isOpen?: boolean;
   onClose?: MouseEventHandler<HTMLButtonElement>;
   children?: React.ReactNode;
+  className?: string;
 }
 
 export function AddUserModal() {
@@ -15,96 +17,56 @@ export function AddUserModal() {
 export const ModalDialog = ({
   isOpen,
   onClose,
+  handleSubmit,
 }: {
-  isOpen: boolean;
-  onClose: any;
+  isOpen: any;
+  onClose: MouseEventHandler<HTMLButtonElement> | boolean | any;
+  handleSubmit: MouseEventHandler<HTMLButtonElement>;
 }) => {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50">
-      <div className="bg-white rounded-lg p-4 shadow-lg">
-        <div className="title mb-4">Are you sure you want to do this?</div>
-        <div className="flex justify-end space-x-2">
-          <FormButton variant="PRIMARY" onClick={() => onClose(true)}>
-            Yes
-          </FormButton>
-          <button
-            className="btnNo bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
-            onClick={() => onClose(false)}
+    <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 z-40">
+      <div className="bg-white rounded-2xl p-4 shadow-lg py-[92px] px-[88px] max-w-[1050px]">
+        <div className="mb-[52px]">
+          <H2 className="text-center mb-[18px]">
+            Apakah pilihanmu sudah benar?
+          </H2>
+          <Large_Text
+            variant="REGULAR"
+            className="text-center text-secondary-text-color"
           >
-            No
-          </button>
+            Jika pilihan sudah benar bisa langsung klik komfirmasi, jika belum
+            yakin bisa klik batal untuk mengecek pilihan lagi
+          </Large_Text>
+        </div>
+        <div className="flex justify-center w-full space-x-2">
+          <FormButton
+            className="w-full"
+            variant="BLACK"
+            onClick={() => onClose(true)}
+          >
+            <Medium_Text variant="BOLD">Batal</Medium_Text>
+          </FormButton>
+          <FormButton
+            className="w-full"
+            variant="PRIMARY"
+            onClick={handleSubmit}
+          >
+            <Medium_Text variant="BOLD">Konfirmasi</Medium_Text>
+          </FormButton>
         </div>
       </div>
     </div>
   );
 };
 
-export function VoteModal({ children, isOpen, onClose }: ModalProops) {
+export function VoteModal({ children, className }: Readonly<ModalProops>) {
   return (
-    <>
-      <section className="pt-0 p-8 max-w-xl mx-auto">
-        <div className="my-3">
-          <Large_Text variant="BOLD" className="mb-2 text-center">
-            Visi
-          </Large_Text>
-          <Medium_Text variant="REGULAR" className="text-center">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit.consectetur
-            adipiscing elit. consectetur adipiscing elit.
-          </Medium_Text>
-        </div>
-        <div className="my-3">
-          <Large_Text variant="BOLD" className="mb-2 text-center">
-            Misi
-          </Large_Text>
-          <Medium_Text variant="REGULAR" className="text-center">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit.consectetur
-            adipiscing elit. consectetur adipiscing elit.
-          </Medium_Text>
-        </div>
-        <div className="my-3">
-          <Large_Text variant="BOLD" className="mb-2 text-center">
-            Motto
-          </Large_Text>
-          <Medium_Text variant="REGULAR" className="text-center">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit.consectetur
-            adipiscing elit. consectetur adipiscing elit.
-          </Medium_Text>
-        </div>
-        <div className="my-3">
-          <Large_Text variant="BOLD" className="mb-2 text-center">
-            Pengalaman
-          </Large_Text>
-          <Medium_Text variant="REGULAR" className="text-center">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit.consectetur
-            adipiscing elit. consectetur adipiscing elit.
-          </Medium_Text>
-        </div>
-        <div className="my-3">
-          <Large_Text variant="BOLD" className="mb-2 text-center">
-            Program Kerja
-          </Large_Text>
-          <Medium_Text variant="REGULAR" className="text-center">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit.consectetur
-            adipiscing elit. consectetur adipiscing elit.
-          </Medium_Text>
-        </div>
-        <div className="mb-3 mt-6">
-          <Large_Text variant="BOLD" className="mb-2 text-center">
-            Video Profil Kandidat
-          </Large_Text>
-          <iframe
-            src="https://www.youtube.com/embed/9xofia597HI?si=wGP5Kb0411AMpg2n"
-            title="YouTube video player"
-            className="rounded-[15px] w-full h-[320px] mx-auto duration-500 ease-in-out"
-            frameBorder="0"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-            referrerPolicy="strict-origin-when-cross-origin"
-            allowFullScreen
-          ></iframe>
-        </div>
+    <section className="relative w-10/12 h-full pb-12 mx-auto">
+      <section className={clsx("bg-white pt-0 w-auto ", className)}>
+        {children}
       </section>
-    </>
+    </section>
   );
 }
