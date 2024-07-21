@@ -4,6 +4,9 @@ import { Prisma } from "@prisma/client";
 export const getAllUser = async () => {
   return await client.user.findMany();
 };
+export const getAllUserAuth = async () => {
+  return await client.user_Auth.findMany();
+};
 
 export const getUserNotVote = async () => {
   return await client.user.findMany({

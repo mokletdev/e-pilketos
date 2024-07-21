@@ -24,28 +24,38 @@ export default function AdminLogin() {
       email,
       password,
     };
+
     try {
       const response = await signIn("credentials", {
-        callbackUrl: "/admin",
+        callbackUrl: "/admin/dashboard",
         redirect: false,
         email: data.email,
         password: data.password,
       });
 
       if (!response?.ok && response?.status === 401) {
+        console.log(response);
+
         toast.error("Login Gagal");
         setError("Akun Tidak Terdaftar Sebagai Admin E-Pilketos");
       }
       if (!response?.ok) {
+        console.log(response);
         toast.error("Login Gagal");
         setError("Gagal Login");
       }
 
       if (response?.ok) {
-        toast.success("Login Berhasil");
-        router.push("/dashboard");
+        if (session?.user?.role === "ADMIN") {
+          toast.success("Login Berhasil");
+          router.push("/admin/dashboard");
+        } else {
+          toast.error("Login Gagal");
+          setError("Akun Tidak Terdaftar Sebagai Admin E-Pilketos");
+        }
       }
     } catch (error) {
+      console.log(error);
       toast.error("Login Gagal");
       setError((error as Error).message);
     }
