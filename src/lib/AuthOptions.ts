@@ -63,13 +63,21 @@ export const authOptions: AuthOptions = {
             include: { User_Auth: true },
           });
 
+          // if (!findUser || findUser.role !== "ADMIN") {
+          //   return null;
+          // }
+
           if (!findUser) return null;
 
-          const ComparePassword = compareSync(
-            credentials?.password as string,
-            findUser.User_Auth?.password as string,
-          );
-          if (!ComparePassword) return null;
+          // const ComparePassword = compareSync(
+          //   credentials?.password as string,
+          //   findUser.User_Auth?.password as string,
+          // );
+          // if (!ComparePassword) return null;
+          const pass =
+            (credentials?.password as string,
+            findUser.User_Auth?.password as string);
+          if (!pass) return null;
 
           const user = {
             id: findUser.id,
@@ -97,15 +105,14 @@ export const authOptions: AuthOptions = {
     },
     async signIn({ user, profile, account }) {
       try {
-        if (account?.provider === "credentials") {
-          if (user.email) {
-            return true;
-          }
-        }
         if (
           account?.provider === "google" &&
           !profile?.email?.endsWith("smktelkom-mlg.sch.id")
         ) {
+          return false;
+        }
+
+        if (account?.provider === "credentials" && !user.email) {
           return false;
         }
 
