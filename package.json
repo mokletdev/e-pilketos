@@ -24,6 +24,7 @@
     "keen-slider": "^6.8.6",
     "next": "14.2.4",
     "next-auth": "^4.24.7",
+    "next-cloudinary": "^6.6.2",
     "next-nprogress-bar": "^2.3.12",
     "npm": "^10.8.1",
     "react": "^18",
