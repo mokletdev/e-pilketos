@@ -4,13 +4,7 @@ import SectionsGap from "../general/SectionsGap";
 import Image from "next/image";
 import "keen-slider/keen-slider.min.css";
 import { useKeenSlider, TrackDetails } from "keen-slider/react";
-
-import gambar1 from "/public/gambar1.jpg";
-import gambar2 from "/public/gambar2.jpg";
-import gambar3 from "/public/gambar3.jpg";
-import gambar4 from "/public/gambar4.jpg";
-import gambar5 from "/public/gambar5.jpg";
-import gambar6 from "/public/gambar6.jpg";
+import GaleriCarousel from "./home-components/Carousel";
 
 export default function Galeri() {
   return (
@@ -31,7 +25,7 @@ export default function Galeri() {
 
             {/* Slides */}
             <div>
-              
+              <GaleriCarousel />
             </div>
           </div>
         </SectionsGap>
