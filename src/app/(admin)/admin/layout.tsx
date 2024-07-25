@@ -15,10 +15,10 @@ export default function MainLayout({
   return (
     <>
       <main className="bg-red-light-6">
-        <div className="flex">
+        <div className="xl:ml-80">
           <Sidebar />
           <div className="px-[28px]">
-            <div className="w-full py-4">
+            <div className="max-w-full w-full py-6">
               <AdminHeaders />
               {children}
             </div>
