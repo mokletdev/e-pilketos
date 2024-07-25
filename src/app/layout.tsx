@@ -11,8 +11,17 @@ const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "E Pilketos Moklet",
-  description: "E-Pilketos adalah aplikasi E-Voting untuk Pemilihan Ketua Osis. Aplikasi ini dikembangkan untuk membantu melakukan Pemilihan Ketua OSIS dengan Mudah dan Cepat.",
-  keywords: ["E-Pilketos", "E-Voting", "Pemilihan Ketua Osis", "SMK Telkom Malang", "Moklet", "E-Pilketos Moklet", "MokletDev"],
+  description:
+    "E-Pilketos adalah aplikasi E-Voting untuk Pemilihan Ketua Osis. Aplikasi ini dikembangkan untuk membantu melakukan Pemilihan Ketua OSIS dengan Mudah dan Cepat.",
+  keywords: [
+    "E-Pilketos",
+    "E-Voting",
+    "Pemilihan Ketua Osis",
+    "SMK Telkom Malang",
+    "Moklet",
+    "E-Pilketos Moklet",
+    "MokletDev",
+  ],
 };
 
 export const viewport: Viewport = {
@@ -31,7 +40,7 @@ export default function RootLayout({
     <html lang="en" className="scroll-smooth">
       <InitialTransition>
         <AdminDisablePathname />
-        <body className={`${inter.className}`}>
+        <body className={`${inter.className} selection:bg-red-light-2`}>
           <NextAuthProviders>
             <ProgressBarProvider>{children}</ProgressBarProvider>
             <Toaster />
