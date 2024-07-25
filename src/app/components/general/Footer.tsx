@@ -130,34 +130,34 @@ export default function Footer() {
                   <p className="font-semibold mb-[28px]">Organisasi</p>
 
                   <div className="grid grid-rows-4 gap-y-[12px]">
-                    <a
+                    <Link
                       href="https://www.moklet.org/organisasi/2023-2024/OSIS"
                       className="font-medium text-[16px] text-secondary-text-color hover:text-primary-color hover:underline duration-200"
                       target="_blank"
                     >
                       OSIS
-                    </a>
-                    <a
+                    </Link>
+                    <Link
                       href="https://www.moklet.org/organisasi/2023-2024/MPK"
                       className="font-medium text-[16px] text-secondary-text-color hover:text-primary-color hover:underline duration-200"
                       target="_blank"
                     >
                       MPK
-                    </a>
-                    <a
+                    </Link>
+                    <Link
                       href="https://www.moklet.org/organisasi/2023-2024/METIC"
                       className="font-medium text-[16px] text-secondary-text-color hover:text-primary-color hover:underline duration-200"
                       target="_blank"
                     >
                       Metic
-                    </a>
-                    <a
+                    </Link>
+                    <Link
                       href="https://mokletdev.vercel.app/"
                       className="font-medium text-[16px] text-secondary-text-color hover:text-primary-color hover:underline duration-200"
                       target="_blank"
                     >
                       Moklet Dev
-                    </a>
+                    </Link>
                   </div>
                 </div>
 
@@ -165,20 +165,20 @@ export default function Footer() {
                 <div>
                   <p className="font-semibold mb-[28px]">Didukung Oleh</p>
                   <div className="grid grid-rows-2 gap-y-[12px]">
-                    <a
+                    <Link
                       href="https://www.moklet.org/organisasi/2023-2024/METIC"
                       className="font-medium text-[16px] text-secondary-text-color hover:text-primary-color hover:underline duration-200"
                       target="_blank"
                     >
                       Metic
-                    </a>
-                    <a
+                    </Link>
+                    <Link
                       href="https://mokletdev.vercel.app/"
                       className="font-medium text-[16px] text-secondary-text-color hover:text-primary-color hover:underline duration-200"
                       target="_blank"
                     >
                       Moklet Dev
-                    </a>
+                    </Link>
                   </div>
                 </div>
               </div>

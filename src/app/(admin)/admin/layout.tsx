@@ -1,4 +1,5 @@
 import { Metadata } from "next";
+import Sidebar from "@/app/components/general/Sidebar";
 
 export const metadata: Metadata = {
   title: "Admin | E-Pilketos Moklet",
@@ -12,7 +13,12 @@ export default function MainLayout({
 }>) {
   return (
     <>
-      <main>{children}</main>
+      <main>
+        <div className="flex">
+          <Sidebar />
+          {children}
+        </div>
+      </main>
     </>
   );
 }
