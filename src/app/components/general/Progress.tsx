@@ -4,7 +4,7 @@ interface ProgressProps {
   percent: number;
 }
 
-export default function Progress({ percent }: any) {
+export default function Progress({ percent }: ProgressProps) {
   const percentage = 100 - percent;
 
   return (
