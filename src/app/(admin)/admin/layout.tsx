@@ -1,5 +1,6 @@
 import { Metadata } from "next";
 import Sidebar from "@/app/components/general/Sidebar";
+import AdminHeaders from "./_components/AdminHeaders";
 
 export const metadata: Metadata = {
   title: "Admin | E-Pilketos Moklet",
@@ -13,10 +14,15 @@ export default function MainLayout({
 }>) {
   return (
     <>
-      <main>
+      <main className="bg-red-light-6">
         <div className="flex">
           <Sidebar />
-          {children}
+          <div className="px-[28px]">
+            <div className="w-full py-4">
+              <AdminHeaders />
+              {children}
+            </div>
+          </div>
         </div>
       </main>
     </>
