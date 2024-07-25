@@ -5,6 +5,7 @@ import Image from "next/image";
 import React, { useState } from "react";
 import fotoKandidat from "@/../public/images/FotoKandidat.png";
 import PlusIcon from "@/app/components/Icons/PlusIcon";
+import EmptyCandidates from "../_components/EmptyCandidates";
 
 export default function Candidates() {
   const [modal, setModal] = useState(false);
@@ -38,6 +39,9 @@ export default function Candidates() {
           <PlusIcon />
           <Medium_Text variant="BOLD">Tambah Kandidat</Medium_Text>
         </FormButton>
+      </div>
+      <div>
+        <EmptyCandidates />
       </div>
       <section
         className={`max-w-full w-full grid grid-cols-1 xl:grid-cols-2 gap-6 mt-20 mb-20 `}
