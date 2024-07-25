@@ -1,8 +1,8 @@
 import clsx from "clsx";
-import React from "react";
+import React, { ReactNode } from "react";
 
 interface TextProops {
-  children?: string;
+  children?: ReactNode;
   className?: string;
 }
 
