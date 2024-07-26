@@ -4,6 +4,9 @@ import { Prisma } from "@prisma/client";
 export const getAllUser = async () => {
   return await client.user.findMany();
 };
+export const getAllUserAuth = async () => {
+  return await client.user_Auth.findMany();
+};
 
 export const getUserNotVote = async () => {
   return await client.user.findMany({
@@ -15,8 +18,14 @@ export const getUserNotVote = async () => {
     },
   });
 };
+export const findUser = async (filter: Prisma.UserWhereInput) => {
+  return await client.user.findFirst({
+    where: filter,
+    include: { User_Auth: { select: { last_login: true } } },
+  });
+};
 
-export const getUser = async (id: number) => {
+export const getUser = async (id: string) => {
   return await client.user.findUnique({
     where: {
       id: id,
@@ -24,22 +33,23 @@ export const getUser = async (id: number) => {
   });
 };
 
-export const createUser = async (data: Prisma.UserCreateInput) => {
+export const createUser = async (data: Prisma.UserUncheckedCreateInput) => {
   return await client.user.create({
-    data: data,
+    data,
   });
 };
 
-export const updateUser = async (id: number, data: Prisma.UserUpdateInput) => {
+export const updateUser = async (
+  where: Prisma.UserWhereUniqueInput,
+  data: Prisma.UserUpdateInput,
+) => {
   return await client.user.update({
-    where: {
-      id: id,
-    },
+    where,
     data: data,
   });
 };
 
-export const deleteUser = async (id: number) => {
+export const deleteUser = async (id: string) => {
   return await client.user.delete({
     where: {
       id: id,
@@ -47,13 +57,22 @@ export const deleteUser = async (id: number) => {
   });
 };
 
-export const CountUserAngkatanbyVoteCandidate = async (id_candidate: number, angkatan: string) => {
+export const CountUserbyVoteSession = async (id_session: string) => {
   return await client.user.count({
     where: {
-      Candidates: {
-        id: id_candidate,
+      User_vote: {
+        vote_session_id: id_session,
       },
-      angkatan: angkatan,
     },
   });
-}
+};
+
+export const UserbyVoteSession = async (id_session: string) => {
+  return await client.user.findMany({
+    where: {
+      User_vote: {
+        vote_session_id: id_session,
+      },
+    },
+  });
+};
