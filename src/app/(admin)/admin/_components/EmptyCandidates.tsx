@@ -7,9 +7,9 @@ export default function EmptyCandidates() {
   return (
     <>
       <div className="bg-red-light-6 w-full h-full">
-        <div className="flex items-center justify-center pt-[280px] pb-[173px]">
+        <div className="flex items-center justify-center pt-[200px] pb-[173px]">
           <div className="bg-white w-[1050px] h-[492px] rounded-[15px] flex items-center text-center shadow-md">
-            <div className="place-items-center absolute top-11 left-1/2  pt-[120px]">
+            <div className="place-items-center absolute top-11 left-1/2  pt-[50px]">
               <Image
                 src={TandaTanya}
                 alt="gambar not found"
