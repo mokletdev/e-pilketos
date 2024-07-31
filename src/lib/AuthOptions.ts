@@ -69,11 +69,11 @@ export const authOptions: AuthOptions = {
 
           if (!findUser) return null;
 
-          // const ComparePassword = compareSync(
-          //   credentials?.password as string,
-          //   findUser.User_Auth?.password as string,
-          // );
-          // if (!ComparePassword) return null;
+          const ComparePassword = compareSync(
+            credentials?.password as string,
+            findUser.User_Auth?.password as string,
+          );
+          if (!ComparePassword) return null;
           const pass =
             (credentials?.password as string,
             findUser.User_Auth?.password as string);

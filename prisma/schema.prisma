@@ -7,7 +7,7 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-enum role {
+enum Role {
   SISWA
   GURU
   ADMIN
@@ -26,7 +26,7 @@ model User {
   email               String               @unique
   name                String
   user_pic            String?
-  role                role
+  role                Role
   Candidates          Candidates?
   User_vote           User_vote?
   vote_session_access vote_session_access?
@@ -34,19 +34,26 @@ model User {
 }
 
 model Candidates {
-  id            String     @id @default(uuid()) @map("id") @db.Char(36)
+  id            String       @id @default(uuid()) @map("id") @db.Char(36)
   img           String
   name          String
   kelas         String?
   visi          String
   misi          String
-  pengalaman    String
+  pengalaman    Pengalaman[]
   motto         String
   progja        String
-  video_profile String
-  user_Id       String     @unique
-  user          User       @relation(fields: [user_Id], references: [id])
+  video_profile String?
+  user_Id       String       @unique
+  user          User         @relation(fields: [user_Id], references: [id])
   User_vote     User_vote?
+}
+
+model Pengalaman {
+  id           String      @id @default(uuid()) @map("id") @db.Char(36)
+  desc         String
+  Candidates   Candidates? @relation(fields: [candidatesId], references: [id])
+  candidatesId String?     @db.Char(36)
 }
 
 model Vote_session {
