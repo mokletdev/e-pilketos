@@ -2,14 +2,17 @@ import client from "@/lib/prisma";
 import { Prisma } from "@prisma/client";
 
 export const getAllCandidates = async () => {
-  return await client.candidates.findMany();
+  return await client.candidates.findMany({
+    include: { pengalaman: true, User_vote: true },
+  });
 };
 
 export const getCandidates = async (id: string) => {
-  return await client.candidates.findUnique({
+  return await client.candidates.findFirst({
     where: {
       id: id,
     },
+    include: { pengalaman: true },
   });
 };
 
@@ -60,3 +63,7 @@ export const getAllCandidatesByVoteSession = async (
     },
   });
 };
+
+export type getCandidatesPayload = Prisma.CandidatesGetPayload<{
+  include: { pengalaman: true };
+}>;

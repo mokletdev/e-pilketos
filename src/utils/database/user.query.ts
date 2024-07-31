@@ -1,9 +1,13 @@
 import client from "@/lib/prisma";
 import { Prisma } from "@prisma/client";
 
-export const getAllUser = async () => {
-  return await client.user.findMany();
+export const getAllUser = async (filter?: Prisma.UserWhereInput) => {
+  return await client.user.findMany({
+    where: filter,
+    include: { User_Auth: { select: { last_login: true, password: true } } },
+  });
 };
+
 export const getAllUserAuth = async () => {
   return await client.user_Auth.findMany();
 };
@@ -76,3 +80,11 @@ export const UserbyVoteSession = async (id_session: string) => {
     },
   });
 };
+
+export type userLastLoginPayload = Prisma.UserGetPayload<{
+  include: { User_Auth: { select: { last_login: true; password?: true } } };
+}>;
+
+export type CandidatesPayload = Prisma.CandidatesGetPayload<{
+  include: { pengalaman: { select: { desc: true } } };
+}>;

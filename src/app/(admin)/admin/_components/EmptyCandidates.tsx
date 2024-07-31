@@ -6,7 +6,7 @@ import TandaTanya from "@/../public/images/TandaTanyaIcon.png";
 export default function EmptyCandidates() {
   return (
     <>
-      <div className="bg-red-light-6 w-full h-full">
+      <div className="bg-red-light-6 w-full h-full max-h-screen">
         <div className="flex items-center justify-center pt-[200px] pb-[173px]">
           <div className="bg-white w-[1050px] h-[492px] rounded-[15px] flex items-center text-center shadow-md">
             <div className="place-items-center absolute top-11 left-1/2  pt-[50px]">
