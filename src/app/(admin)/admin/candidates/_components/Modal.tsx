@@ -1,11 +1,12 @@
+// components/Modal.tsx
 "use client";
 import { FormButton } from "@/app/components/general/Button";
-import { TextArea, TextField } from "@/app/components/general/Input";
+import { TextArea, TextField, SelectField } from "@/app/components/general/Input"; // Add SelectField
 import { AddModal } from "@/app/components/general/Modal";
 import { Medium_Text } from "@/app/components/general/Text";
 import PlusAddIcon from "@/app/components/Icons/PlusAddIcon";
 import XIcon from "@/app/components/Icons/XIcon";
-import { updateCandidatesById } from "@/utils/database/getServerSession";
+import { getAllVoteSession } from "@/utils/database/voteSession.query"; // Adjust the import path as needed
 import { CandidatesPayload } from "@/utils/database/user.query";
 import { Pengalaman } from "@prisma/client";
 import clsx from "clsx";
@@ -14,10 +15,22 @@ import React, {
   Dispatch,
   FormEvent,
   SetStateAction,
+  useEffect, // Add useEffect
   useState,
 } from "react";
 import toast from "react-hot-toast";
-// !candidates
+import { updateCandidatesById } from "@/utils/database/getServerSession";
+
+// Define the type for the vote session
+type VoteSession = {
+  id: string;
+  title: string;
+  openedAt: Date;
+  closeAt: Date;
+  isPublic: boolean;
+  max_vote: number;
+};
+
 export default function Modal({
   setIsOpenModal,
   data,
@@ -27,6 +40,16 @@ export default function Modal({
 }) {
   const [pengalaman, setPengalaman] = useState<Pengalaman[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [voteSessions, setVoteSessions] = useState<VoteSession[]>([]); // Add state for vote sessions
+
+  useEffect(() => {
+    async function fetchVoteSessions() {
+      const sessions = await getAllVoteSession();
+      setVoteSessions(sessions);
+    }
+
+    fetchVoteSessions();
+  }, []);
 
   const addPengalaman = () => {
     setPengalaman([...pengalaman, { desc: "", id: "", candidatesId: "" }]);
@@ -118,6 +141,15 @@ export default function Modal({
             />
           </div>
         </div>
+        <SelectField
+          label="Vote Session"
+          name="voteSessionId"
+          options={voteSessions.map((session) => ({
+            value: session.id,
+            label: session.title,
+          }))}
+          required
+        />
         <p className="mb-3">Pengalaman</p>
         {pengalaman.map((peng, index) => (
           <div key={index} className="flex items-center gap-x-3">
