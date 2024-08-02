@@ -1,20 +1,13 @@
 "use client";
 import { FormButton } from "@/app/components/general/Button";
-import {
-  SelectField,
-  TextArea,
-  TextField,
-} from "@/app/components/general/Input";
+import { TextArea, TextField } from "@/app/components/general/Input";
 import { AddModal } from "@/app/components/general/Modal";
 import { Medium_Text } from "@/app/components/general/Text";
 import PlusAddIcon from "@/app/components/Icons/PlusAddIcon";
 import XIcon from "@/app/components/Icons/XIcon";
 import { updateCandidatesById } from "@/utils/database/getServerSession";
-import {
-  CandidatesPayload,
-  userLastLoginPayload,
-} from "@/utils/database/user.query";
-import { Pengalaman, Role } from "@prisma/client";
+import { CandidatesPayload } from "@/utils/database/user.query";
+import { Pengalaman } from "@prisma/client";
 import clsx from "clsx";
 import React, {
   ChangeEvent,
@@ -24,7 +17,6 @@ import React, {
   useState,
 } from "react";
 import toast from "react-hot-toast";
-import { v4 } from "uuid";
 // !candidates
 export default function Modal({
   setIsOpenModal,

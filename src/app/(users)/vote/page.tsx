@@ -1,5 +1,5 @@
 "use client";
-// ! DO NOT EDIT THIS CODE
+// ! DO NOT EDIT THIS CODE  
 import SectionsGap from "@/app/components/general/SectionsGap";
 import Image from "next/image";
 import React, {
