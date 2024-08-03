@@ -1,7 +1,11 @@
 // components/Modal.tsx
 "use client";
 import { FormButton } from "@/app/components/general/Button";
-import { TextArea, TextField, SelectField } from "@/app/components/general/Input"; // Add SelectField
+import {
+  TextArea,
+  TextField,
+  SelectField,
+} from "@/app/components/general/Input"; // Add SelectField
 import { AddModal } from "@/app/components/general/Modal";
 import { Medium_Text } from "@/app/components/general/Text";
 import PlusAddIcon from "@/app/components/Icons/PlusAddIcon";
@@ -94,7 +98,7 @@ export default function Modal({
   return (
     <AddModal type="Tambah Kandidat" onClose={() => setIsOpenModal(false)}>
       <form onSubmit={HandleSubmit} className="pb-4">
-        <div className="grid lg:grid-cols-2 grid-cols-1 gap-x-7">
+        <div className="grid xl:grid-cols-2 grid-cols-1 gap-x-7">
           <div>
             <TextField
               variant="Rounded-sm"
