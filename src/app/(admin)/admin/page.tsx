@@ -1,6 +1,19 @@
-import { redirect } from "next/navigation";
-import React from "react";
+"use client";
+import { useSession } from "next-auth/react";
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 
-export default function page() {
-  redirect("/authAdmin/login");
+export default function Page() {
+  const { data: session } = useSession();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (session?.user?.role == "ADMIN") {
+      router.push("/admin/dashboard");
+    } else {
+      router.push("/authAdmin/login");
+    }
+  }, [session, router]);
+
+  return null;
 }

@@ -1,14 +1,9 @@
 "use server";
-
-import { getServerSession, Session } from "next-auth";
 import {
   createUser,
   deleteUser,
   findUser,
-  getAllUser,
-  getUser,
   updateUser,
-  userLastLoginPayload,
 } from "./user.query";
 import { revalidatePath } from "next/cache";
 import { Role } from "@prisma/client";

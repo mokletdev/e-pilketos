@@ -1,10 +1,6 @@
 "use client";
-import { FormButton } from "@/app/components/general/Button";
-import { H1, H5, Large_Text, Medium_Text } from "@/app/components/general/Text";
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
-import fotoKandidat from "@/../public/images/FotoKandidat.png";
-import PlusIcon from "@/app/components/Icons/PlusIcon";
 import Trash from "@/../public/images/TrashIcon.png";
 import Edit from "@/../public/images/EditIcon.png";
 import AddCandidates from "./AddCandidates";
