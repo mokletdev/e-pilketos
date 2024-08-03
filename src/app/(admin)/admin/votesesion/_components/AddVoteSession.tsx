@@ -1,3 +1,4 @@
+// src/app/(admin)/admin/votesesion/_components/AddVoteSession.tsx
 "use client";
 
 import { useState } from "react";
@@ -11,7 +12,7 @@ export default function AddVoteSession() {
       {showModalCreate && <VoteSessionModal setIsOpenModal={setShowModalCreate} />}
       <button
         onClick={() => setShowModalCreate(true)}
-        className="inline-block w-fit rounded-full bg-primary-400 px-6 py-3 transition-all duration-500 hover:bg-primary-200"
+        className="inline-block w-fit rounded-full bg-red-400 px-6 py-3 transition-all duration-500 hover:bg-primary-200"
       >
         <span className="text-base text-white">
           <div className="flex items-center">
