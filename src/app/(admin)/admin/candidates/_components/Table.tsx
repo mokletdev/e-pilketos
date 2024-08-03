@@ -46,12 +46,14 @@ export default function CandidatesTable({
       cell: (row) => (
         <div className="flex gap-x-3">
           <button
+            title="Button"
             onClick={() => EditDataCandidates(row)}
             className="p-[8px] bg-[#D0F0FD] text-white rounded-md hover:ring hover:ring-[#D0F0FD] duration-300"
           >
             <Image src={Edit} alt="edit" />
           </button>
           <button
+            title="Button"
             onClick={() => DeteleDataCandidates(row.id)}
             className="p-[8px] bg-red-light-4 text-white rounded-md ml-2 hover:ring hover:ring-red-light-4 duration-300"
           >
@@ -84,9 +86,6 @@ export default function CandidatesTable({
   if (loader) return <div>Loading</div>;
   return (
     <>
-      <div className="flex w-full justify-end">
-        <AddCandidates />
-      </div>
       <div>{data.length === 0 && <EmptyCandidates />}</div>
 
       <section
@@ -95,8 +94,18 @@ export default function CandidatesTable({
         {modal && <Modal data={dataCandidate} setIsOpenModal={setModal} />}
       </section>
       {data.length !== 0 && (
-        <DataTable columns={columns} data={data} pagination highlightOnHover />
+        <div className="z-0">
+          <DataTable
+            columns={columns}
+            data={data}
+            pagination
+            highlightOnHover
+          />
+        </div>
       )}
+      <div className="flex w-full justify-center mt-4">
+        <AddCandidates />
+      </div>
     </>
   );
 }

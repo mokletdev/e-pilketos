@@ -1,6 +1,7 @@
 import React from "react";
 import Progress from "@/app/components/general/Progress";
 import { H3, H4, Medium_Text } from "@/app/components/general/Text";
+import ProgessCard from "./_components/ProgessCard";
 
 import { getAllUser, userLastLoginPayload } from "@/utils/database/user.query";
 import UserTable from "./_components/Table";
@@ -23,54 +24,18 @@ export default async function Dashboard() {
 
   return (
     <main className="h-full overflow-x-hidden">
-      <div className="w-full bg-red-light-6 gap-x-[28px] grid grid-cols-2 grid-rows-1">
-        <div className="w-full h-[219px] bg-white rounded-[10px] shadow-md mt-[28px]">
-          <div className="flex py-[28px] px-[64px] justify-between">
-            <div className="grid grid-row">
-              <H3>Total Vote</H3>
-              <H4 className="">Siswa</H4>
-              <Medium_Text
-                variant="REGULAR"
-                className="text-secondary-text-color"
-              >
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-              </Medium_Text>
-            </div>
-            <Progress percent={80} />
-          </div>
-        </div>
-        <div className="w-full h-[219px] bg-white rounded-[10px] shadow-md mt-[28px]">
-          <div className="flex py-[28px] px-[64px] justify-between">
-            <div className="grid grid-row">
-              <H3>Total Vote</H3>
-              <H4 className="">Guru</H4>
-              <Medium_Text
-                variant="REGULAR"
-                className="text-secondary-text-color"
-              >
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-              </Medium_Text>
-            </div>
-            <Progress percent={80} />
-          </div>
-        </div>
+      <div className="w-full bg-red-light-6 gap-x-[28px] flex flex-col xl:flex-row">
+        <ProgessCard target="Siswa" percent={80}>
+          Lorem ipsum dolor sit amet consectetur adipisicing elit.
+        </ProgessCard>
+        <ProgessCard target="Guru" percent={80}>
+          Lorem ipsum dolor sit amet consectetur adipisicing elit.
+        </ProgessCard>
       </div>
       <div className="mt-[28px] pb-[52px]">
-        <div className="w-full h-[219px] bg-white rounded-[10px] shadow-md mt-[28px]">
-          <div className="flex py-[28px] px-[64px] justify-between">
-            <div className="grid grid-row">
-              <H3>Total Vote</H3>
-              <H4 className="">Semua</H4>
-              <Medium_Text
-                variant="REGULAR"
-                className="text-secondary-text-color"
-              >
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-              </Medium_Text>
-            </div>
-            <Progress percent={80} />
-          </div>
-        </div>
+        <ProgessCard target="Semua" percent={80}>
+          Lorem ipsum dolor sit amet consectetur adipisicing elit.
+        </ProgessCard>
       </div>
       <UserTable
         roles="Admin"

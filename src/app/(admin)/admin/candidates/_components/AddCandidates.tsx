@@ -13,7 +13,7 @@ export default function AddCandidates() {
       {showModal && <Modal setIsOpenModal={setShowModal} />}
       <FormButton
         variant="PRIMARY"
-        className="flex gap-x-3 items-center -mt-12"
+        className="flex gap-x-3 items-center"
         onClick={() => setShowModal(true)}
       >
         <PlusIcon />

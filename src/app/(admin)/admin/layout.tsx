@@ -15,7 +15,7 @@ export default function MainLayout({
   return (
     <>
       <main className="bg-red-light-6">
-        <div className="xl:ml-80">
+        <div className="lg:ml-80">
           <Sidebar />
           <div className="px-[28px]">
             <div className="max-w-full w-full py-6">

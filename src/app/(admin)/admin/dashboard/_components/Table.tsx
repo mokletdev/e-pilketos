@@ -53,12 +53,14 @@ export default function UserTable({
       cell: (row) => (
         <div className="flex gap-x-3">
           <button
+            title="Button"
             onClick={() => EditDataUser(row)}
             className="p-[8px] bg-[#D0F0FD] text-white rounded-md hover:ring hover:ring-[#D0F0FD] duration-300"
           >
             <Image src={Edit} alt="edit" />
           </button>
           <button
+            title="Button"
             onClick={() => DeteleDataUser(row.id)}
             className="p-[8px] bg-red-light-4 text-white rounded-md ml-2 hover:ring hover:ring-red-light-4 duration-300"
           >
@@ -92,7 +94,7 @@ export default function UserTable({
 
   return (
     <>
-      <div className="flex justify-between items-center mb-[36px]">
+      <div className="flex justify-between items-center mb-[36px] flex-col gap-4 text-center xl:text-start xl:flex-row ">
         <div>
           <H5>User Management | Data {roles}</H5>
           <Medium_Text variant="REGULAR" className="text-secondary-text-color">
