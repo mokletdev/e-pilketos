@@ -118,4 +118,98 @@ export const createVoteSession = async (data: {
       return null;
     }
   }
-  
+
+  export const deleteVoteSession = async (id: string) => {
+    try {
+      await client.vote_session.delete({
+        where: {
+          id,
+        },
+      });
+      return true;
+    } catch (error) {
+      console.error((error as Error).message);
+      return false;
+    }
+  };
+
+    export const getVoteSession = async (id: string) => {
+        try {
+        const voteSession = await client.vote_session.findFirst({
+            where: {
+            id,
+            },
+        });
+        return voteSession;
+        } catch (error) {
+        console.error((error as Error).message);
+        return null;
+        }
+    };
+
+    export const getVoteSessionByTitle = async (title: string) => {
+        try {
+        const voteSession = await client.vote_session.findFirst({
+            where: {
+            title,
+            },
+        });
+        return voteSession;
+        } catch (error) {
+        console.error((error as Error).message);
+        return null;
+        }
+    };  
+
+    export const getVoteSessionByDate = async (date: Date) => {
+        try {
+        const voteSession = await client.vote_session.findFirst({
+            where: {
+            openedAt: date,
+            },
+        });
+        return voteSession;
+        } catch (error) {
+        console.error((error as Error).message);
+        return null;
+        }
+    };
+
+    export const getVoteSessionByPublic = async (isPublic: boolean) => {
+        try {
+        const voteSession = await client.vote_session.findFirst({
+            where: {
+            isPublic,
+            },
+        });
+        return voteSession;
+        } catch (error) {
+        console.error((error as Error).message);
+        return null;
+        }
+    };
+
+    export const UpdateVoteSession = async (id: string, data: {
+        name: string;
+        start_time: Date;
+        end_time: Date;
+        isPublic: boolean;
+        max_vote: number;
+      }) => {
+        try {
+          const voteSession = await client.vote_session.update({
+            where: { id },
+            data: {
+              title: data.name,
+              openedAt: data.start_time,
+              closeAt: data.end_time,
+              isPublic: data.isPublic,
+              max_vote: data.max_vote,
+            },
+          });
+          return voteSession;
+        } catch (error) {
+          console.error((error as Error).message);
+          return null;
+        }
+      }
