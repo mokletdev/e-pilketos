@@ -33,23 +33,24 @@ export default function AdminLogin() {
         password: data.password,
       });
 
-      if (!response?.ok && response?.status === 401) {
-        console.log(response);
-
-        toast.error("Login Gagal");
-        setError("Akun Tidak Terdaftar Sebagai Admin E-Pilketos");
-      }
       if (!response?.ok) {
-        console.log(response);
         toast.error("Login Gagal");
         setError("Gagal Login");
       }
+      if (response?.status === 401) {
+        console.log(response);
+        toast.error("Login Gagal");
+        setError("Akun Tidak Terdaftar Sebagai Admin E-Pilketos");
+      }
 
       if (response?.ok) {
-        if (session?.user?.role === "ADMIN") {
+        if (
+          (session && session?.user?.role === "ADMIN") ||
+          (session && session?.user?.role === "GURU")
+        ) {
           toast.success("Login Berhasil");
           router.push("/admin/dashboard");
-        } else {
+        } else if (session && session?.user?.role === "SISWA") {
           toast.error("Login Gagal");
           setError("Akun Tidak Terdaftar Sebagai Admin E-Pilketos");
         }
