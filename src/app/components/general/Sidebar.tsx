@@ -1,20 +1,61 @@
 "use client";
 import React from "react";
-
-import LogoMPK from "@/../public/images/LogoMPK.png";
+import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { Large_Text, Medium_Text } from "./Text";
+
+import LogoMPK from "@/../public/images/LogoMPK.png";
+import { Large_Text } from "./Text";
 import DashboardIcon from "../Icons/DashboardIcon";
 import KandidatIcon from "../Icons/KandidatIcon";
 import LiveCountIcon from "../Icons/LiveCountIcon";
 import HasilVote from "../Icons/HasilVote";
 import LaporanExcelIcon from "../Icons/LaporanExcelIcon";
 import { signOut } from "next-auth/react";
+import { title } from "node:process";
+
+interface SidebarProps {
+  title: string;
+  href: string;
+  click?: () => void;
+}
 
 export default function Sidebar() {
+  const [modal, setModal] = useState(false);
+
+  const handleClick = () => {
+    setModal(!modal);
+  };
+
+  const link: SidebarProps[] = [
+    {
+      title: "Dashboard",
+      href: "/admin/dashboard",
+    },
+    {
+      title: "Kandidat",
+      href: "/admin/candidates",
+    },
+    {
+      title: "Live Count",
+      href: "/admin/liveCount",
+    },
+    {
+      title: "Hasil Vote",
+      href: "/admin/hasilVote",
+    },
+    {
+      title: "Laporan Excel",
+      href: "/admin",
+    },
+    {
+      title: "Log Out",
+      href: "",
+      click: () => signOut({ callbackUrl: "/authAdmin/login" }),
+    },
+  ];
   return (
-    <div className="block w-80">
+    <div className="lg:block lg:w-80 relative">
       <aside
         id="sidebar"
         className={`fixed left-0 bg-white top-0 z-20 h-full flex-shrink-0 transition-all duration-300 lg:w-80 lg:opacity-100 hidden lg:flex`}
@@ -140,6 +181,61 @@ export default function Sidebar() {
           </div>
         </div>
       </aside>
+      <button
+        title="Hamburger"
+        onClick={handleClick}
+        className="p-4 bg-white rounded-xl fixed z-50 top-0 shadow-shadow-2 m-4 focus:ring-0 outline-none lg:hidden"
+      >
+        <svg
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <g id="vuesax/linear/menu">
+            <g id="menu">
+              <path
+                id="Vector"
+                d="M3 7H21"
+                stroke="#111928"
+                strokeWidth="1.2"
+                strokeLinecap="round"
+              />
+              <path
+                id="Vector_2"
+                d="M3 12H21"
+                stroke="#111928"
+                strokeWidth="1.2"
+                strokeLinecap="round"
+              />
+              <path
+                id="Vector_3"
+                d="M3 17H21"
+                stroke="#111928"
+                strokeWidth="1.2"
+                strokeLinecap="round"
+              />
+            </g>
+          </g>
+        </svg>
+      </button>
+      {modal && (
+        <div className="left-4 lg:hidden fixed z-50 top-24">
+          <ul className="p-4 bg-white rounded-xl shadow-shadow-2 space-y-4">
+            {link.map((item, index) => (
+              <li
+                key={index}
+                className="hover:bg-primary-color hover:text-white text-center rounded-full ease-in-out duration-500 block p-2"
+              >
+                <button title={item.title} onClick={item.click}>
+                  <Link href={item.href}>{item.title}</Link>
+                </button>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
     </div>
   );
 }

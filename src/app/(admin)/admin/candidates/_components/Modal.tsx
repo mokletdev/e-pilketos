@@ -94,7 +94,7 @@ export default function Modal({
   return (
     <AddModal type="Tambah Kandidat" onClose={() => setIsOpenModal(false)}>
       <form onSubmit={HandleSubmit} className="pb-4">
-        <div className="grid grid-cols-2 gap-x-7">
+        <div className="grid lg:grid-cols-2 grid-cols-1 gap-x-7">
           <div>
             <TextField
               variant="Rounded-sm"
@@ -165,6 +165,7 @@ export default function Modal({
               value={peng.desc}
             />
             <button
+              title="Button"
               type="button"
               className={clsx(
                 "px-4 py-1.5 bg-primary-color border-2 mt-7 border-primary-color text-white rounded-[8px] group",
@@ -178,6 +179,7 @@ export default function Modal({
           </div>
         ))}
         <button
+          title="Button"
           className={clsx(
             "px-4 py-1.5 bg-primary-color border-2 border-primary-color text-white rounded-[8px] group",
             "transition-all duration-300 ease-in-out",
@@ -188,7 +190,7 @@ export default function Modal({
         >
           <PlusAddIcon />
         </button>
-        <div className="grid grid-cols-2 gap-x-7">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-x-7">
           <TextArea label="Visi" name="visi" value={data?.visi} required />
           <TextArea label="Misi" name="misi" value={data?.misi} required />
         </div>
