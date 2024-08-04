@@ -1,5 +1,5 @@
 import React from "react";
 
 export default function HasilVote() {
-  return <></>;
+  return <main></main>;
 }

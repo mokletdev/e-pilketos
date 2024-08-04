@@ -22,7 +22,8 @@ export default function AccessDenied() {
                 variant="REGULAR"
                 className="text-secondary-text-color mt-[18px]"
               >
-                Anda sebagai user tidak memiliki akses membuka ke halaman admin
+                Anda sebagai user tidak memiliki akses membuka ke halaman
+                tersebut
               </Large_Text>
             </div>
           </div>
