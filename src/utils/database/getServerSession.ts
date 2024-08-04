@@ -1,10 +1,5 @@
 "use server";
-import {
-  createUser,
-  deleteUser,
-  findUser,
-  updateUser,
-} from "./user.query";
+import { createUser, deleteUser, findUser, updateUser } from "./user.query";
 import { revalidatePath } from "next/cache";
 import { Role } from "@prisma/client";
 import client from "@/lib/prisma";
@@ -16,6 +11,8 @@ import {
 } from "./candidates.query";
 import { hash } from "bcrypt";
 import { nextGetServerSession } from "@/lib/AuthOptions";
+import { createVoteSession, UpdateVoteSession } from "./voteSession.query";
+import { title } from "process";
 
 export const deleteUserById = async (id: string) => {
   try {
@@ -117,39 +114,34 @@ export const deleteCandidatesById = async (id: string) => {
   }
 };
 
-export const updateCandidatesById = async (
-  candidate_id: string,
-  data: FormData,
-) => {
+export const updateCandidatesById = async (id: string, data: FormData) => {
   try {
     const name = data.get("candidatesName") as string;
     const img = data.get("img") as string;
-    const kelas = data.get("kelas") as string;
+    const kelas = data.get("kelas") as string | null;
     const visi = data.get("visi") as string;
     const misi = data.get("misi") as string;
-    const pengalaman = JSON.parse(
-      (data.get("pengalaman") as string) || "[]",
-    ) as string[];
+    const pengalaman = JSON.parse(data.get("pengalaman") as string) as {
+      desc: string;
+    }[];
     const motto = data.get("motto") as string;
     const progja = data.get("progja") as string;
-    const video_profile = data.get("video_profile") as string;
+    const video_profile = data.get("video_profile") as string | null;
 
-    // Check if candidate exists
-    const findCandidatesById = await getCandidates(candidate_id);
-    const user = await findUser({ id: candidate_id });
+    const existingCandidate = await getCandidates(id);
 
-    // if (!user) {
-    //   throw new Error("User not found");
-    // }
+    const session = await nextGetServerSession();
+    const userId = session?.user?.id;
+    const user = await findUser({ id: userId?.toString() });
 
-    if (!findCandidatesById) {
+    if (!id) {
       const create = await createCandidate({
         img,
         misi,
         motto,
         name,
         pengalaman: {
-          create: pengalaman.map((desc) => ({ desc })),
+          create: pengalaman,
         },
         progja,
         video_profile,
@@ -158,47 +150,97 @@ export const updateCandidatesById = async (
         user: { connect: { id: user?.id } },
       });
       if (!create) throw new Error("Create Candidate failed");
-      revalidatePath("/admin/candidates");
-      return { message: "Success to Create Candidate!", error: false };
-    } else {
-      const pengalamanToDisconnect =
-        findCandidatesById.pengalaman.filter(
-          (existingPengalaman) => !pengalaman.includes(existingPengalaman.desc),
-        ) || [];
 
-      const update = await updateCandidate(candidate_id, {
-        img: img ?? findCandidatesById.img,
-        misi: misi ?? findCandidatesById.misi,
-        motto: motto ?? findCandidatesById.motto,
-        name: name ?? findCandidatesById.name,
+      revalidatePath("/admin/candidates");
+      return {
+        message: "Success to Create Candidate!",
+        error: false,
+        data: create,
+      };
+    } else {
+      const pengalamanToDisconnect = existingCandidate?.pengalaman;
+
+      const pengalamanToConnectOrCreate = pengalaman.map((p) => ({
+        desc: p.desc,
+      }));
+      // .map((p) => {
+      //   const existingPengalaman = existingCandidate?.pengalaman;
+      //   return {
+      //     where: { id: existingPengalaman ? existingPengalaman : "" },
+      //     create: { desc: p.desc, candidatesId: id },
+      //   };
+      // })
+      // .filter((item) => item.where.id !== "");
+
+      const update = await updateCandidate(id, {
+        img: img ?? existingCandidate?.img,
+        misi: misi ?? existingCandidate?.misi,
+        motto: motto ?? existingCandidate?.motto,
+        name: name ?? existingCandidate?.name,
         pengalaman: {
-          connectOrCreate: pengalaman.map((desc) => ({
-            where: {
-              id: findCandidatesById.pengalaman.find((p) => p.desc === desc)
-                ?.id,
-            },
-            create: {
-              desc,
-              candidatesId: candidate_id,
-            },
-          })),
-          disconnect: pengalamanToDisconnect.map((pengalaman) => ({
-            id: pengalaman.id,
-          })),
+          create: pengalamanToConnectOrCreate,
+          disconnect: pengalamanToDisconnect?.map((p) => ({ id: p.id })),
         },
-        progja: progja ?? findCandidatesById.progja,
-        video_profile: video_profile ?? findCandidatesById.video_profile,
-        visi: visi ?? findCandidatesById.visi,
-        kelas: kelas ?? findCandidatesById.kelas,
+        progja: progja ?? existingCandidate?.progja,
+        video_profile: video_profile ?? existingCandidate?.video_profile,
+        visi: visi ?? existingCandidate?.visi,
+        kelas: kelas ?? existingCandidate?.kelas,
       });
       if (!update) throw new Error("Update Candidate failed");
+
       revalidatePath("/admin/candidates");
       return { message: "Success to Update Candidate!", error: false };
     }
   } catch (error) {
-    console.error((error as Error).message);
+    console.error("Error updating candidate:", (error as Error).message);
     return {
       message: "Failed to Update Candidate",
+      error: true,
+    };
+  }
+};
+
+export const upsertVoteSession = async (id: string | null, data: FormData) => {
+  try {
+    const session = await nextGetServerSession();
+    if (!session?.user?.role.includes("ADMIN"))
+      return { error: true, message: "Unauthorized" };
+
+    const title = data.get("title") as string;
+    const start_time = new Date(data.get("start_time") as string);
+    const end_time = new Date(data.get("end_time") as string);
+    const isPublic = data.get("is_active") === "true";
+    const max_vote = parseInt(data.get("max_vote") as string, 10);
+
+    if (id == null) {
+      await createVoteSession({
+        id: id ?? "",
+        title: title,
+        openedAt: start_time,
+        closeAt: end_time,
+        isPublic,
+        max_vote,
+      });
+    } else {
+      await UpdateVoteSession(id, {
+        id: id ?? "",
+        title,
+        openedAt: start_time,
+        closeAt: end_time,
+        isPublic,
+        max_vote,
+      });
+    }
+
+    revalidatePath("/admin/votesesion");
+    return { message: "Vote session saved successfully!", error: false };
+  } catch (e) {
+    console.error(e);
+    const error = (e as Error).message;
+    console.log(error);
+
+    return {
+      message: "Failed to save vote session",
       error: true,
     };
   }

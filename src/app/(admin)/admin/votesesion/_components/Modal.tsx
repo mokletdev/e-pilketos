@@ -1,60 +1,60 @@
 "use client";
 import { FormButton } from "@/app/components/general/Button";
-import { TextArea, TextField } from "@/app/components/general/Input"; // No need for SelectField here
+import {
+  SelectField,
+  TextArea,
+  TextField,
+} from "@/app/components/general/Input"; // No need for SelectField here
 import { AddModal } from "@/app/components/general/Modal";
 import { Medium_Text } from "@/app/components/general/Text";
 import { CandidatesPayload } from "@/utils/database/user.query";
-import clsx from "clsx";
-import React, { Dispatch, FormEvent, SetStateAction, useEffect, useState } from "react";
+import React, {
+  ChangeEvent,
+  Dispatch,
+  FormEvent,
+  SetStateAction,
+  useEffect,
+  useState,
+} from "react";
 import toast from "react-hot-toast";
-import { upsertVoteSession } from "@/utils/database/voteSession.query"; // Adjust the import path as needed
-
-type VoteSessionPayload = {
-  id?: string; // Optional for new sessions
-  title: string;
-  openedAt: Date;
-  closeAt: Date;
-  isPublic: boolean;
-  maxVote: number;
-};
+import { VoteSessionGeneralPayload } from "@/utils/database/voteSession.query";
+import { upsertVoteSession } from "@/utils/database/getServerSession";
 
 export default function VoteSessionModal({
   setIsOpenModal,
   data,
 }: {
   setIsOpenModal: Dispatch<SetStateAction<boolean>>;
-  data?: VoteSessionPayload | null; // Accept existing session data
+  data?: VoteSessionGeneralPayload | null;
 }) {
-  const [title, setTitle] = useState(data?.title || "");
-  const [openedAt, setOpenedAt] = useState(data?.openedAt || new Date());
-  const [closeAt, setCloseAt] = useState(data?.closeAt || new Date());
-  const [isPublic, setIsPublic] = useState(data?.isPublic || false);
-  const [maxVote, setMaxVote] = useState(data?.maxVote || 1);
+  // const [title, setTitle] = useState(data?.title || "");
+  // const [openedAt, setOpenedAt] = useState(data?.openedAt || new Date());
+  // const [closeAt, setCloseAt] = useState(data?.closeAt || new Date());
+  // const [maxVote, setMaxVote] = useState(data?.max_vote || 1);
 
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (
+    e: FormEvent<HTMLFormElement> | ChangeEvent<HTMLInputElement | any>,
+  ) => {
     e.preventDefault();
     setIsLoading(true);
     try {
       const toastId = toast.loading("Loading...");
-      const voteSessionData = {
-        id: data?.id, // Pass the ID for updates
-        title,
-        openedAt: openedAt.toISOString(),
-        closeAt: closeAt.toISOString(),
-        isPublic,
-        maxVote,
-      };
-      const result = await upsertVoteSession(voteSessionData);
-      
+      const formdata: any = new FormData(e.target);
+
+      const result = await upsertVoteSession(data?.id as string, formdata);
+      console.log(result);
+
       if (!result.error) {
         toast.success(result.message, { id: toastId });
-        setIsOpenModal(false); // Close modal on success
+        setIsOpenModal(false);
       } else {
+        console.log(result);
         toast.error(result.message, { id: toastId });
       }
     } catch (error) {
+      console.log((error as Error).message);
       toast.error((error as Error).message + ", Error");
     } finally {
       setIsLoading(false);
@@ -62,13 +62,17 @@ export default function VoteSessionModal({
   };
 
   return (
-    <AddModal type={data ? "Edit Vote Session" : "Add Vote Session"} onClose={() => setIsOpenModal(false)}>
+    <AddModal
+      type={data ? "Edit Vote Session" : "Add Vote Session"}
+      onClose={() => setIsOpenModal(false)}
+    >
       <form onSubmit={handleSubmit} className="pb-4">
         <TextField
           variant="Rounded-sm"
           label="Title"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
+          type="text"
+          name="title"
+          value={data?.title || ""}
           required
         />
         <div className="grid grid-cols-2 gap-x-7">
@@ -76,34 +80,37 @@ export default function VoteSessionModal({
             variant="Rounded-sm"
             type="datetime-local"
             label="Opened At"
-            value={openedAt.toISOString().slice(0, 16)} // Format for input
-            onChange={(e) => setOpenedAt(new Date(e.target.value))}
+            name="start_time"
+            value={data?.openedAt.toISOString().slice(0, 16)}
             required
           />
           <TextField
             variant="Rounded-sm"
             type="datetime-local"
             label="Close At"
-            value={closeAt.toISOString().slice(0, 16)} // Format for input
-            onChange={(e) => setCloseAt(new Date(e.target.value))}
+            name="end_time"
+            value={data?.closeAt.toISOString().slice(0, 16)}
             required
           />
         </div>
         <div className="flex items-center mb-4">
-          <input
-            type="checkbox"
-            checked={isPublic}
-            onChange={(e) => setIsPublic(e.target.checked)}
-            className="mr-2"
+          <SelectField
+            name="is_active"
+            className="mr-2 w-full"
+            label="Is Public"
+            options={[
+              { value: "true", label: "True" },
+              { value: "false", label: "False" },
+            ]}
+            value={data?.isPublic.toString()}
           />
-          <label className="text-sm">Is Public</label>
         </div>
         <TextField
           variant="Rounded-sm"
           type="number"
           label="Max Vote"
-          value={maxVote}
-          onChange={(e) => setMaxVote(Number(e.target.value))}
+          name="max_vote"
+          value={data?.max_vote.toString()}
           required
         />
         <div className="w-full flex gap-x-4">

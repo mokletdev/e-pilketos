@@ -23,7 +23,7 @@ export default function CandidatesTable({
 
   const columns: TableColumn<CandidatesPayload>[] = [
     {
-      name: "Name",
+      name: "No",
       cell: (row, i) => i + 1,
       sortable: false,
     },

@@ -1,9 +1,16 @@
 import client from "@/lib/prisma";
 import { Prisma } from "@prisma/client";
 
-export const getAllCandidates = async () => {
+export const getAllCandidates = async (
+  filter?: Prisma.CandidatesWhereInput,
+) => {
   return await client.candidates.findMany({
-    include: { pengalaman: true, User_vote: true },
+    where: filter,
+    include: {
+      pengalaman: true,
+      User_vote: { select: { vote_session: true } },
+      user: true,
+    },
   });
 };
 
@@ -12,13 +19,17 @@ export const getCandidates = async (id: string) => {
     where: {
       id: id,
     },
-    include: { pengalaman: true },
+    include: { pengalaman: true, user: true, User_vote: true },
   });
 };
 
 export const createCandidate = async (data: Prisma.CandidatesCreateInput) => {
   return await client.candidates.create({
     data: data,
+    include: {
+      pengalaman: true,
+      user: true,
+    },
   });
 };
 
@@ -67,3 +78,8 @@ export const getAllCandidatesByVoteSession = async (
 export type getCandidatesPayload = Prisma.CandidatesGetPayload<{
   include: { pengalaman: true };
 }>;
+
+export type getPengalamanCandidates = Prisma.PengalamanGetPayload<{}>;
+
+export type getCreatePengalamanCandidates =
+  Prisma.PengalamanCreateWithoutCandidatesInput;
