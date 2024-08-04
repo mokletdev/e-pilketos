@@ -2,39 +2,26 @@
 import { useEffect, useState } from "react";
 import DataTable, { TableColumn } from "react-data-table-component";
 import { FaPencilAlt, FaRegTrashAlt } from "react-icons/fa";
-import { toast } from "sonner";
-
-import { deleteVoteSessionById } from "../../../../../utils/database/voteSession.query"; // Adjust the import path as needed
+import {
+  deleteVoteSessionById,
+  VoteSessionGeneralPayload,
+} from "../../../../../utils/database/voteSession.query"; // Adjust the import path as needed
 import VoteSessionModal from "./Modal"; // Adjust the import path as needed
+import toast from "react-hot-toast";
+import AddVoteSession from "./AddVoteSession";
 
 export default function VoteSessionTable({
   data,
 }: {
-  data: {
-    id: string;
-    title: string;
-    openedAt: string;
-    closeAt: string;
-    isPublic: boolean;
-  }[];
+  data: VoteSessionGeneralPayload[];
 }) {
   const [loader, setLoader] = useState(true);
-  const [modalData, setModalData] = useState<{
-    id?: string;
-    title?: string;
-    openedAt?: string;
-    closeAt?: string;
-    isPublic?: boolean;
-  } | null>(null);
+  const [modalData, setModalData] = useState<VoteSessionGeneralPayload | null>(
+    null,
+  );
   const [isOpenModal, setIsOpenModal] = useState(false);
 
-  const columns: TableColumn<{
-    id: string;
-    title: string;
-    openedAt: string;
-    closeAt: string;
-    isPublic: boolean;
-  }>[] = [
+  const columns: TableColumn<VoteSessionGeneralPayload>[] = [
     {
       name: "Session Name",
       selector: (row) => row.title,
@@ -79,13 +66,7 @@ export default function VoteSessionTable({
     },
   ];
 
-  function editVoteSession(data: {
-    id: string;
-    title: string;
-    openedAt: string;
-    closeAt: string;
-    isPublic: boolean;
-  }) {
+  function editVoteSession(data: VoteSessionGeneralPayload) {
     setModalData(data);
     setIsOpenModal(true);
   }
@@ -105,10 +86,17 @@ export default function VoteSessionTable({
   if (loader) return <div>Loading</div>;
 
   return (
-    <div className="p-2 rounded-md bg-white">
-      {isOpenModal && (
-        <VoteSessionModal setIsOpenModal={setIsOpenModal} data={modalData} />
-      )}
+    <div>
+      <div className="flex w-full justify-end">
+        <AddVoteSession />
+      </div>
+      <section
+        className={`max-w-full w-full grid grid-cols-1 xl:grid-cols-2 gap-6 mb-20 `}
+      >
+        {isOpenModal && (
+          <VoteSessionModal setIsOpenModal={setIsOpenModal} data={modalData} />
+        )}
+      </section>
       <DataTable columns={columns} data={data} pagination highlightOnHover />
     </div>
   );

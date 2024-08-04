@@ -10,9 +10,12 @@ import { AddModal } from "@/app/components/general/Modal";
 import { Medium_Text } from "@/app/components/general/Text";
 import PlusAddIcon from "@/app/components/Icons/PlusAddIcon";
 import XIcon from "@/app/components/Icons/XIcon";
-import { getAllVoteSession } from "@/utils/database/voteSession.query"; // Adjust the import path as needed
+import {
+  getAllVoteSession,
+  VoteSessionGeneralPayload,
+} from "@/utils/database/voteSession.query"; // Adjust the import path as needed
 import { CandidatesPayload } from "@/utils/database/user.query";
-import { Pengalaman } from "@prisma/client";
+import { Pengalaman, Vote_session } from "@prisma/client";
 import clsx from "clsx";
 import React, {
   ChangeEvent,
@@ -24,16 +27,12 @@ import React, {
 } from "react";
 import toast from "react-hot-toast";
 import { updateCandidatesById } from "@/utils/database/getServerSession";
+import {
+  getCreatePengalamanCandidates,
+  getPengalamanCandidates,
+} from "@/utils/database/candidates.query";
 
 // Define the type for the vote session
-type VoteSession = {
-  id: string;
-  title: string;
-  openedAt: Date;
-  closeAt: Date;
-  isPublic: boolean;
-  max_vote: number;
-};
 
 export default function Modal({
   setIsOpenModal,
@@ -42,21 +41,24 @@ export default function Modal({
   setIsOpenModal: Dispatch<SetStateAction<boolean>>;
   data?: CandidatesPayload | null;
 }) {
-  const [pengalaman, setPengalaman] = useState<Pengalaman[]>([]);
+  const [pengalaman, setPengalaman] = useState<getCreatePengalamanCandidates[]>(
+    data?.pengalaman ?? [],
+  );
   const [isLoading, setIsLoading] = useState(false);
-  const [voteSessions, setVoteSessions] = useState<VoteSession[]>([]); // Add state for vote sessions
+  const [voteSessions, setVoteSessions] = useState<VoteSessionGeneralPayload[]>(
+    [],
+  );
 
   useEffect(() => {
     async function fetchVoteSessions() {
       const sessions = await getAllVoteSession();
       setVoteSessions(sessions);
     }
-
     fetchVoteSessions();
   }, []);
 
   const addPengalaman = () => {
-    setPengalaman([...pengalaman, { desc: "", id: "", candidatesId: "" }]);
+    setPengalaman([...pengalaman, { desc: "" }]);
   };
   const removePengalaman = (index: number) => {
     setPengalaman(pengalaman.filter((_, i) => i !== index));
@@ -64,8 +66,12 @@ export default function Modal({
 
   const handlePengalamanChange = (index: number, value: string) => {
     const newPengalaman = [...pengalaman];
-    newPengalaman[index] = { ...newPengalaman[index], desc: value };
-    setPengalaman(newPengalaman);
+    newPengalaman[index] = {
+      ...newPengalaman[index],
+      desc: value,
+    };
+    setPengalaman([...newPengalaman]);
+    console.log(newPengalaman);
   };
 
   const HandleSubmit = async (
@@ -73,6 +79,8 @@ export default function Modal({
   ) => {
     e.preventDefault();
     setIsLoading(true);
+    console.log(pengalaman);
+
     try {
       const formData = new FormData(e.target);
       formData.append("pengalaman", JSON.stringify(pengalaman));
@@ -148,11 +156,12 @@ export default function Modal({
         <SelectField
           label="Vote Session"
           name="voteSessionId"
+          value={data?.User_vote?.vote_session.title || ""}
           options={voteSessions.map((session) => ({
             value: session.id,
             label: session.title,
           }))}
-          required
+          // required
         />
         <p className="mb-3">Pengalaman</p>
         {pengalaman.map((peng, index) => (
@@ -165,7 +174,7 @@ export default function Modal({
               }
               label={`Pengalaman ${index + 1}`}
               className="w-full"
-              name="pengalaman"
+              name="isi_pengalaman"
               value={peng.desc}
             />
             <button

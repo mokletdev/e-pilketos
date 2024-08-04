@@ -19,7 +19,7 @@ interface InputProps {
 interface SelectFieldProps {
   label?: string;
   required?: boolean;
-  options: { value: string; label: string }[];
+  options: { value: string | boolean; label: string }[];
   className?: string;
   value?: string | Array<string>;
   name: string;
@@ -167,7 +167,7 @@ export function SelectField({
           Pilih
         </option>
         {options?.map((option, index) => (
-          <option value={option.value} key={index}>
+          <option value={option.value.toString()} key={index}>
             {option.label}
           </option>
         ))}
