@@ -54,6 +54,9 @@ export default function VoteSessionModal({
 
       const result = await upsertVoteSession(data?.id as string, formdata);
       console.log(result);
+      console.log(candidats);
+      console.log(data?.User_vote?.candidate_id);
+      console.log(data);
 
       if (!result.error) {
         toast.success(result.message, { id: toastId });
@@ -122,29 +125,47 @@ export default function VoteSessionModal({
           value={data?.max_vote.toString()}
           required
         />
+        <p className="mt-6">Kandidat</p>
         {candidates.map((can, index) => (
-          <div key={index} className="flex gap-x-3 items-center">
+          <div key={index} className="flex gap-x-3 items-center w-full">
             <SelectField
               name="select_candidates"
+              className="w-full"
               value={data?.User_vote?.candidate.id}
               options={candidats?.map((x, i) => ({
                 label: x.name,
                 value: x.id,
               }))}
             />
-            <FormButton
+            <button
               onClick={() => DeleteCandidates(index)}
               type="button"
-              variant="PRIMARY"
+              className="bg-primary-color group hover:bg-white rounded-full border-2 border-primary-color mt-3 mb-6 hover:border-primary-color p-2 duration-300"
             >
-              Delete
-            </FormButton>
+              <svg
+                className="w-6 h-6 text-white hover:text-primary-color "
+                aria-hidden="true"
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                fill="none"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke="currentColor"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M6 18 17.94 6M18 18 6.06 6"
+                />
+              </svg>
+            </button>
           </div>
         ))}
         <button
           onClick={() => AddCandidates()}
           type="button"
-          className="bg-primary-color group hover:bg-white rounded-sm p-4"
+          className="bg-primary-color group hover:bg-white rounded-full border-2 border-primary-color mt-3 mb-6 hover:border-primary-color p-2 duration-300"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
