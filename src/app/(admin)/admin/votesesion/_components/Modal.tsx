@@ -17,22 +17,31 @@ import React, {
   useState,
 } from "react";
 import toast from "react-hot-toast";
-import { VoteSessionGeneralPayload } from "@/utils/database/voteSession.query";
+import {
+  getCandidatesWhereVoteSessionInput,
+  VoteSessionWithCandidates,
+} from "@/utils/database/voteSession.query";
 import { upsertVoteSession } from "@/utils/database/getServerSession";
 
 export default function VoteSessionModal({
   setIsOpenModal,
   data,
+  candidats,
 }: {
   setIsOpenModal: Dispatch<SetStateAction<boolean>>;
-  data?: VoteSessionGeneralPayload | null;
+  data?: VoteSessionWithCandidates | null;
+  candidats?: CandidatesPayload[] | null;
 }) {
-  // const [title, setTitle] = useState(data?.title || "");
-  // const [openedAt, setOpenedAt] = useState(data?.openedAt || new Date());
-  // const [closeAt, setCloseAt] = useState(data?.closeAt || new Date());
-  // const [maxVote, setMaxVote] = useState(data?.max_vote || 1);
-
   const [isLoading, setIsLoading] = useState(false);
+  const [candidates, setCandidates] = useState<any[]>([]);
+
+  const AddCandidates = () => {
+    setCandidates([...candidates, ""]);
+  };
+
+  const DeleteCandidates = (index: number) => {
+    setCandidates(candidates?.filter((_, i) => i !== index));
+  };
 
   const handleSubmit = async (
     e: FormEvent<HTMLFormElement> | ChangeEvent<HTMLInputElement | any>,
@@ -113,6 +122,43 @@ export default function VoteSessionModal({
           value={data?.max_vote.toString()}
           required
         />
+        {candidates.map((can, index) => (
+          <div key={index} className="flex gap-x-3 items-center">
+            <SelectField
+              name="select_candidates"
+              value={data?.User_vote?.candidate.id}
+              options={candidats?.map((x, i) => ({
+                label: x.name,
+                value: x.id,
+              }))}
+            />
+            <FormButton
+              onClick={() => DeleteCandidates(index)}
+              type="button"
+              variant="PRIMARY"
+            >
+              Delete
+            </FormButton>
+          </div>
+        ))}
+        <button
+          onClick={() => AddCandidates()}
+          type="button"
+          className="bg-primary-color group hover:bg-white rounded-sm p-4"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            height="24"
+            viewBox="0 -960 960 960"
+            width="24"
+            fill="none"
+          >
+            <path
+              className="fill-white group-hover:fill-primary-color"
+              d="M440-440H200v-80h240v-240h80v240h240v80H520v240h-80v-240Z"
+            />
+          </svg>
+        </button>
         <div className="w-full flex gap-x-4">
           <FormButton
             onClick={() => setIsOpenModal(false)}

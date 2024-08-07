@@ -3,7 +3,10 @@ import { Prisma } from "@prisma/client";
 
 export const getAllVoteSession = async () => {
   try {
-    const voteSession = await client.vote_session.findMany();
+    const voteSession = await client.vote_session.findMany({
+      // select: { User_vote: { include: { candidate: true } } },
+      include: { User_vote: { include: { candidate: true } } },
+    });
     return voteSession;
   } catch (error) {
     console.error((error as Error).message);
@@ -221,7 +224,16 @@ export const UpdateVoteSession = async (
 };
 
 export type VoteSessionGeneralPayload = Prisma.Vote_sessionGetPayload<{}>;
+export type VoteSessionWithCandidates = Prisma.Vote_sessionGetPayload<{
+  include: {
+    Vote_session_candidate: true;
+    User_vote: { select: { candidate: true; candidate_id: true } };
+  };
+}>;
 
 export type VoteSessionWithUserVotePayload = Prisma.Vote_sessionGetPayload<{
   include: { User_vote: { select: { user: true } } };
 }>;
+
+export type getCandidatesWhereVoteSessionInput =
+  Prisma.CandidatesCreateWithoutUser_voteInput;

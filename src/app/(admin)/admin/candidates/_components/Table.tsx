@@ -84,8 +84,11 @@ export default function CandidatesTable({
     <>
       <div>{data.length === 0 && <EmptyCandidates />}</div>
 
+      <div className="flex w-full justify-end mt-4">
+        <AddCandidates />
+      </div>
       <section
-        className={`max-w-full w-full grid grid-cols-1 xl:grid-cols-2 gap-6 mb-20 `}
+        className={`max-w-full w-full grid grid-cols-1 xl:grid-cols-2 gap-6 mb-6`}
       >
         {modal && <Modal data={dataCandidate} setIsOpenModal={setModal} />}
       </section>
@@ -99,9 +102,6 @@ export default function CandidatesTable({
           />
         </div>
       )}
-      <div className="flex w-full justify-center mt-4">
-        <AddCandidates />
-      </div>
     </>
   );
 }
