@@ -8,7 +8,7 @@ export default function Progress({ percent }: ProgressProps) {
   const percentage = 100 - percent;
 
   return (
-    <div className="relative size-40">
+    <div className="relative size-40 z-10">
       <svg
         className="size-full -rotate-90"
         viewBox="0 0 36 36"
