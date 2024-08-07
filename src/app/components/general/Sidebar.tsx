@@ -13,6 +13,7 @@ import HasilVote from "../Icons/HasilVote";
 import LaporanExcelIcon from "../Icons/LaporanExcelIcon";
 import { signOut } from "next-auth/react";
 import { title } from "node:process";
+import VoteSetup from "../Icons/VoteSetup";
 
 interface SidebarProps {
   title: string;
@@ -139,6 +140,20 @@ export default function Sidebar() {
                         className="ml-3 whitespace-nowrap text-primary-400 font-semibold"
                       >
                         Live Count
+                      </Large_Text>
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      href="/admin/votesesion"
+                      className="group flex items-center rounded-[50px] px-5 py-3 text-base font-normal text-primary-400 hover:bg-secondary-color hover:text-white transition-all"
+                    >
+                      <VoteSetup />
+                      <Large_Text
+                        variant="BOLD"
+                        className="ml-3 whitespace-nowrap text-primary-400 font-semibold"
+                      >
+                        Vote Setup
                       </Large_Text>
                     </Link>
                   </li>

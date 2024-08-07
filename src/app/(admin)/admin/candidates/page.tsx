@@ -8,7 +8,7 @@ export default async function Candidates() {
   const session = await nextGetServerSession();
   const { user } = session!;
 
-  const candidate: CandidatesPayload[] = await getAllCandidates({});
+  const candidate: CandidatesPayload[] = await getAllCandidates();
 
   return (
     <div className="max-w-full min-h-screen">
