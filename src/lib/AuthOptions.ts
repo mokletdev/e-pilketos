@@ -7,6 +7,11 @@ import client from "./prisma";
 import { compareSync } from "bcrypt";
 import { createUser, findUser, updateUser } from "@/utils/database/user.query";
 
+interface exampleSiswaProps {
+  name: string;
+  email: string;
+  password: string;
+}
 declare module "next-auth" {
   interface Session {
     user?: {
@@ -63,10 +68,6 @@ export const authOptions: AuthOptions = {
             include: { User_Auth: true },
           });
 
-          // if (!findUser || findUser.role !== "ADMIN") {
-          //   return null;
-          // }
-
           if (!findUser) return null;
 
           const ComparePassword = compareSync(
@@ -118,6 +119,23 @@ export const authOptions: AuthOptions = {
 
         if (user.email) {
           const userDatabase = await findUser({ email: user.email });
+
+          const dataSiswa: exampleSiswaProps[] = [
+            {
+              name: "Naufal Nabil Ramadhan",
+              email: "naufal_nabil_32rpl@student.smktelkom-mlg.sch.id",
+              password: "12345678",
+            },
+            {
+              name: "Ryo Hariono Agwyn",
+              email: "ryo_hariono_32rpl@student.smktelkom-mlg.sch.id",
+              password: "12345678",
+            },
+          ];
+          const findData = dataSiswa.find((data) => {
+            data.email === user.email;
+          });
+
           if (!userDatabase) {
             await createUser({
               email: user.email,
@@ -129,6 +147,7 @@ export const authOptions: AuthOptions = {
                 },
               },
             });
+            const userDatabase = await findUser({ email: user.email });
           }
         }
         return true;
@@ -143,6 +162,7 @@ export const authOptions: AuthOptions = {
           const userDatabase = await findUser({ email: user.email });
           if (userDatabase) {
             token.email = userDatabase.email;
+            token.password = userDatabase.User_Auth?.password || "";
             token.role = userDatabase.role;
           }
         }
