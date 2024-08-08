@@ -1,16 +1,61 @@
 "use client";
 import { FormButton } from "@/app/components/general/Button";
-import SectionsGap from "@/app/components/general/SectionsGap";
-import { H2, Large_Text } from "@/app/components/general/Text";
-import GoogleLogo from "@/app/components/Icons/GoogleLogo";
-import { signIn } from "next-auth/react";
-import React from "react";
+import { H2, Large_Text, Small_Text } from "@/app/components/general/Text";
+import { signIn, useSession } from "next-auth/react";
+import React, { FormEvent, useState } from "react";
 import imgLeft from "@/../public/images/LoginUserLeft.png";
 import imgRight from "@/../public/images/LoginUserRight.png";
 import Image from "next/image";
 import HeaderSect from "@/../public/images/headersection.png";
+import { useRouter } from "next/navigation";
+import toast from "react-hot-toast";
+import { TextField } from "@/app/components/general/Input";
 
 export default function UserLogin() {
+  const router = useRouter();
+  const { data: session, status } = useSession();
+  const [error, setError] = useState("");
+  const [email, setEmail] = useState<string | undefined>("");
+  const [password, setPassword] = useState<string | undefined>("");
+
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const data = {
+      email,
+      password,
+    };
+
+    try {
+      const response = await signIn("credentials", {
+        callbackUrl: "/vote",
+        redirect: false,
+        email: data.email,
+        password: data.password,
+      });
+
+      if (!response?.ok) {
+        toast.error("Login Gagal");
+        setError("Gagal Login");
+      }
+      if (response?.status === 401) {
+        console.log(response);
+        toast.error("Login Gagal");
+        setError("Akun Tidak Terdaftar");
+      }
+
+      if (response?.ok) {
+        toast.success("Login Berhasil");
+        router.push("/vote");
+      } else {
+        toast.error("Login Gagal");
+        setError("");
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error("Login Gagal");
+      setError((error as Error).message);
+    }
+  };
   return (
     <>
       <main className="px-4 lg:px-20">
@@ -36,7 +81,40 @@ export default function UserLogin() {
               Jangan lupa login menggunakan akun google yang diberikan oleh
               sekolah ya teman-teman..
             </Large_Text>
-            <FormButton
+
+            <div className="w-full h-full my-14 z-20 relative">
+              <form onSubmit={handleSubmit}>
+                <TextField
+                  placeholder="Masukkan Email Anda"
+                  type="email"
+                  name="email"
+                  value={email}
+                  handleChange={(e) => setEmail(e.target.value)}
+                  required
+                />
+                <TextField
+                  placeholder="Masukkan Password Anda"
+                  type="password"
+                  name="password"
+                  value={password}
+                  handleChange={(e) => setPassword(e.target.value)}
+                  required
+                />
+                <FormButton
+                  type="submit"
+                  variant="PRIMARY"
+                  className="flex items-center gap-x-4 w-full justify-center group"
+                >
+                  <Large_Text variant="BOLD">Login</Large_Text>
+                </FormButton>
+                {error && (
+                  <Small_Text variant="MEDIUM" className="text-red-500 mt-4">
+                    {error}
+                  </Small_Text>
+                )}
+              </form>
+            </div>
+            {/* <FormButton
               variant="PRIMARY"
               onClick={() =>
                 signIn("google", { callbackUrl: "/vote", redirect: false })
@@ -45,7 +123,7 @@ export default function UserLogin() {
             >
               <GoogleLogo />
               <Large_Text variant="BOLD">Login dengan Google</Large_Text>
-            </FormButton>
+            </FormButton> */}
           </div>
         </div>
         <Image

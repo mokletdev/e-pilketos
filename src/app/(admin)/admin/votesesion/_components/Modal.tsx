@@ -17,22 +17,31 @@ import React, {
   useState,
 } from "react";
 import toast from "react-hot-toast";
-import { VoteSessionGeneralPayload } from "@/utils/database/voteSession.query";
+import {
+  getCandidatesWhereVoteSessionInput,
+  VoteSessionWithCandidates,
+} from "@/utils/database/voteSession.query";
 import { upsertVoteSession } from "@/utils/database/getServerSession";
 
 export default function VoteSessionModal({
   setIsOpenModal,
   data,
+  candidats,
 }: {
   setIsOpenModal: Dispatch<SetStateAction<boolean>>;
-  data?: VoteSessionGeneralPayload | null;
+  data?: VoteSessionWithCandidates | null;
+  candidats?: CandidatesPayload[] | null;
 }) {
-  // const [title, setTitle] = useState(data?.title || "");
-  // const [openedAt, setOpenedAt] = useState(data?.openedAt || new Date());
-  // const [closeAt, setCloseAt] = useState(data?.closeAt || new Date());
-  // const [maxVote, setMaxVote] = useState(data?.max_vote || 1);
-
   const [isLoading, setIsLoading] = useState(false);
+  const [candidates, setCandidates] = useState<any[]>([]);
+
+  const AddCandidates = () => {
+    setCandidates([...candidates, ""]);
+  };
+
+  const DeleteCandidates = (index: number) => {
+    setCandidates(candidates?.filter((_, i) => i !== index));
+  };
 
   const handleSubmit = async (
     e: FormEvent<HTMLFormElement> | ChangeEvent<HTMLInputElement | any>,
@@ -45,6 +54,9 @@ export default function VoteSessionModal({
 
       const result = await upsertVoteSession(data?.id as string, formdata);
       console.log(result);
+      console.log(candidats);
+      console.log(data?.User_vote?.candidate_id);
+      console.log(data);
 
       if (!result.error) {
         toast.success(result.message, { id: toastId });
@@ -113,6 +125,61 @@ export default function VoteSessionModal({
           value={data?.max_vote.toString()}
           required
         />
+        <p className="mt-6">Kandidat</p>
+        {candidates.map((can, index) => (
+          <div key={index} className="flex gap-x-3 items-center w-full">
+            <SelectField
+              name="select_candidates"
+              className="w-full"
+              value={data?.User_vote?.candidate.id}
+              options={candidats?.map((x, i) => ({
+                label: x.name,
+                value: x.id,
+              }))}
+            />
+            <button
+              onClick={() => DeleteCandidates(index)}
+              type="button"
+              className="bg-primary-color group hover:bg-white rounded-full border-2 border-primary-color mt-3 mb-6 hover:border-primary-color p-2 duration-300"
+            >
+              <svg
+                className="w-6 h-6 text-white hover:text-primary-color "
+                aria-hidden="true"
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                fill="none"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke="currentColor"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M6 18 17.94 6M18 18 6.06 6"
+                />
+              </svg>
+            </button>
+          </div>
+        ))}
+        <button
+          onClick={() => AddCandidates()}
+          type="button"
+          className="bg-primary-color group hover:bg-white rounded-full border-2 border-primary-color mt-3 mb-6 hover:border-primary-color p-2 duration-300"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            height="24"
+            viewBox="0 -960 960 960"
+            width="24"
+            fill="none"
+          >
+            <path
+              className="fill-white group-hover:fill-primary-color"
+              d="M440-440H200v-80h240v-240h80v240h240v80H520v240h-80v-240Z"
+            />
+          </svg>
+        </button>
         <div className="w-full flex gap-x-4">
           <FormButton
             onClick={() => setIsOpenModal(false)}
