@@ -79,7 +79,7 @@ export default function Sidebar() {
     {
       title: "Log Out",
       href: "",
-      click: () => signOut({ callbackUrl: "/authAdmin/login" }),
+      click: () => signOut({ callbackUrl: "/auth/login" }),
     },
   ];
   return (
@@ -190,7 +190,7 @@ export default function Sidebar() {
             </div>
             <div className="flex items-center justify-center mb-8">
               <button
-                onClick={() => signOut({ callbackUrl: "/authAdmin/login" })}
+                onClick={() => signOut({ callbackUrl: "/auth/login" })}
                 className="group flex items-center rounded-[50px] px-5 py-3 text-base font-normal text-primary-400 hover:bg-secondary-color hover:text-white transition-all gap-x-3 w-full"
               >
                 <svg
