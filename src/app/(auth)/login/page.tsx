@@ -13,7 +13,6 @@ import { TextField } from "@/app/components/general/Input";
 
 export default function UserLogin() {
   const router = useRouter();
-  const { data: session, status } = useSession();
   const [error, setError] = useState("");
   const [email, setEmail] = useState<string | undefined>("");
   const [password, setPassword] = useState<string | undefined>("");

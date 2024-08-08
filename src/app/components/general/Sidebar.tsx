@@ -131,6 +131,20 @@ export default function Sidebar() {
                   </li>
                   <li>
                     <Link
+                      href="/admin/users"
+                      className="group flex items-center rounded-[50px] px-5 py-3 text-base font-normal text-primary-400 hover:bg-secondary-color hover:text-white transition-all"
+                    >
+                      <LiveCountIcon />
+                      <Large_Text
+                        variant="BOLD"
+                        className="ml-3 whitespace-nowrap text-primary-400 font-semibold"
+                      >
+                        User
+                      </Large_Text>
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
                       href="/admin/liveCount"
                       className="group flex items-center rounded-[50px] px-5 py-3 text-base font-normal text-primary-400 hover:bg-secondary-color hover:text-white transition-all"
                     >

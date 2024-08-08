@@ -11,15 +11,7 @@ import { deleteUserById } from "@/utils/database/getServerSession";
 import toast from "react-hot-toast";
 import Modal from "./Modal";
 
-export default function UserTable({
-  data,
-  roles,
-  desc,
-}: {
-  data: userLastLoginPayload[];
-  roles: string;
-  desc: string;
-}) {
+export default function UserTable({ data }: { data: userLastLoginPayload[] }) {
   const [modal, setModal] = useState(false);
   const [dataUser, setDataUser] = useState<userLastLoginPayload | null>(null);
   const [loader, setLoader] = useState(true);
@@ -96,10 +88,7 @@ export default function UserTable({
     <>
       <div className="flex justify-between items-center mb-[36px] flex-col gap-4 text-center xl:text-start xl:flex-row ">
         <div>
-          <H5>User Management | Data {roles}</H5>
-          <Medium_Text variant="REGULAR" className="text-secondary-text-color">
-            {desc}
-          </Medium_Text>
+          <H5>User Management</H5>
         </div>
         <div>
           <AddUser />
