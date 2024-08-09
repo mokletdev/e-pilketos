@@ -28,6 +28,7 @@
     "next-auth": "^4.24.7",
     "next-cloudinary": "^6.6.2",
     "next-nprogress-bar": "^2.3.12",
+    "nodemailer": "^6.9.14",
     "npm": "^10.8.1",
     "prisma": "^5.17.0",
     "react": "^18",
@@ -46,6 +47,7 @@
   },
   "devDependencies": {
     "@types/node": "^20",
+    "@types/nodemailer": "^6.4.15",
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "@types/react-slick": "^0.23.13",

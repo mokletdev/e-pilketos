@@ -12,7 +12,7 @@ import LiveCountIcon from "../Icons/LiveCountIcon";
 import HasilVote from "../Icons/HasilVote";
 import LaporanExcelIcon from "../Icons/LaporanExcelIcon";
 import { signOut } from "next-auth/react";
-import { title } from "node:process";
+import { FaUsers } from "react-icons/fa";
 import VoteSetup from "../Icons/VoteSetup";
 
 interface SidebarProps {
@@ -134,12 +134,12 @@ export default function Sidebar() {
                       href="/admin/users"
                       className="group flex items-center rounded-[50px] px-5 py-3 text-base font-normal text-primary-400 hover:bg-secondary-color hover:text-white transition-all"
                     >
-                      <LiveCountIcon />
+                      <FaUsers />
                       <Large_Text
                         variant="BOLD"
                         className="ml-3 whitespace-nowrap text-primary-400 font-semibold"
                       >
-                        User
+                        Users
                       </Large_Text>
                     </Link>
                   </li>

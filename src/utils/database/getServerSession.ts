@@ -12,8 +12,9 @@ import {
 import { hash } from "bcrypt";
 import { nextGetServerSession } from "@/lib/AuthOptions";
 import { createVoteSession, UpdateVoteSession } from "./voteSession.query";
-import { title } from "process";
 import { generatePassword } from "../generatePassword";
+import { EmailService } from "@/lib/emailService";
+import { newUserAccount } from "../emailTemplate";
 
 export const deleteUserById = async (id: string) => {
   try {
@@ -63,6 +64,15 @@ export const updateUserById = async (id: string | null, data: FormData) => {
         },
       });
       if (!create) throw new Error("Create failed");
+
+      const emailService = new EmailService();
+      await emailService
+        .sendEmail({
+          to: email,
+          subject: "PILKETOS Moklet: New user account",
+          html: newUserAccount(email, userPassword, name),
+        })
+        .catch(console.log);
     } else if (id) {
       const findUserById = await client.user.findFirst({
         where: { id },

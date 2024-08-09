@@ -46,7 +46,7 @@ export const authOptions: AuthOptions = {
   },
   providers: [
     CredentialsProvider({
-      name: "Credentials",
+      name: "PILKETOS Credentials",
       credentials: {
         email: {
           label: "Email",

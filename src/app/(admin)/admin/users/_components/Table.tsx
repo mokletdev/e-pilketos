@@ -20,17 +20,17 @@ export default function UserTable({ data }: { data: userLastLoginPayload[] }) {
     {
       name: "Name",
       selector: (row) => row.name,
-      sortable: false,
+      sortable: true,
     },
     {
       name: "Email",
       selector: (row) => row.email,
-      sortable: false,
+      sortable: true,
     },
     {
       name: "Role",
       selector: (row) => row.role,
-      sortable: false,
+      sortable: true,
     },
     {
       name: "Last Login",
@@ -38,7 +38,7 @@ export default function UserTable({ data }: { data: userLastLoginPayload[] }) {
         row.User_Auth?.last_login
           ? row.User_Auth?.last_login.toUTCString()
           : "Never",
-      sortable: false,
+      sortable: true,
     },
     {
       name: "Action",
