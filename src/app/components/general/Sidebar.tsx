@@ -12,7 +12,7 @@ import LiveCountIcon from "../Icons/LiveCountIcon";
 import HasilVote from "../Icons/HasilVote";
 import LaporanExcelIcon from "../Icons/LaporanExcelIcon";
 import { signOut } from "next-auth/react";
-import { FaUsers } from "react-icons/fa";
+import { title } from "node:process";
 import VoteSetup from "../Icons/VoteSetup";
 
 interface SidebarProps {
@@ -79,7 +79,7 @@ export default function Sidebar() {
     {
       title: "Log Out",
       href: "",
-      click: () => signOut({ callbackUrl: "/auth/login" }),
+      click: () => signOut({ callbackUrl: "/authAdmin/login" }),
     },
   ];
   return (
@@ -126,20 +126,6 @@ export default function Sidebar() {
                         className="ml-3 whitespace-nowrap text-primary-400 font-semibold"
                       >
                         Kandidat
-                      </Large_Text>
-                    </Link>
-                  </li>
-                  <li>
-                    <Link
-                      href="/admin/users"
-                      className="group flex items-center rounded-[50px] px-5 py-3 text-base font-normal text-primary-400 hover:bg-secondary-color hover:text-white transition-all"
-                    >
-                      <FaUsers />
-                      <Large_Text
-                        variant="BOLD"
-                        className="ml-3 whitespace-nowrap text-primary-400 font-semibold"
-                      >
-                        Users
                       </Large_Text>
                     </Link>
                   </li>
@@ -204,7 +190,7 @@ export default function Sidebar() {
             </div>
             <div className="flex items-center justify-center mb-8">
               <button
-                onClick={() => signOut({ callbackUrl: "/auth/login" })}
+                onClick={() => signOut({ callbackUrl: "/authAdmin/login" })}
                 className="group flex items-center rounded-[50px] px-5 py-3 text-base font-normal text-primary-400 hover:bg-secondary-color hover:text-white transition-all gap-x-3 w-full"
               >
                 <svg

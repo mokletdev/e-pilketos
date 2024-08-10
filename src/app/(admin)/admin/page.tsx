@@ -11,7 +11,7 @@ export default function Page() {
     if (session?.user?.role == "ADMIN") {
       router.push("/admin/dashboard");
     } else {
-      router.push("/auth/login");
+      router.push("/authAdmin/login");
     }
   }, [session, router]);
 
