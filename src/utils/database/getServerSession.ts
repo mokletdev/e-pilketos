@@ -12,7 +12,9 @@ import {
 import { hash } from "bcrypt";
 import { nextGetServerSession } from "@/lib/AuthOptions";
 import { createVoteSession, UpdateVoteSession } from "./voteSession.query";
-import { title } from "process";
+import { generatePassword } from "../generatePassword";
+import { EmailService } from "@/lib/emailService";
+import { newUserAccount } from "../emailTemplate";
 
 export const deleteUserById = async (id: string) => {
   try {
@@ -47,26 +49,37 @@ export const updateUserById = async (id: string | null, data: FormData) => {
       include: { User_Auth: { select: { last_login: true } } },
     });
 
-    const hashedPassword = await hash(password, 10);
-
     if (!findEmail && id == null) {
+      const userPassword = password || generatePassword();
+      const hashedPassword = await hash(userPassword, 10);
+
       const create = await createUser({
         email: email,
         name: name,
         role: role,
         User_Auth: {
           create: {
-            password: password ? hashedPassword : undefined,
+            password: hashedPassword,
           },
         },
       });
       if (!create) throw new Error("Create failed");
+
+      const emailService = new EmailService();
+      await emailService
+        .sendEmail({
+          to: email,
+          subject: "PILKETOS Moklet: New user account",
+          html: newUserAccount(email, userPassword, name),
+        })
+        .catch(console.log);
     } else if (id) {
       const findUserById = await client.user.findFirst({
         where: { id },
         include: { User_Auth: { select: { last_login: true } } },
       });
       if (findUserById) {
+        const hashedPassword = await hash(password, 10);
         const update = await updateUser(
           {
             id: id ?? findUserById.id,
