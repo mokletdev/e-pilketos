@@ -5,12 +5,26 @@ export const getAllVoteSession = async () => {
   try {
     const voteSession = await client.vote_session.findMany({
       // select: { User_vote: { include: { candidate: true } } },
-      include: { User_vote: { include: { candidate: true } } },
+      include: {
+        User_vote: { include: { candidate: true } },
+        Vote_session_candidate: true,
+      },
     });
     return voteSession;
   } catch (error) {
     console.error((error as Error).message);
     return [];
+  }
+};
+
+export const getAllVoteSessionCandidates = async () => {
+  try {
+    const voteSessionCandidates =
+      await client.vote_session_candidate.findMany();
+    return voteSessionCandidates;
+  } catch (error) {
+    console.log(error);
+    return;
   }
 };
 
@@ -35,8 +49,18 @@ export const createVoteSession = async (data: VoteSessionGeneralPayload) => {
         closeAt: data.closeAt,
         isPublic: data.isPublic,
         max_vote: data.max_vote,
+        Vote_session_candidate: {
+          connect: {
+            candidate_id: data.Vote_session_candidate?.candidate_id,
+          },
+        },
       },
     });
+    console.log(
+      "Updating candidate number:",
+      data.Vote_session_candidate?.candidates_number,
+    );
+
     return voteSession;
   } catch (error) {
     console.error((error as Error).message);
@@ -44,57 +68,57 @@ export const createVoteSession = async (data: VoteSessionGeneralPayload) => {
   }
 };
 
-export const upsertVoteSession = async (
-  id: string | undefined,
-  formData: FormData,
-) => {
-  try {
-    const title = formData.get("title") as string;
-    const start_time = new Date(formData.get("start_time") as string);
-    const end_time = new Date(formData.get("end_time") as string);
-    const is_active = formData.get("is_active") === "true";
-    const max_vote = parseInt(formData.get("max_vote") as string, 10) || 1000;
+// export const upsertVoteSession = async (
+//   id: string | undefined,
+//   formData: FormData,
+// ) => {
+//   try {
+//     const title = formData.get("title") as string;
+//     const start_time = new Date(formData.get("start_time") as string);
+//     const end_time = new Date(formData.get("end_time") as string);
+//     const is_active = formData.get("is_active") === "true";
+//     const max_vote = parseInt(formData.get("max_vote") as string, 10) || 1000;
 
-    if (id) {
-      const updatedVoteSession = await client.vote_session.update({
-        where: { id },
-        data: {
-          title: title,
-          openedAt: start_time,
-          closeAt: end_time,
-          isPublic: is_active,
-          max_vote: max_vote,
-        },
-      });
-      return {
-        error: false,
-        message: "Vote session updated successfully",
-        data: updatedVoteSession,
-      };
-    } else {
-      const newVoteSession = await client.vote_session.create({
-        data: {
-          title: title,
-          openedAt: start_time,
-          closeAt: end_time,
-          isPublic: is_active,
-          max_vote: max_vote,
-        },
-      });
-      return {
-        error: false,
-        message: "Vote session created successfully",
-        data: newVoteSession,
-      };
-    }
-  } catch (error) {
-    console.error((error as Error).message);
-    return {
-      error: true,
-      message: "An error occurred while upserting the vote session",
-    };
-  }
-};
+//     if (id) {
+//       const updatedVoteSession = await client.vote_session.update({
+//         where: { id },
+//         data: {
+//           title: title,
+//           openedAt: start_time,
+//           closeAt: end_time,
+//           isPublic: is_active,
+//           max_vote: max_vote,
+//         },
+//       });
+//       return {
+//         error: false,
+//         message: "Vote session updated successfully",
+//         data: updatedVoteSession,
+//       };
+//     } else {
+//       const newVoteSession = await client.vote_session.create({
+//         data: {
+//           title: title,
+//           openedAt: start_time,
+//           closeAt: end_time,
+//           isPublic: is_active,
+//           max_vote: max_vote,
+//         },
+//       });
+//       return {
+//         error: false,
+//         message: "Vote session created successfully",
+//         data: newVoteSession,
+//       };
+//     }
+//   } catch (error) {
+//     console.error((error as Error).message);
+//     return {
+//       error: true,
+//       message: "An error occurred while upserting the vote session",
+//     };
+//   }
+// };
 
 export const deleteVoteSessionById = async (id: string) => {
   try {
@@ -214,8 +238,22 @@ export const UpdateVoteSession = async (
         closeAt: data.closeAt,
         isPublic: data.isPublic,
         max_vote: data.max_vote,
+        Vote_session_candidate: {
+          update: {
+            where: {
+              id: data.Vote_session_candidate?.id,
+            },
+            data: {
+              candidate_id: data.Vote_session_candidate?.candidate_id,
+            },
+          },
+        },
       },
     });
+    console.log(
+      "Updating candidate number:",
+      data.Vote_session_candidate?.candidates_number,
+    );
     return voteSession;
   } catch (error) {
     console.error((error as Error).message);
@@ -223,7 +261,13 @@ export const UpdateVoteSession = async (
   }
 };
 
-export type VoteSessionGeneralPayload = Prisma.Vote_sessionGetPayload<{}>;
+export type VoteSessionGeneralPayload = Prisma.Vote_sessionGetPayload<{
+  include: {
+    Vote_session_candidate: {
+      select: { candidate_id: true; candidates_number: true; id: true };
+    };
+  };
+}>;
 export type VoteSessionWithCandidates = Prisma.Vote_sessionGetPayload<{
   include: {
     Vote_session_candidate: true;
@@ -236,4 +280,6 @@ export type VoteSessionWithUserVotePayload = Prisma.Vote_sessionGetPayload<{
 }>;
 
 export type getCandidatesWhereVoteSessionInput =
-  Prisma.CandidatesCreateWithoutUser_voteInput;
+  Prisma.Vote_session_candidateGetPayload<{
+    include: { vote_session: true };
+  }>;

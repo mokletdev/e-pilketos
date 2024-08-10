@@ -211,6 +211,10 @@ export const upsertVoteSession = async (id: string | null, data: FormData) => {
     const end_time = new Date(data.get("end_time") as string);
     const isPublic = data.get("is_active") === "true";
     const max_vote = parseInt(data.get("max_vote") as string, 10);
+    const candidates_number = data.get("candidates_number");
+
+    const findVoteSessionCandidatesId =
+      await client.vote_session_candidate.findFirst();
 
     if (id == null) {
       await createVoteSession({
@@ -220,6 +224,7 @@ export const upsertVoteSession = async (id: string | null, data: FormData) => {
         closeAt: end_time,
         isPublic,
         max_vote,
+        Vote_session_candidate: { candidate_id},
       });
     } else {
       await UpdateVoteSession(id, {
@@ -229,6 +234,9 @@ export const upsertVoteSession = async (id: string | null, data: FormData) => {
         closeAt: end_time,
         isPublic,
         max_vote,
+        Vote_session_candidate: {
+          candidate_id,
+        },
       });
     }
 

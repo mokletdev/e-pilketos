@@ -33,10 +33,10 @@ export default function VoteSessionModal({
   candidats?: CandidatesPayload[] | null;
 }) {
   const [isLoading, setIsLoading] = useState(false);
-  const [candidates, setCandidates] = useState<any[]>([]);
+  const [candidates, setCandidates] = useState(candidats);
 
   const AddCandidates = () => {
-    setCandidates([...candidates, ""]);
+    setCandidates([...candidates, {}]);
   };
 
   const DeleteCandidates = (index: number) => {
@@ -87,6 +87,14 @@ export default function VoteSessionModal({
           value={data?.title || ""}
           required
         />
+        {/* <TextField
+          variant="Rounded-sm"
+          label="Nomor Kandidat"
+          type="text"
+          name="candidates_number"
+          value={data?.Vote_session_candidate?.candidates_number.toString()}
+          required
+        /> */}
         <div className="grid grid-cols-2 gap-x-7">
           <TextField
             variant="Rounded-sm"
@@ -127,39 +135,52 @@ export default function VoteSessionModal({
         />
         <p className="mt-6">Kandidat</p>
         {candidates.map((can, index) => (
-          <div key={index} className="flex gap-x-3 items-center w-full">
-            <SelectField
-              name="select_candidates"
-              className="w-full"
-              value={data?.User_vote?.candidate.id}
-              options={candidats?.map((x, i) => ({
-                label: x.name,
-                value: x.id,
-              }))}
-            />
-            <button
-              onClick={() => DeleteCandidates(index)}
-              type="button"
-              className="bg-primary-color group hover:bg-white rounded-full border-2 border-primary-color mt-3 mb-6 hover:border-primary-color p-2 duration-300"
-            >
-              <svg
-                className="w-6 h-6 text-white hover:text-primary-color "
-                aria-hidden="true"
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                fill="none"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  stroke="currentColor"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M6 18 17.94 6M18 18 6.06 6"
+          <div key={index}>
+            <div className="flex gap-x-3 items-center">
+              <div className="w-full">
+                <SelectField
+                  name="select_candidates"
+                  className="w-full"
+                  value={data?.Vote_session_candidate?.candidate_id}
+                  options={candidats?.map((x, i) => ({
+                    label: x.name,
+                    value: x.id,
+                  }))}
                 />
-              </svg>
-            </button>
+                <TextField
+                  variant="Rounded-sm"
+                  type="number"
+                  className="w-full"
+                  label="Nomor Kandidat"
+                  name="candidates_number"
+                  value={data?.Vote_session_candidate?.candidates_number.toString()}
+                  required
+                />
+              </div>
+              <button
+                onClick={() => DeleteCandidates(index)}
+                type="button"
+                className="bg-primary-color group hover:bg-white rounded-full border-2 border-primary-color mt-3 mb-6 hover:border-primary-color p-2 duration-300"
+              >
+                <svg
+                  className="w-6 h-6 text-white hover:text-primary-color "
+                  aria-hidden="true"
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke="currentColor"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M6 18 17.94 6M18 18 6.06 6"
+                  />
+                </svg>
+              </button>
+            </div>
           </div>
         ))}
         <button

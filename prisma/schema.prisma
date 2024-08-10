@@ -57,14 +57,14 @@ model Pengalaman {
 }
 
 model Vote_session {
-  id                     String                  @id @default(uuid()) @map("id") @db.Char(36)
+  id                     String                   @id @default(uuid()) @map("id") @db.Char(36)
   title                  String
   openedAt               DateTime
   closeAt                DateTime
   isPublic               Boolean
   max_vote               Int
-  User_vote              User_vote?
-  Vote_session_candidate Vote_session_candidate?
+  User_vote              User_vote[]
+  Vote_session_candidate Vote_session_candidate[]
   vote_session_access    vote_session_access?
 }
 
@@ -79,11 +79,11 @@ model User_vote {
 }
 
 model Vote_session_candidate {
-  id              String       @id @default(uuid()) @map("id") @db.Char(36)
-  vote_session_id String       @unique
-  candidate_id    String       @unique
-  vote_session    Vote_session @relation(fields: [vote_session_id], references: [id])
-  number          Int
+  id                String       @id @default(uuid()) @map("id") @db.Char(36)
+  vote_session_id   String       @unique
+  candidate_id      String       @unique
+  vote_session      Vote_session @relation(fields: [vote_session_id], references: [id])
+  candidates_number Int
 }
 
 model vote_session_access {
