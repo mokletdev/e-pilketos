@@ -19,7 +19,7 @@ export default function CandidatesTable({
   const [dataCandidate, setDataCandidate] = useState<CandidatesPayload | null>(
     null,
   );
-  const [loader, setLoader] = useState(false);
+  const [loader, setLoader] = useState(true);
 
   const columns: TableColumn<CandidatesPayload>[] = [
     {

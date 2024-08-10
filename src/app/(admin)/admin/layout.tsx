@@ -13,18 +13,16 @@ export default function MainLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <>
-      <main className="bg-red-light-6">
-        <div className="lg:ml-80">
-          <Sidebar />
-          <div className="px-[28px]">
-            <div className="max-w-full w-full py-6">
-              <AdminHeaders />
-              {children}
-            </div>
+    <main className="bg-red-light-6">
+      <div className="lg:ml-80">
+        <Sidebar />
+        <div className="px-[28px]">
+          <div className="max-w-full w-full py-6">
+            <AdminHeaders />
+            {children}
           </div>
         </div>
-      </main>
-    </>
+      </div>
+    </main>
   );
 }

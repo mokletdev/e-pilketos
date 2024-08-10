@@ -46,7 +46,7 @@ export const authOptions: AuthOptions = {
   },
   providers: [
     CredentialsProvider({
-      name: "Credentials",
+      name: "PILKETOS Credentials",
       credentials: {
         email: {
           label: "Email",
@@ -75,6 +75,7 @@ export const authOptions: AuthOptions = {
             findUser.User_Auth?.password as string,
           );
           if (!ComparePassword) return null;
+
           const pass =
             (credentials?.password as string,
             findUser.User_Auth?.password as string);
@@ -95,10 +96,10 @@ export const authOptions: AuthOptions = {
         }
       },
     }),
-    GoogleProvider({
-      clientId: process.env.GOOGLE_CLIENT_ID || "",
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET || "",
-    }),
+    // GoogleProvider({
+    //   clientId: process.env.GOOGLE_CLIENT_ID || "",
+    //   clientSecret: process.env.GOOGLE_CLIENT_SECRET || "",
+    // }),
   ],
   callbacks: {
     async redirect({ url, baseUrl }) {
@@ -115,40 +116,6 @@ export const authOptions: AuthOptions = {
 
         if (account?.provider === "credentials" && !user.email) {
           return false;
-        }
-
-        if (user.email) {
-          const userDatabase = await findUser({ email: user.email });
-
-          const dataSiswa: exampleSiswaProps[] = [
-            {
-              name: "Naufal Nabil Ramadhan",
-              email: "naufal_nabil_32rpl@student.smktelkom-mlg.sch.id",
-              password: "12345678",
-            },
-            {
-              name: "Ryo Hariono Agwyn",
-              email: "ryo_hariono_32rpl@student.smktelkom-mlg.sch.id",
-              password: "12345678",
-            },
-          ];
-          const findData = dataSiswa.find((data) => {
-            data.email === user.email;
-          });
-
-          if (!userDatabase) {
-            await createUser({
-              email: user.email,
-              name: user.name || "",
-              role: "SISWA",
-              User_Auth: {
-                create: {
-                  last_login: new Date(),
-                },
-              },
-            });
-            const userDatabase = await findUser({ email: user.email });
-          }
         }
         return true;
       } catch (error) {
