@@ -1,20 +1,30 @@
 "use client";
-import React, { useEffect, useState } from "react";
-import Image from "next/image";
-import Trash from "@/../public/images/TrashIcon.png";
-import Edit from "@/../public/images/EditIcon.png";
+
+import React, { ChangeEvent, useCallback, useEffect, useState } from "react";
+import { Role } from "@prisma/client";
+import { FaPencilAlt, FaTrash } from "react-icons/fa";
+import toast from "react-hot-toast";
+import MiniSearch from "minisearch";
+import clsx from "clsx";
 import AddUser from "./AddUser";
 import DataTable, { TableColumn } from "react-data-table-component";
-import { H5, Medium_Text } from "@/app/components/general/Text";
+import { H5, Small_Text } from "@/app/components/general/Text";
 import { userLastLoginPayload } from "@/utils/database/user.query";
 import { deleteUserById } from "@/utils/database/getServerSession";
-import toast from "react-hot-toast";
 import Modal from "./Modal";
+import { AddBulk } from "./ModalBulk";
+import { TextField } from "@/app/components/general/Input";
+import { bulkDeleteUsers } from "@/utils/actions/users.actions";
 
 export default function UserTable({ data }: { data: userLastLoginPayload[] }) {
   const [modal, setModal] = useState(false);
-  const [dataUser, setDataUser] = useState<userLastLoginPayload | null>(null);
+  const [userData, setUserData] = useState<userLastLoginPayload | null>(null);
   const [loader, setLoader] = useState(true);
+  const [usersData, setUsersData] = useState(data);
+
+  const [selectedRows, setSelectedRows] = useState<string[]>([]);
+  const [toggleCleared, setToggleCleared] = useState(false);
+  const [selectedRole, setRoleSelected] = useState<Role | "ALL" | null>(null);
 
   const columns: TableColumn<userLastLoginPayload>[] = [
     {
@@ -45,18 +55,18 @@ export default function UserTable({ data }: { data: userLastLoginPayload[] }) {
       cell: (row) => (
         <div className="flex gap-x-3">
           <button
-            title="Button"
-            onClick={() => EditDataUser(row)}
-            className="p-[8px] bg-[#D0F0FD] text-white rounded-md hover:ring hover:ring-[#D0F0FD] duration-300"
+            title="Edit"
+            onClick={() => editUserData(row)}
+            className="p-2 bg-blue-500 text-white rounded-lg hover:scale-110 active:scale-105 duration-150"
           >
-            <Image src={Edit} alt="edit" />
+            <FaPencilAlt size={14} />
           </button>
           <button
-            title="Button"
-            onClick={() => DeteleDataUser(row.id)}
-            className="p-[8px] bg-red-light-4 text-white rounded-md ml-2 hover:ring hover:ring-red-light-4 duration-300"
+            title="Delete"
+            onClick={() => deteleUserData(row.id)}
+            className="p-2.5 bg-red-500 text-white rounded-md hover:scale-110 active:scale-105 duration-150"
           >
-            <Image src={Trash} alt="delete" />
+            <FaTrash size={14} />
           </button>
         </div>
       ),
@@ -64,12 +74,12 @@ export default function UserTable({ data }: { data: userLastLoginPayload[] }) {
     },
   ];
 
-  function EditDataUser(data: userLastLoginPayload) {
-    setDataUser(data);
+  function editUserData(data: userLastLoginPayload) {
+    setUserData(data);
     setModal(true);
   }
 
-  const DeteleDataUser = async (id: string) => {
+  const deteleUserData = async (id: string) => {
     if (!confirm("Anda yakin ingin menghapus user ini?")) return;
     const toastId = toast.loading("Loading...");
     const result = await deleteUserById(id);
@@ -77,6 +87,58 @@ export default function UserTable({ data }: { data: userLastLoginPayload[] }) {
       toast.success(result.message, { id: toastId });
     } else toast.error(result.message, { id: toastId });
   };
+
+  const handleRowSelected = useCallback(
+    (state: {
+      allSelected: boolean;
+      selectedCount: number;
+      selectedRows: userLastLoginPayload[];
+    }) => {
+      setSelectedRows(state.selectedRows.map((item) => item.id));
+    },
+    [],
+  );
+
+  const selectableRowSelected = useCallback(
+    (row: userLastLoginPayload) =>
+      row.role === selectedRole || selectedRole === "ALL",
+    [selectedRole],
+  );
+
+  async function deleteUsers() {
+    if (!confirm("Anda yakin ingin menghapus user yang dipilih?")) return;
+    const toastId = toast.loading("Loading...");
+    const result = await bulkDeleteUsers(selectedRows);
+    if (!result.error) {
+      toast.success(result.message, { id: toastId });
+    } else toast.error(result.message, { id: toastId });
+  }
+
+  let miniSearch = new MiniSearch({
+    fields: ["name", "email", "role"],
+    searchOptions: {
+      fuzzy: 0.2,
+    },
+  });
+  miniSearch.addAll(data);
+
+  const handleSearch = useCallback((e: ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+
+    console.log(value);
+
+    if (value.trim().length !== 0) {
+      setUsersData(
+        miniSearch
+          .search(value)
+          .map((result) =>
+            data.find((user) => result?.id == user.id),
+          ) as userLastLoginPayload[],
+      );
+    } else {
+      setUsersData(data);
+    }
+  }, []);
 
   useEffect(() => {
     setLoader(false);
@@ -90,12 +152,87 @@ export default function UserTable({ data }: { data: userLastLoginPayload[] }) {
         <div>
           <H5>User Management</H5>
         </div>
-        <div>
+        <div className="flex gap-2">
+          <AddBulk />
           <AddUser />
         </div>
       </div>
-      {modal && <Modal data={dataUser} setIsOpenModal={setModal} />}
-      <DataTable columns={columns} data={data} pagination highlightOnHover />
+      {modal && <Modal data={userData} setIsOpenModal={setModal} />}
+      <div className="w-full px-4 py-2 bg-white flex justify-between">
+        <TextField
+          type="text"
+          placeholder="search user"
+          handleChange={handleSearch}
+        />
+        {selectedRows.length > 0 && (
+          <div className="flex items-center">
+            <Small_Text variant="REGULAR" className="items-center">
+              {selectedRows.length} users selected
+            </Small_Text>
+          </div>
+        )}
+        <div className="flex gap-2 items-center transition-all">
+          <button
+            title="Delete"
+            onClick={deleteUsers}
+            className={clsx(
+              "p-2 bg-red-500 text-xs text-white rounded-lg hover:scale-110 hover:-translate-y-0.5 hover:shadow-md active:scale-105 duration-150",
+              selectedRows.length > 0 ? "opacity-100" : "opacity-0",
+            )}
+          >
+            Delete
+          </button>
+          <button
+            title="Select all SISWA"
+            onClick={() => setRoleSelected("SISWA")}
+            className="p-2 bg-gray-500 text-xs text-white rounded-lg hover:scale-110 hover:-translate-y-0.5 hover:shadow-md active:scale-105 duration-150"
+          >
+            Select Siswa
+          </button>
+          <button
+            title="Select all GURU"
+            onClick={() => setRoleSelected("GURU")}
+            className="p-2 bg-gray-500 text-xs text-white rounded-lg hover:scale-110 hover:-translate-y-0.5 hover:shadow-md active:scale-105 duration-150"
+          >
+            Select Guru
+          </button>
+          <button
+            title="Select all ADMIN"
+            onClick={() => setRoleSelected("ADMIN")}
+            className="p-2 bg-gray-500 text-xs text-white rounded-lg hover:scale-110 hover:-translate-y-0.5 hover:shadow-md active:scale-105 duration-150"
+          >
+            Select Admin
+          </button>
+          <button
+            title="Select all"
+            onClick={() => setRoleSelected("ALL")}
+            className="p-2 bg-gray-500 text-xs text-white rounded-lg hover:scale-110 hover:-translate-y-0.5 hover:shadow-md active:scale-105 duration-150"
+          >
+            Select All
+          </button>
+          <button
+            title="Clear"
+            onClick={() => {
+              setToggleCleared(!toggleCleared);
+              setRoleSelected(null);
+              setSelectedRows([]);
+            }}
+            className="p-2 bg-gray-500 text-xs text-white rounded-lg hover:scale-110 hover:-translate-y-0.5 hover:shadow-md active:scale-105 duration-150"
+          >
+            Clear
+          </button>
+        </div>
+      </div>
+      <DataTable
+        selectableRows
+        onSelectedRowsChange={handleRowSelected}
+        columns={columns}
+        data={usersData}
+        selectableRowSelected={selectableRowSelected}
+        clearSelectedRows={toggleCleared}
+        pagination
+        highlightOnHover
+      />
     </>
   );
 }
