@@ -18,7 +18,7 @@ const adminPage = [
   "/admin/liveCount",
 ];
 
-const authPage = ["/auth/login"];
+const authPage = ["/authAdmin/login"];
 
 function withAuth(middleware: NextMiddleware, requireAuth: string[] = []) {
   return async (req: NextRequest, next: NextFetchEvent) => {
@@ -37,7 +37,7 @@ function withAuth(middleware: NextMiddleware, requireAuth: string[] = []) {
       }
     } else if (requireAuth.includes(pathname)) {
       if (!authPage.includes(pathname)) {
-        return NextResponse.redirect(new URL("/auth/login", req.url));
+        return NextResponse.redirect(new URL("/authAdmin/login", req.url));
       }
     }
 
@@ -51,5 +51,5 @@ export default withAuth(mainMiddleware, [
   "/admin/candidates",
   "/admin/hasilVote",
   "/admin/liveCount",
-  "/auth/login",
+  "/authAdmin/login",
 ]);
