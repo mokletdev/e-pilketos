@@ -78,7 +78,7 @@ export function TextField({
           id={name}
           className={`w-full ${
             variant === "Rounded-sm" ? "rounded-[8px] " : "rounded-full"
-          } bg-white border border-stroke shadow-shadow-2 placeholder:text-secondary-text-color text-primary-text-color focus:ring-2 focus:ring-red-light-2 outline-none px-6 py-3`}
+          } bg-white border border-stroke shadow-shadow-2 placeholder:text-secondary-text-color text-primary-text-color focus:ring-2 focus:ring-red-light-2 outline-none px-6 py-3 transition-all`}
           required={required}
           onKeyDown={onKeyDown}
           disabled={disabled}
