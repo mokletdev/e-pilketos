@@ -7,6 +7,11 @@ import client from "./prisma";
 import { compareSync } from "bcrypt";
 import { createUser, findUser, updateUser } from "@/utils/database/user.query";
 
+interface exampleSiswaProps {
+  name: string;
+  email: string;
+  password: string;
+}
 declare module "next-auth" {
   interface Session {
     user?: {
@@ -41,7 +46,7 @@ export const authOptions: AuthOptions = {
   },
   providers: [
     CredentialsProvider({
-      name: "Credentials",
+      name: "PILKETOS Credentials",
       credentials: {
         email: {
           label: "Email",
@@ -63,10 +68,6 @@ export const authOptions: AuthOptions = {
             include: { User_Auth: true },
           });
 
-          // if (!findUser || findUser.role !== "ADMIN") {
-          //   return null;
-          // }
-
           if (!findUser) return null;
 
           const ComparePassword = compareSync(
@@ -74,6 +75,7 @@ export const authOptions: AuthOptions = {
             findUser.User_Auth?.password as string,
           );
           if (!ComparePassword) return null;
+
           const pass =
             (credentials?.password as string,
             findUser.User_Auth?.password as string);
@@ -94,10 +96,10 @@ export const authOptions: AuthOptions = {
         }
       },
     }),
-    GoogleProvider({
-      clientId: process.env.GOOGLE_CLIENT_ID || "",
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET || "",
-    }),
+    // GoogleProvider({
+    //   clientId: process.env.GOOGLE_CLIENT_ID || "",
+    //   clientSecret: process.env.GOOGLE_CLIENT_SECRET || "",
+    // }),
   ],
   callbacks: {
     async redirect({ url, baseUrl }) {
@@ -115,22 +117,6 @@ export const authOptions: AuthOptions = {
         if (account?.provider === "credentials" && !user.email) {
           return false;
         }
-
-        if (user.email) {
-          const userDatabase = await findUser({ email: user.email });
-          if (!userDatabase) {
-            await createUser({
-              email: user.email,
-              name: user.name || "",
-              role: "SISWA",
-              User_Auth: {
-                create: {
-                  last_login: new Date(),
-                },
-              },
-            });
-          }
-        }
         return true;
       } catch (error) {
         console.error("Error in signIn callback:", error);
@@ -143,6 +129,7 @@ export const authOptions: AuthOptions = {
           const userDatabase = await findUser({ email: user.email });
           if (userDatabase) {
             token.email = userDatabase.email;
+            token.password = userDatabase.User_Auth?.password || "";
             token.role = userDatabase.role;
           }
         }

@@ -7,6 +7,7 @@ import FotoKandidat from "@/../public/images/FotoKandidat.png";
 
 export default function HasilVote() {
   return (
+
     <main className="min-h-screen flex">
       <div className="my-auto gap-24 mx-auto">
         <div className="mb-24">
@@ -58,5 +59,12 @@ export default function HasilVote() {
         </div>
       </div>
     </main>
+
+    <section>
+      <div className="max-w-3xl mx-auto my-10">
+        <ChartDougnuts />
+      </div>
+    </section>
+
   );
 }

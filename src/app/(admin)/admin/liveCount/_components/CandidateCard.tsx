@@ -33,6 +33,7 @@ export default function CandidateCard() {
             </div>
             <div className="">
               <Progressbar progress={25} />
+
             </div>
           </div>
           <ImageProfile src={FotoKandidat} />

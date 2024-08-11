@@ -9,11 +9,14 @@ import {
 import VoteSessionModal from "./Modal"; // Adjust the import path as needed
 import toast from "react-hot-toast";
 import AddVoteSession from "./AddVoteSession";
+import { CandidatesPayload } from "@/utils/database/user.query";
 
 export default function VoteSessionTable({
   data,
+  candidates,
 }: {
   data: VoteSessionGeneralPayload[];
+  candidates: CandidatesPayload[];
 }) {
   const [loader, setLoader] = useState(true);
   const [modalData, setModalData] = useState<VoteSessionGeneralPayload | null>(
@@ -94,7 +97,11 @@ export default function VoteSessionTable({
         className={`max-w-full w-full grid grid-cols-1 xl:grid-cols-2 gap-6 mb-20 `}
       >
         {isOpenModal && (
-          <VoteSessionModal setIsOpenModal={setIsOpenModal} data={modalData} />
+          <VoteSessionModal
+            setIsOpenModal={setIsOpenModal}
+            data={modalData}
+            candidats={candidates}
+          />
         )}
       </section>
       <DataTable columns={columns} data={data} pagination highlightOnHover />

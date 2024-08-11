@@ -24,7 +24,7 @@ export default function Progressbar({ progress }: ProgressbarProps) {
   }, [progress]);
 
   return (
-    <div className="w-full rounded-xl h-5 bg-secondary-color">
+    <div className="w-full rounded-xl h-5 bg-white">
       <div
         className="h-full rounded-xl bg-red-light"
         style={{ width: `${currentProgress}%` }}

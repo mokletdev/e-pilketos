@@ -25,7 +25,7 @@ export const getUserNotVote = async () => {
 export const findUser = async (filter: Prisma.UserWhereInput) => {
   return await client.user.findFirst({
     where: filter,
-    include: { User_Auth: { select: { last_login: true } } },
+    include: { User_Auth: { select: { last_login: true, password: true } } },
   });
 };
 
@@ -58,6 +58,11 @@ export const deleteUser = async (id: string) => {
     where: {
       id: id,
     },
+  });
+};
+export const deleteUsers = async (where: Prisma.UserWhereInput) => {
+  return await client.user.deleteMany({
+    where,
   });
 };
 

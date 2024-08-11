@@ -13,3 +13,5 @@ export async function GET(req: Request) {
     status: 200,
   });
 }
+
+export async function POST(req: Request) {}
