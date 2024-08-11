@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 
-import LogoMPK from "@/../public/images/LogoMPK.png";
+import LogoMPK from "@/../public/logo-mpk.png";
 import { Large_Text } from "./Text";
 import DashboardIcon from "../Icons/DashboardIcon";
 import KandidatIcon from "../Icons/KandidatIcon";

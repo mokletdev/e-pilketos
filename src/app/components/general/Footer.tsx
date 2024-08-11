@@ -1,7 +1,7 @@
 import React from "react";
 import SectionsGap from "./SectionsGap";
 import Image from "next/image";
-import logoMPK from "@/../public/images/LogoMPK.png";
+import LogoMPK from "@/../public/logo-mpk.png";
 import logoOsis from "@/../public/logo-osis.png";
 import logoTS from "@/../public/logo-ts.png";
 import Link from "next/link";
@@ -21,7 +21,7 @@ export default function Footer() {
             <div className="mx-[22px]">
               <div className="flex justify-center items-center gap-x-[52px] py-[52px]">
                 <div>
-                  <Image src={logoMPK} alt="Logo MPK" className="w-[63px]" />
+                  <Image src={LogoMPK} alt="Logo MPK" className="w-[63px]" />
                 </div>
                 <div>
                   <Image src={logoOsis} alt="Logo OSIS" className="w-[63px]" />
