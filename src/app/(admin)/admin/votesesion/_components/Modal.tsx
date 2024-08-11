@@ -18,10 +18,12 @@ import React, {
 } from "react";
 import toast from "react-hot-toast";
 import {
+  CandidatesWithVoteSessionCandidates,
   getCandidatesWhereVoteSessionInput,
   VoteSessionWithCandidates,
 } from "@/utils/database/voteSession.query";
 import { upsertVoteSession } from "@/utils/database/getServerSession";
+import { Vote_session_candidate } from "@prisma/client";
 
 export default function VoteSessionModal({
   setIsOpenModal,
@@ -33,10 +35,12 @@ export default function VoteSessionModal({
   candidats?: CandidatesPayload[] | null;
 }) {
   const [isLoading, setIsLoading] = useState(false);
-  const [candidates, setCandidates] = useState<any[]>([]);
+  const [candidates, setCandidates] = useState<
+    CandidatesWithVoteSessionCandidates[]
+  >(data?.vote_session_candidate || []);
 
   const AddCandidates = () => {
-    setCandidates([...candidates, ""]);
+    setCandidates([...candidates, { candidates_number: 0, candidate_id: "" }]);
   };
 
   const DeleteCandidates = (index: number) => {
@@ -50,13 +54,26 @@ export default function VoteSessionModal({
     setIsLoading(true);
     try {
       const toastId = toast.loading("Loading...");
-      const formdata: any = new FormData(e.target);
+      const formdata = new FormData(e.target);
+
+      candidates.forEach((candidate, index) => {
+        formdata.append(`candidate_id`, candidate.candidate_id);
+        formdata.append(
+          `candidate_number`,
+          candidate.candidates_number?.toString(),
+        );
+      });
 
       const result = await upsertVoteSession(data?.id as string, formdata);
       console.log(result);
-      console.log(candidats);
-      console.log(data?.User_vote?.candidate_id);
+      console.log(candidates);
+      console.log(data?.vote_session_candidate);
       console.log(data);
+      if (data?.vote_session_candidate.length === 0) {
+        setIsLoading(false);
+        toast.error("Tidak ada kandidat yang dipilih", { id: toastId });
+        return;
+      }
 
       if (!result.error) {
         toast.success(result.message, { id: toastId });
@@ -127,39 +144,54 @@ export default function VoteSessionModal({
         />
         <p className="mt-6">Kandidat</p>
         {candidates.map((can, index) => (
-          <div key={index} className="flex gap-x-3 items-center w-full">
-            <SelectField
-              name="select_candidates"
-              className="w-full"
-              value={data?.User_vote?.candidate.id}
-              options={candidats?.map((x, i) => ({
-                label: x.name,
-                value: x.id,
-              }))}
-            />
-            <button
-              onClick={() => DeleteCandidates(index)}
-              type="button"
-              className="bg-primary-color group hover:bg-white rounded-full border-2 border-primary-color mt-3 mb-6 hover:border-primary-color p-2 duration-300"
-            >
-              <svg
-                className="w-6 h-6 text-white hover:text-primary-color "
-                aria-hidden="true"
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                fill="none"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  stroke="currentColor"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M6 18 17.94 6M18 18 6.06 6"
+          <div key={index}>
+            <div className="flex gap-x-3 items-center">
+              <div className="w-full">
+                <SelectField
+                  name={`candidate_id[]`}
+                  className="w-full"
+                  value={can.candidate_id}
+                  options={
+                    candidats?.map((x, i) => ({
+                      label: x.name,
+                      value: x.id,
+                    })) || []
+                  }
                 />
-              </svg>
-            </button>
+                <TextField
+                  variant="Rounded-sm"
+                  type="text"
+                  className="w-full"
+                  label="Nomor Kandidat"
+                  name={`candidate_number[]`}
+                  value={can.candidates_number?.toString()}
+                  required
+                />
+              </div>
+              <button
+                onClick={() => DeleteCandidates(index)}
+                type="button"
+                className="bg-primary-color group hover:bg-white rounded-full border-2 border-primary-color mt-3 mb-6 hover:border-primary-color p-2 duration-300"
+              >
+                <svg
+                  className="w-6 h-6 text-white hover:text-primary-color "
+                  aria-hidden="true"
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke="currentColor"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M6 18 17.94 6M18 18 6.06 6"
+                  />
+                </svg>
+              </button>
+            </div>
           </div>
         ))}
         <button
