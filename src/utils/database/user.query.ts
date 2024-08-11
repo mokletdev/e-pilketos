@@ -60,11 +60,6 @@ export const deleteUser = async (id: string) => {
     },
   });
 };
-export const deleteUsers = async (where: Prisma.UserWhereInput) => {
-  return await client.user.deleteMany({
-    where,
-  });
-};
 
 export const CountUserbyVoteSession = async (id_session: string) => {
   return await client.user.count({
