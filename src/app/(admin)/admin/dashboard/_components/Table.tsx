@@ -22,7 +22,7 @@ export default function UserTable({
 }) {
   const [modal, setModal] = useState(false);
   const [dataUser, setDataUser] = useState<userLastLoginPayload | null>(null);
-  const [loader, setLoader] = useState(false);
+  const [loader, setLoader] = useState(true);
 
   const columns: TableColumn<userLastLoginPayload>[] = [
     {
