@@ -25,15 +25,15 @@ export default async function Dashboard() {
   return (
     <main className="h-full overflow-x-hidden">
       <div className="w-full bg-red-light-6 gap-x-[28px] flex flex-col xl:flex-row">
-        <ProgessCard target="Siswa" percent={80}>
+        <ProgessCard target="Siswa" percent={50}>
           Lorem ipsum dolor sit amet consectetur adipisicing elit.
         </ProgessCard>
-        <ProgessCard target="Guru" percent={80}>
+        <ProgessCard target="Guru" percent={90}>
           Lorem ipsum dolor sit amet consectetur adipisicing elit.
         </ProgessCard>
       </div>
       <div className="mt-[28px] pb-[52px]">
-        <ProgessCard target="Semua" percent={80}>
+        <ProgessCard target="Semua" percent={20}>
           Lorem ipsum dolor sit amet consectetur adipisicing elit.
         </ProgessCard>
       </div>

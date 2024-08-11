@@ -16,6 +16,8 @@ const adminPage = [
   "/admin/candidates",
   "/admin/hasilVote",
   "/admin/liveCount",
+  "/admin/users",
+  "/admin/votesesion",
 ];
 
 const authPage = ["/auth/login"];
@@ -51,5 +53,7 @@ export default withAuth(mainMiddleware, [
   "/admin/candidates",
   "/admin/hasilVote",
   "/admin/liveCount",
+  "/admin/users",
+  "/admin/votesesion",
   "/auth/login",
 ]);
