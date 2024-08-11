@@ -118,6 +118,7 @@ export default function UserTable({ data }: { data: userLastLoginPayload[] }) {
     } else toast.error(result.message, { id: toastId });
   }
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   let miniSearch = new MiniSearch({
     fields: ["name", "email", "role"],
     searchOptions: {
@@ -126,23 +127,26 @@ export default function UserTable({ data }: { data: userLastLoginPayload[] }) {
   });
   miniSearch.addAll(data);
 
-  const handleSearch = useCallback((e: ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
+  const handleSearch = useCallback(
+    (e: ChangeEvent<HTMLInputElement>) => {
+      const value = e.target.value;
 
-    console.log(value);
+      console.log(value);
 
-    if (value.trim().length !== 0) {
-      setUsersData(
-        miniSearch
-          .search(value)
-          .map((result) =>
-            data.find((user) => result?.id == user.id),
-          ) as userLastLoginPayload[],
-      );
-    } else {
-      setUsersData(data);
-    }
-  }, []);
+      if (value.trim().length !== 0) {
+        setUsersData(
+          miniSearch
+            .search(value)
+            .map((result) =>
+              data.find((user) => result?.id == user.id),
+            ) as userLastLoginPayload[],
+        );
+      } else {
+        setUsersData(data);
+      }
+    },
+    [data, miniSearch],
+  );
 
   useEffect(() => {
     setLoader(false);

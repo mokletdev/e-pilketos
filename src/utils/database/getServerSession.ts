@@ -232,14 +232,10 @@ export const upsertVoteSession = async (id: string | null, data: FormData) => {
       10,
     );
 
-    const vote_session_candidatesd = candidates_id.map((can, i) => ({
+    const vote_session_candidatesd = candidates_id.map((can) => ({
       candidate_id: can,
-      candidates_number: isNaN(candidates_number) ? i : candidates_number,
+      candidates_number: candidates_number,
     }));
-
-    if (vote_session_candidatesd.length === 0) {
-      throw new Error("Tidak ada kandidat yang dipilih");
-    }
 
     if (id == null) {
       await createVoteSession({
@@ -249,9 +245,20 @@ export const upsertVoteSession = async (id: string | null, data: FormData) => {
         closeAt: end_time,
         isPublic,
         max_vote,
-        vote_session_candidate: vote_session_candidatesd,
+        vote_session_candidate: vote_session_candidatesd.map((X) => ({
+          candidate_id: X.candidate_id,
+          candidates_number: X.candidates_number,
+        })),
       });
     } else {
+      const findVoteSession = await client.vote_session.findUnique({
+        where: { id: id },
+        include: { vote_session_candidate: true },
+      });
+      const oldVoteSession = await client.vote_session_candidate.findMany({
+        where: { vote_session_id: id },
+      });
+      console.log(findVoteSession);
       await UpdateVoteSession(id, {
         id: id ?? "",
         title,
@@ -259,8 +266,35 @@ export const upsertVoteSession = async (id: string | null, data: FormData) => {
         closeAt: end_time,
         isPublic,
         max_vote,
-        vote_session_candidate: vote_session_candidatesd,
+        vote_session_candidate: vote_session_candidatesd.map((X) => ({
+          candidate_id: X.candidate_id,
+          candidates_number: X.candidates_number,
+        })),
       });
+      if (findVoteSession) {
+        // const update = await client.vote_session.update({
+        //   where: { id },
+        //   data: {
+        //     title: title ?? findVoteSession.title,
+        //     openedAt: start_time ?? findVoteSession.openedAt,
+        //     closeAt: end_time ?? findVoteSession.closeAt,
+        //     isPublic: isPublic ?? findVoteSession.isPublic,
+        //     max_vote: max_vote ?? findVoteSession.max_vote,
+        //     vote_session_candidate: {
+        //       disconnect: oldVoteSession.map((voteSession) => ({
+        //         id: voteSession.id,
+        //       })),
+        //       create: {
+        //         candidate_id: ,
+        //         candidates_number: vote_session_candidatesd.map(
+        //           (x) => x.candidates_number,
+        //         ),
+        //       },
+        //     },
+        //   },
+        // });
+      }
+      console.log(candidates_id);
     }
 
     revalidatePath("/admin/votesesion");

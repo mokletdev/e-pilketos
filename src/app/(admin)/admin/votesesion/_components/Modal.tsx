@@ -18,6 +18,7 @@ import React, {
 } from "react";
 import toast from "react-hot-toast";
 import {
+  CandidatesWithVoteSessionCandidates,
   getCandidatesWhereVoteSessionInput,
   VoteSessionWithCandidates,
 } from "@/utils/database/voteSession.query";
@@ -34,15 +35,12 @@ export default function VoteSessionModal({
   candidats?: CandidatesPayload[] | null;
 }) {
   const [isLoading, setIsLoading] = useState(false);
-  const [candidates, setCandidates] = useState<Vote_session_candidate[]>(
-    data?.vote_session_candidate || [],
-  );
+  const [candidates, setCandidates] = useState<
+    CandidatesWithVoteSessionCandidates[]
+  >(data?.vote_session_candidate || []);
 
   const AddCandidates = () => {
-    setCandidates([
-      ...candidates,
-      { candidates_number: 0, candidate_id: "", id: "", vote_session_id: "" },
-    ]);
+    setCandidates([...candidates, { candidates_number: 0, candidate_id: "" }]);
   };
 
   const DeleteCandidates = (index: number) => {
@@ -57,6 +55,7 @@ export default function VoteSessionModal({
     try {
       const toastId = toast.loading("Loading...");
       const formdata = new FormData(e.target);
+
       candidates.forEach((candidate, index) => {
         formdata.append(`candidate_id`, candidate.candidate_id);
         formdata.append(
@@ -149,7 +148,7 @@ export default function VoteSessionModal({
             <div className="flex gap-x-3 items-center">
               <div className="w-full">
                 <SelectField
-                  name={`candidate_id[${index}]`}
+                  name={`candidate_id[]`}
                   className="w-full"
                   value={can.candidate_id}
                   options={
@@ -161,10 +160,10 @@ export default function VoteSessionModal({
                 />
                 <TextField
                   variant="Rounded-sm"
-                  type="number"
+                  type="text"
                   className="w-full"
                   label="Nomor Kandidat"
-                  name={`candidate_number[${index}`}
+                  name={`candidate_number[]`}
                   value={can.candidates_number?.toString()}
                   required
                 />

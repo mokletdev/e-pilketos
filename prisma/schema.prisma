@@ -20,7 +20,7 @@ model User {
   email               String               @unique
   name                String
   user_pic            String?
-  role                Role
+  role                Role                 @default(SISWA)
   User_vote           User_vote?
   vote_session_access vote_session_access?
   User_Auth           User_Auth?

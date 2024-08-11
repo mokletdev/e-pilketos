@@ -231,9 +231,20 @@ export const UpdateVoteSession = async (
     const oldVoteSession = await client.vote_session_candidate.findMany({
       where: { vote_session_id: id },
     });
-    const findCandidates = await client.vote_session_candidate.findFirst({
-      include: { candidate: true },
+    const findCandidates = await client.vote_session_candidate.findFirst({});
+    const findDataCandidate = await client.candidates.findFirst({
+      where: { Vote_session_candidate: { candidate: { id: id } } },
+      include: { Vote_session_candidate: true },
     });
+    const findVoteSessionCandidate =
+      await client.vote_session_candidate.findUnique({
+        where: { vote_session_id: id },
+      });
+    console.log(findVoteSessionCandidate);
+    console.log(findCandidates);
+    console.log(oldVoteSession);
+    console.log(findDataCandidate);
+
     const voteSession = await client.vote_session.update({
       where: { id },
       data: {
@@ -243,11 +254,11 @@ export const UpdateVoteSession = async (
         isPublic: data.isPublic,
         max_vote: data.max_vote,
         vote_session_candidate: {
-          // disconnect: oldVoteSession.map((voteSession) => ({
-          //   id: voteSession.id,
-          // })),
+          disconnect: oldVoteSession.map((voteSession) => ({
+            id: voteSession.id,
+          })),
           create: {
-            candidate_id: findCandidates?.id as string,
+            candidate_id: findCandidates?.candidate_id as string,
             candidates_number: findCandidates?.candidates_number || 0,
             candidate: (findCandidates?.candidate_id as undefined) || undefined,
           },
@@ -273,8 +284,11 @@ export type VoteSessionGeneralPayload = Prisma.Vote_sessionGetPayload<{
 }>;
 export type VoteSessionWithCandidates = Prisma.Vote_sessionGetPayload<{
   include: {
-    vote_session_candidate: true;
-    User_vote: true;
+    vote_session_candidate: {
+      select: { candidate_id: true; candidates_number: true };
+    };
+    // User_vote: true;
+    // vote_session_access: true;
   };
 }>;
 
@@ -285,4 +299,9 @@ export type VoteSessionWithUserVotePayload = Prisma.Vote_sessionGetPayload<{
 export type getCandidatesWhereVoteSessionInput =
   Prisma.Vote_session_candidateGetPayload<{
     include: { vote_session: true };
+  }>;
+
+export type CandidatesWithVoteSessionCandidates =
+  Prisma.Vote_session_candidateGetPayload<{
+    select: { candidate_id: true; candidates_number: true };
   }>;
