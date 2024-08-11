@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import SectionsGap from "./SectionsGap";
 import Link from "next/link";
-import LogoMPK from "@/../public/images/LogoMPK.png";
+import LogoMPK from "@/../public/logo-mpk.png";
 import { Large_Text, Small_Text } from "./Text";
 import Image from "next/image";
 import { FormButton } from "./Button";
