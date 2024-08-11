@@ -1,13 +1,14 @@
 import client from "@/lib/prisma";
 import { Prisma } from "@prisma/client";
+import { getAllCandidates } from "./candidates.query";
 
 export const getAllVoteSession = async () => {
   try {
     const voteSession = await client.vote_session.findMany({
-      // select: { User_vote: { include: { candidate: true } } },
       include: {
         User_vote: { include: { candidate: true } },
-        Vote_session_candidate: true,
+        vote_session_access: true,
+        vote_session_candidate: true,
       },
     });
     return voteSession;
@@ -49,17 +50,14 @@ export const createVoteSession = async (data: VoteSessionGeneralPayload) => {
         closeAt: data.closeAt,
         isPublic: data.isPublic,
         max_vote: data.max_vote,
-        Vote_session_candidate: {
-          connect: {
-            candidate_id: data.Vote_session_candidate?.candidate_id,
-          },
+        vote_session_candidate: {
+          create: data.vote_session_candidate.map((can) => ({
+            candidate_id: can.candidate_id,
+            candidates_number: can.candidates_number,
+          })),
         },
       },
     });
-    console.log(
-      "Updating candidate number:",
-      data.Vote_session_candidate?.candidates_number,
-    );
 
     return voteSession;
   } catch (error) {
@@ -230,6 +228,12 @@ export const UpdateVoteSession = async (
   data: VoteSessionGeneralPayload,
 ) => {
   try {
+    const oldVoteSession = await client.vote_session_candidate.findMany({
+      where: { vote_session_id: id },
+    });
+    const findCandidates = await client.vote_session_candidate.findFirst({
+      include: { candidate: true },
+    });
     const voteSession = await client.vote_session.update({
       where: { id },
       data: {
@@ -238,22 +242,19 @@ export const UpdateVoteSession = async (
         closeAt: data.closeAt,
         isPublic: data.isPublic,
         max_vote: data.max_vote,
-        Vote_session_candidate: {
-          update: {
-            where: {
-              id: data.Vote_session_candidate?.id,
-            },
-            data: {
-              candidate_id: data.Vote_session_candidate?.candidate_id,
-            },
+        vote_session_candidate: {
+          // disconnect: oldVoteSession.map((voteSession) => ({
+          //   id: voteSession.id,
+          // })),
+          create: {
+            candidate_id: findCandidates?.id as string,
+            candidates_number: findCandidates?.candidates_number || 0,
+            candidate: (findCandidates?.candidate_id as undefined) || undefined,
           },
         },
       },
     });
-    console.log(
-      "Updating candidate number:",
-      data.Vote_session_candidate?.candidates_number,
-    );
+
     return voteSession;
   } catch (error) {
     console.error((error as Error).message);
@@ -263,15 +264,17 @@ export const UpdateVoteSession = async (
 
 export type VoteSessionGeneralPayload = Prisma.Vote_sessionGetPayload<{
   include: {
-    Vote_session_candidate: {
-      select: { candidate_id: true; candidates_number: true; id: true };
+    vote_session_candidate: {
+      select: { candidate_id: true; candidates_number: true };
     };
+    // User_vote: true;
+    // vote_session_access: true;
   };
 }>;
 export type VoteSessionWithCandidates = Prisma.Vote_sessionGetPayload<{
   include: {
-    Vote_session_candidate: true;
-    User_vote: { select: { candidate: true; candidate_id: true } };
+    vote_session_candidate: true;
+    User_vote: true;
   };
 }>;
 

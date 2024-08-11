@@ -15,6 +15,8 @@ import { createVoteSession, UpdateVoteSession } from "./voteSession.query";
 import { generatePassword } from "../generatePassword";
 import { EmailService } from "@/lib/emailService";
 import { newUserAccount } from "../emailTemplate";
+import CandidateCard from "@/app/(admin)/admin/liveCount/_components/CandidateCard";
+import CandidatesTable from "@/app/(admin)/admin/candidates/_components/Table";
 
 export const deleteUserById = async (id: string) => {
   try {
@@ -224,10 +226,20 @@ export const upsertVoteSession = async (id: string | null, data: FormData) => {
     const end_time = new Date(data.get("end_time") as string);
     const isPublic = data.get("is_active") === "true";
     const max_vote = parseInt(data.get("max_vote") as string, 10);
-    const candidates_number = data.get("candidates_number");
+    const candidates_id = data.getAll("candidate_id") as string[];
+    const candidates_number = parseInt(
+      data.get("candidate_number") as string,
+      10,
+    );
 
-    const findVoteSessionCandidatesId =
-      await client.vote_session_candidate.findFirst();
+    const vote_session_candidatesd = candidates_id.map((can, i) => ({
+      candidate_id: can,
+      candidates_number: isNaN(candidates_number) ? i : candidates_number,
+    }));
+
+    if (vote_session_candidatesd.length === 0) {
+      throw new Error("Tidak ada kandidat yang dipilih");
+    }
 
     if (id == null) {
       await createVoteSession({
@@ -237,7 +249,7 @@ export const upsertVoteSession = async (id: string | null, data: FormData) => {
         closeAt: end_time,
         isPublic,
         max_vote,
-        Vote_session_candidate: { candidate_id},
+        vote_session_candidate: vote_session_candidatesd,
       });
     } else {
       await UpdateVoteSession(id, {
@@ -247,9 +259,7 @@ export const upsertVoteSession = async (id: string | null, data: FormData) => {
         closeAt: end_time,
         isPublic,
         max_vote,
-        Vote_session_candidate: {
-          candidate_id,
-        },
+        vote_session_candidate: vote_session_candidatesd,
       });
     }
 

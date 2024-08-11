@@ -22,6 +22,7 @@ import {
   VoteSessionWithCandidates,
 } from "@/utils/database/voteSession.query";
 import { upsertVoteSession } from "@/utils/database/getServerSession";
+import { Vote_session_candidate } from "@prisma/client";
 
 export default function VoteSessionModal({
   setIsOpenModal,
@@ -33,10 +34,15 @@ export default function VoteSessionModal({
   candidats?: CandidatesPayload[] | null;
 }) {
   const [isLoading, setIsLoading] = useState(false);
-  const [candidates, setCandidates] = useState(candidats);
+  const [candidates, setCandidates] = useState<Vote_session_candidate[]>(
+    data?.vote_session_candidate || [],
+  );
 
   const AddCandidates = () => {
-    setCandidates([...candidates, {}]);
+    setCandidates([
+      ...candidates,
+      { candidates_number: 0, candidate_id: "", id: "", vote_session_id: "" },
+    ]);
   };
 
   const DeleteCandidates = (index: number) => {
@@ -50,13 +56,25 @@ export default function VoteSessionModal({
     setIsLoading(true);
     try {
       const toastId = toast.loading("Loading...");
-      const formdata: any = new FormData(e.target);
+      const formdata = new FormData(e.target);
+      candidates.forEach((candidate, index) => {
+        formdata.append(`candidate_id`, candidate.candidate_id);
+        formdata.append(
+          `candidate_number`,
+          candidate.candidates_number?.toString(),
+        );
+      });
 
       const result = await upsertVoteSession(data?.id as string, formdata);
       console.log(result);
-      console.log(candidats);
-      console.log(data?.User_vote?.candidate_id);
+      console.log(candidates);
+      console.log(data?.vote_session_candidate);
       console.log(data);
+      if (data?.vote_session_candidate.length === 0) {
+        setIsLoading(false);
+        toast.error("Tidak ada kandidat yang dipilih", { id: toastId });
+        return;
+      }
 
       if (!result.error) {
         toast.success(result.message, { id: toastId });
@@ -87,14 +105,6 @@ export default function VoteSessionModal({
           value={data?.title || ""}
           required
         />
-        {/* <TextField
-          variant="Rounded-sm"
-          label="Nomor Kandidat"
-          type="text"
-          name="candidates_number"
-          value={data?.Vote_session_candidate?.candidates_number.toString()}
-          required
-        /> */}
         <div className="grid grid-cols-2 gap-x-7">
           <TextField
             variant="Rounded-sm"
@@ -139,21 +149,23 @@ export default function VoteSessionModal({
             <div className="flex gap-x-3 items-center">
               <div className="w-full">
                 <SelectField
-                  name="select_candidates"
+                  name={`candidate_id[${index}]`}
                   className="w-full"
-                  value={data?.Vote_session_candidate?.candidate_id}
-                  options={candidats?.map((x, i) => ({
-                    label: x.name,
-                    value: x.id,
-                  }))}
+                  value={can.candidate_id}
+                  options={
+                    candidats?.map((x, i) => ({
+                      label: x.name,
+                      value: x.id,
+                    })) || []
+                  }
                 />
                 <TextField
                   variant="Rounded-sm"
                   type="number"
                   className="w-full"
                   label="Nomor Kandidat"
-                  name="candidates_number"
-                  value={data?.Vote_session_candidate?.candidates_number.toString()}
+                  name={`candidate_number[${index}`}
+                  value={can.candidates_number?.toString()}
                   required
                 />
               </div>

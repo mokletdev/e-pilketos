@@ -10,6 +10,7 @@ export const getAllCandidates = async (
       pengalaman: true,
       User_vote: { select: { vote_session: true } },
       user: true,
+      Vote_session_candidate: true,
     },
   });
 };

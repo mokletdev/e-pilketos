@@ -7,12 +7,6 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-enum Role {
-  SISWA
-  GURU
-  ADMIN
-}
-
 model User_Auth {
   id         String    @id @default(uuid()) @map("id") @db.Char(36)
   password   String?
@@ -34,19 +28,20 @@ model User {
 }
 
 model Candidates {
-  id            String       @id @default(uuid()) @map("id") @db.Char(36)
-  img           String
-  name          String
-  kelas         String?
-  visi          String
-  misi          String
-  pengalaman    Pengalaman[]
-  motto         String
-  progja        String
-  video_profile String?
-  user          User?        @relation(fields: [userId], references: [id])
-  User_vote     User_vote?
-  userId        String?      @db.Char(36)
+  id                     String                  @id @default(uuid()) @map("id") @db.Char(36)
+  img                    String
+  name                   String
+  kelas                  String?
+  visi                   String
+  misi                   String
+  pengalaman             Pengalaman[]
+  motto                  String
+  progja                 String
+  video_profile          String?
+  user                   User?                   @relation(fields: [userId], references: [id])
+  User_vote              User_vote?
+  userId                 String?                 @db.Char(36)
+  Vote_session_candidate Vote_session_candidate?
 }
 
 model Pengalaman {
@@ -64,8 +59,8 @@ model Vote_session {
   isPublic               Boolean
   max_vote               Int
   User_vote              User_vote[]
-  Vote_session_candidate Vote_session_candidate[]
-  vote_session_access    vote_session_access?
+  vote_session_candidate Vote_session_candidate[]
+  vote_session_access    vote_session_access[]
 }
 
 model User_vote {
@@ -83,6 +78,7 @@ model Vote_session_candidate {
   vote_session_id   String       @unique
   candidate_id      String       @unique
   vote_session      Vote_session @relation(fields: [vote_session_id], references: [id])
+  candidate         Candidates   @relation(fields: [candidate_id], references: [id])
   candidates_number Int
 }
 
@@ -92,4 +88,10 @@ model vote_session_access {
   user_Id         String       @unique
   vote_session    Vote_session @relation(fields: [vote_session_id], references: [id])
   user            User         @relation(fields: [user_Id], references: [id])
+}
+
+enum Role {
+  ADMIN
+  GURU
+  SISWA
 }

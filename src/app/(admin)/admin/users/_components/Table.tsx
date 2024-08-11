@@ -15,6 +15,7 @@ import Modal from "./Modal";
 import { AddBulk } from "./ModalBulk";
 import { TextField } from "@/app/components/general/Input";
 import { bulkDeleteUsers } from "@/utils/actions/users.actions";
+import { useRouter } from "next/navigation";
 
 export default function UserTable({ data }: { data: userLastLoginPayload[] }) {
   const [modal, setModal] = useState(false);
@@ -25,6 +26,7 @@ export default function UserTable({ data }: { data: userLastLoginPayload[] }) {
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
   const [toggleCleared, setToggleCleared] = useState(false);
   const [selectedRole, setRoleSelected] = useState<Role | "ALL" | null>(null);
+  const router = useRouter();
 
   const columns: TableColumn<userLastLoginPayload>[] = [
     {
@@ -85,6 +87,7 @@ export default function UserTable({ data }: { data: userLastLoginPayload[] }) {
     const result = await deleteUserById(id);
     if (!result.error) {
       toast.success(result.message, { id: toastId });
+      router.refresh();
     } else toast.error(result.message, { id: toastId });
   };
 
@@ -111,6 +114,7 @@ export default function UserTable({ data }: { data: userLastLoginPayload[] }) {
     const result = await bulkDeleteUsers(selectedRows);
     if (!result.error) {
       toast.success(result.message, { id: toastId });
+      router.refresh();
     } else toast.error(result.message, { id: toastId });
   }
 
