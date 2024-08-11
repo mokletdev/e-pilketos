@@ -15,6 +15,8 @@ import { createVoteSession, UpdateVoteSession } from "./voteSession.query";
 import { generatePassword } from "../generatePassword";
 import { EmailService } from "@/lib/emailService";
 import { newUserAccount } from "../emailTemplate";
+import CandidateCard from "@/app/(admin)/admin/liveCount/_components/CandidateCard";
+import CandidatesTable from "@/app/(admin)/admin/candidates/_components/Table";
 
 export const deleteUserById = async (id: string) => {
   try {
@@ -224,6 +226,16 @@ export const upsertVoteSession = async (id: string | null, data: FormData) => {
     const end_time = new Date(data.get("end_time") as string);
     const isPublic = data.get("is_active") === "true";
     const max_vote = parseInt(data.get("max_vote") as string, 10);
+    const candidates_id = data.getAll("candidate_id") as string[];
+    const candidates_number = parseInt(
+      data.get("candidate_number") as string,
+      10,
+    );
+
+    const vote_session_candidatesd = candidates_id.map((can) => ({
+      candidate_id: can,
+      candidates_number: candidates_number,
+    }));
 
     if (id == null) {
       await createVoteSession({
@@ -233,8 +245,20 @@ export const upsertVoteSession = async (id: string | null, data: FormData) => {
         closeAt: end_time,
         isPublic,
         max_vote,
+        vote_session_candidate: vote_session_candidatesd.map((X) => ({
+          candidate_id: X.candidate_id,
+          candidates_number: X.candidates_number,
+        })),
       });
     } else {
+      const findVoteSession = await client.vote_session.findUnique({
+        where: { id: id },
+        include: { vote_session_candidate: true },
+      });
+      const oldVoteSession = await client.vote_session_candidate.findMany({
+        where: { vote_session_id: id },
+      });
+      console.log(findVoteSession);
       await UpdateVoteSession(id, {
         id: id ?? "",
         title,
@@ -242,7 +266,35 @@ export const upsertVoteSession = async (id: string | null, data: FormData) => {
         closeAt: end_time,
         isPublic,
         max_vote,
+        vote_session_candidate: vote_session_candidatesd.map((X) => ({
+          candidate_id: X.candidate_id,
+          candidates_number: X.candidates_number,
+        })),
       });
+      if (findVoteSession) {
+        // const update = await client.vote_session.update({
+        //   where: { id },
+        //   data: {
+        //     title: title ?? findVoteSession.title,
+        //     openedAt: start_time ?? findVoteSession.openedAt,
+        //     closeAt: end_time ?? findVoteSession.closeAt,
+        //     isPublic: isPublic ?? findVoteSession.isPublic,
+        //     max_vote: max_vote ?? findVoteSession.max_vote,
+        //     vote_session_candidate: {
+        //       disconnect: oldVoteSession.map((voteSession) => ({
+        //         id: voteSession.id,
+        //       })),
+        //       create: {
+        //         candidate_id: ,
+        //         candidates_number: vote_session_candidatesd.map(
+        //           (x) => x.candidates_number,
+        //         ),
+        //       },
+        //     },
+        //   },
+        // });
+      }
+      console.log(candidates_id);
     }
 
     revalidatePath("/admin/votesesion");

@@ -32,7 +32,7 @@ export default function CandidateCard() {
               </div>
             </div>
             <div className="">
-              <Progressbar progress={40} />
+              <Progressbar progress={10} />
             </div>
           </div>
           <ImageProfile src={FotoKandidat} />

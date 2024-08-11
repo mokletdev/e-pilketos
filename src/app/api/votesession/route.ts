@@ -1,4 +1,7 @@
-import { getAllVoteSession } from "@/utils/database/voteSession.query";
+import {
+  getAllVoteSession,
+  getAllVoteSessionCandidates,
+} from "@/utils/database/voteSession.query";
 import { NextResponse } from "next/server";
 
 export async function GET(req: Request) {

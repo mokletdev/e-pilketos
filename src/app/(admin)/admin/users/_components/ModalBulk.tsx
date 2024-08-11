@@ -37,6 +37,7 @@ export default function Modal({
         toast.success(update.message, { id: toastId });
         setIsLoading(false);
         setIsOpenModal(false);
+        router.refresh();
       } else {
         toast.error(update.message, { id: toastId });
         setIsLoading(false);
