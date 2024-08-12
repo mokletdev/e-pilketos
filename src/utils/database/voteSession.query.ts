@@ -118,19 +118,6 @@ export const createVoteSession = async (data: VoteSessionGeneralPayload) => {
 //   }
 // };
 
-export const deleteVoteSessionById = async (id: string) => {
-  try {
-    await client.vote_session.delete({ where: { id } });
-    return { error: false, message: "Vote session deleted successfully" };
-  } catch (error) {
-    console.error((error as Error).message);
-    return {
-      error: true,
-      message: "An error occurred while deleting the vote session",
-    };
-  }
-};
-
 export const updatedVoteSessionbyId = async (
   id: string,
   data: VoteSessionGeneralPayload,

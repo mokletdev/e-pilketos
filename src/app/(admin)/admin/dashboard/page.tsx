@@ -11,6 +11,13 @@ import { Role } from "@prisma/client";
 export default async function Dashboard() {
   const session = await nextGetServerSession();
   const { user } = session!;
+  const AllDataUserVote = [900, 300];
+  const AllUser = AllDataUserVote.reduce((acc, cur) => acc + cur);
+  const VoteUser = [500, 50];
+  const AllVote = VoteUser.reduce((acc, cur) => acc + cur);
+  const percentGuru = Math.floor((VoteUser[0] / AllDataUserVote[0]) * 100);
+  const percentSiswa = Math.floor((VoteUser[1] / AllDataUserVote[1]) * 100);
+  const percentAll = Math.floor((AllVote / AllUser) * 100);
 
   const admin: userLastLoginPayload[] = await getAllUser({
     AND: [
@@ -25,16 +32,16 @@ export default async function Dashboard() {
   return (
     <main className="h-full overflow-x-hidden">
       <div className="w-full bg-red-light-6 gap-x-[28px] flex flex-col xl:flex-row">
-        <ProgessCard target="Siswa" percent={50}>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit.
+        <ProgessCard target="Siswa" percent={percentSiswa}>
+          Persentase Siswa yang sudah vote.
         </ProgessCard>
-        <ProgessCard target="Guru" percent={90}>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit.
+        <ProgessCard target="Guru" percent={percentGuru}>
+          Persentase Guru yang sudah vote.
         </ProgessCard>
       </div>
       <div className="mt-[28px] pb-[52px]">
-        <ProgessCard target="Semua" percent={20}>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit.
+        <ProgessCard target="Semua" percent={percentAll}>
+          Persentase Siswa dan Guru yang sudah vote.
         </ProgessCard>
       </div>
       <UserTable

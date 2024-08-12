@@ -310,3 +310,17 @@ export const upsertVoteSession = async (id: string | null, data: FormData) => {
     };
   }
 };
+
+export const deleteVoteSessionById = async (id: string) => {
+  try {
+    const del = await client.vote_session.delete({ where: { id: id } });
+    if (!del) return { error: true, message: "Failed to Delete Vote Session" };
+    else return { error: false, message: "Vote session deleted successfully" };
+  } catch (error) {
+    console.error(error);
+    return {
+      error: true,
+      message: "An error occurred while deleting the vote session",
+    };
+  }
+};
