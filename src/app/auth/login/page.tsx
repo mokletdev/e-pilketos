@@ -63,17 +63,7 @@ export default function AdminLogin() {
   };
   return (
     <main className="px-4 lg:px-20">
-      <Image
-        src={imgLeft}
-        alt="Image Carousel"
-        className="h-full w-auto md:absolute top-0 left-0 hidden md:block"
-      />
-      <Image
-        src={HeaderSect}
-        alt="HeaderSection"
-        className="-mt-72 md:hidden lg:-mt-0 mx-auto"
-      />
-      <div className="w-full h-full my-14 z-20 relative">
+      <div className="w-full h-full my-20 z-20 relative">
         <form onSubmit={handleSubmit}>
           <div className="bg-white max-w-[624px] w-full py-[72px] md:py-[92px] px-[24px] md:px-[88px] flex-col items-center mx-auto shadow-shadow-2">
             <H2 className="text-center text-primary-text-color">
@@ -117,11 +107,6 @@ export default function AdminLogin() {
           </div>
         </form>
       </div>
-      <Image
-        src={imgRight}
-        alt="Image Carousel"
-        className="h-full w-auto md:absolute top-0 right-0  hidden md:block"
-      />
     </main>
   );
 }

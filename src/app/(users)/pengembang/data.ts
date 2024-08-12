@@ -21,7 +21,7 @@ export const Contributor: dataProps[] = [
     job: "Backend",
   },
   {
-    name: "Fahrell Shandy Zhariff Widiatmoko",
+    name: "Fahrell Shandy Zhariif",
     ImgUrl: "",
     gen: "32nd",
     job: "Frontend",
