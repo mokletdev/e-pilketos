@@ -1,10 +1,14 @@
 "use client";
 import { useKeenSlider } from "keen-slider/react";
 import { useEffect, useState } from "react";
-import imagePlaceHolder from "@/../public/images/imagePlaceholder.jpeg";
 import Image from "next/image";
 import Arrow from "../../general/Arrow";
 import "keen-slider/keen-slider.min.css";
+import img1 from "@/../public/images/IMG_3229.png";
+import img2 from "@/../public/images/IMG_3233.png";
+import img3 from "@/../public/images/IMG_3234.png";
+import img4 from "@/../public/images/IMG_3237.png";
+import img5 from "@/../public/images/IMG_3259.png";
 
 interface GaleriProps {
   Image: any;
@@ -14,27 +18,23 @@ interface GaleriProps {
 export default function GaleriCarousel() {
   const galeriCard: GaleriProps[] = [
     {
-      Image: imagePlaceHolder,
+      Image: img1,
       alt: "",
     },
     {
-      Image: imagePlaceHolder,
+      Image: img2,
       alt: "",
     },
     {
-      Image: imagePlaceHolder,
+      Image: img3,
       alt: "",
     },
     {
-      Image: imagePlaceHolder,
+      Image: img4,
       alt: "",
     },
     {
-      Image: imagePlaceHolder,
-      alt: "",
-    },
-    {
-      Image: imagePlaceHolder,
+      Image: img5,
       alt: "",
     },
   ];
@@ -75,28 +75,30 @@ export default function GaleriCarousel() {
     return () => clearInterval(timer);
   }, [slider]);
   return (
-    <main className="">
+    <>
       <div
         data-aos="fade-up"
         data-aos-duration="500"
         data-aos-delay="500"
-        className="mt-[100px] navigation-wrapper relative"
+        className="mt-[100px] relative"
       >
         <div
           ref={sliderRef}
-          className="keen-slider teams-wrapper max-w-full max-h-full"
+          className="keen-slider teams-wrapper max-w-full max-h-full group"
         >
           {galeriCard.map((item, index) => (
             <div
               key={index}
               className={`keen-slider__slide number-slide${
                 index + 1
-              } hover:scale-110 `}
+              } group-hover:scale-110 `}
             >
               <Image
                 src={item.Image}
                 alt={item.alt}
                 className={`rounded-2xl`}
+                width={800}
+                height={600}
               />
             </div>
           ))}
@@ -123,6 +125,6 @@ export default function GaleriCarousel() {
           )}
         </div>
       </div>
-    </main>
+    </>
   );
 }

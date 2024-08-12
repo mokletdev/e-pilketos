@@ -40,7 +40,9 @@ export default function RootLayout({
     <html lang="en" className="scroll-smooth">
       <InitialTransition>
         <AdminDisablePathname />
-        <body className={`${inter.className} selection:bg-red-light-2`}>
+        <body
+          className={`${inter.className} selection:bg-red-light-2 bg-red-light-6`}
+        >
           <NextAuthProviders>
             <ProgressBarProvider>{children}</ProgressBarProvider>
             <Toaster />

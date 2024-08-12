@@ -1,9 +1,7 @@
 "use client";
-import React, { useState } from "react";
+import React from "react";
 import SectionsGap from "../general/SectionsGap";
-import Image from "next/image";
 import "keen-slider/keen-slider.min.css";
-import { useKeenSlider, TrackDetails } from "keen-slider/react";
 import GaleriCarousel from "./home-components/Carousel";
 
 export default function Galeri() {
