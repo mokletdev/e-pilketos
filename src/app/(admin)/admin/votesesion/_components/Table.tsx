@@ -2,14 +2,12 @@
 import { useEffect, useState } from "react";
 import DataTable, { TableColumn } from "react-data-table-component";
 import { FaPencilAlt, FaRegTrashAlt } from "react-icons/fa";
-import {
-  deleteVoteSessionById,
-  VoteSessionGeneralPayload,
-} from "../../../../../utils/database/voteSession.query"; // Adjust the import path as needed
+import { VoteSessionGeneralPayload } from "../../../../../utils/database/voteSession.query"; // Adjust the import path as needed
 import VoteSessionModal from "./Modal"; // Adjust the import path as needed
 import toast from "react-hot-toast";
 import AddVoteSession from "./AddVoteSession";
 import { CandidatesPayload } from "@/utils/database/user.query";
+import { deleteVoteSessionById } from "@/utils/database/getServerSession";
 
 export default function VoteSessionTable({
   data,
