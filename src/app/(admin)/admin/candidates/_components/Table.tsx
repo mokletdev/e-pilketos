@@ -34,7 +34,7 @@ export default function CandidatesTable({
     },
     {
       name: "Kelas",
-      selector: (row) => row.kelas as string,
+      selector: (row) => row.kandidat_kelas as string,
       sortable: false,
     },
     {
