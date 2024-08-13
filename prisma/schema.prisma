@@ -22,6 +22,7 @@ model User {
   user_pic            String?
   role                Role                 @default(SISWA)
   User_vote           User_vote?
+  kelas               String?
   vote_session_access vote_session_access?
   User_Auth           User_Auth?
   Candidates          Candidates[]
@@ -31,10 +32,10 @@ model Candidates {
   id                     String                  @id @default(uuid()) @map("id") @db.Char(36)
   img                    String
   name                   String
-  kelas                  String?
   visi                   String
   misi                   String
   pengalaman             Pengalaman[]
+  kandidat_kelas         String?
   motto                  String
   progja                 String
   video_profile          String?
@@ -94,4 +95,6 @@ enum Role {
   ADMIN
   GURU
   SISWA
+  MPK
+  OSIS
 }

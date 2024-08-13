@@ -43,6 +43,7 @@ export const updateUserById = async (id: string | null, data: FormData) => {
   try {
     const email = data.get("email") as string;
     const name = data.get("name") as string;
+    const kelas = data.get("kelas") as string;
     const password = data.get("password") as string;
     const role = data.get("role") as Role;
 
@@ -58,6 +59,7 @@ export const updateUserById = async (id: string | null, data: FormData) => {
       const create = await createUser({
         email: email,
         name: name,
+        kelas: kelas,
         role: role,
         User_Auth: {
           create: {
@@ -89,6 +91,7 @@ export const updateUserById = async (id: string | null, data: FormData) => {
           {
             email: email ?? findUserById.email,
             name: name ?? findUserById.name,
+            kelas: kelas ?? findUserById.kelas,
             role: role ?? findUserById.role,
             User_Auth: {
               update: { password: password ? hashedPassword : undefined },
@@ -133,7 +136,7 @@ export const updateCandidatesById = async (id: string, data: FormData) => {
   try {
     const name = data.get("candidatesName") as string;
     const img = data.get("img") as string;
-    const kelas = data.get("kelas") as string | null;
+    const kandidat_kelas = data.get("kandidat_kelas") as string | null;
     const visi = data.get("visi") as string;
     const misi = data.get("misi") as string;
     const pengalaman = JSON.parse(data.get("pengalaman") as string) as {
@@ -161,7 +164,7 @@ export const updateCandidatesById = async (id: string, data: FormData) => {
         progja,
         video_profile,
         visi,
-        kelas,
+        kandidat_kelas,
         user: { connect: { id: user?.id } },
       });
       if (!create) throw new Error("Create Candidate failed");
@@ -199,7 +202,7 @@ export const updateCandidatesById = async (id: string, data: FormData) => {
         progja: progja ?? existingCandidate?.progja,
         video_profile: video_profile ?? existingCandidate?.video_profile,
         visi: visi ?? existingCandidate?.visi,
-        kelas: kelas ?? existingCandidate?.kelas,
+        kandidat_kelas: kandidat_kelas ?? existingCandidate?.kandidat_kelas,
       });
       if (!update) throw new Error("Update Candidate failed");
 

@@ -128,11 +128,11 @@ export default function Modal({
               required
             />
             <TextField
-              value={data?.kelas as string}
+              value={data?.kandidat_kelas as string}
               variant="Rounded-sm"
               type="text"
               label="Kelas"
-              name="kelas"
+              name="kandidat_kelas"
               required
             />
             <TextField

@@ -24,7 +24,9 @@ export default function Pengembang() {
                   <Image
                     src={student.ImgUrl}
                     alt={student.name}
-                    className="mx-auto w-[168px] h-[212px]"
+                    width={168}
+                    height={212}
+                    className="mx-auto w-[268px] h-[212px] object-cover rounded-[12px]"
                   />
                   <H4 className="text-center mt-6">{student.name}</H4>
                   <p className="text-[24px] font-normal text-secondary-text-color text-center">
