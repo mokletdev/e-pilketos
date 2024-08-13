@@ -68,6 +68,14 @@ export default function Modal({
           required
         />
         <TextField
+          value={data?.kelas as string}
+          type="text"
+          label="Kelas"
+          name="kelas"
+          placeholder="Kelas"
+          required
+        />
+        <TextField
           type="password"
           label="Password"
           name="password"
