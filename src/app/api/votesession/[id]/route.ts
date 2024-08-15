@@ -8,8 +8,6 @@ export async function GET(
 ) {
   const { id } = params;
 
-  console.log(id);
-
   const voteData = await client.vote_session.findUnique({
     where: { id: id as string },
     include: {
