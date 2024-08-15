@@ -5,9 +5,11 @@ import Image from "next/image";
 import HeaderSect from "@/../public/images/headersection.png";
 import { H1, Large_Text } from "../general/Text";
 import { FormButton } from "../general/Button";
-import { signIn } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 export default function Header() {
+  const router = useRouter();
+
   return (
     <>
       <main className="bg-red-light-6 w-full h-auto flex pb-[92px]">
@@ -29,7 +31,7 @@ export default function Header() {
               </Large_Text>
               <div className="flex justify-center 2xl:justify-normal">
                 <FormButton
-                  onClick={() => signIn()}
+                  onClick={() => router.push("/vote")}
                   variant="PRIMARY"
                   className="max-w-[210px]"
                 >

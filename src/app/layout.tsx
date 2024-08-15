@@ -10,9 +10,9 @@ import { AdminDisablePathname } from "@/lib/disablePathNames";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "E Pilketos Moklet",
+  title: "E-Pilketos Moklet",
   description:
-    "E-Pilketos adalah aplikasi E-Voting untuk Pemilihan Ketua Osis. Aplikasi ini dikembangkan untuk membantu melakukan Pemilihan Ketua OSIS dengan Mudah dan Cepat.",
+    "Aplikasi pemilihan Ketua OSIS SMK Telkom Malang Masa Bakti 2024/2025",
   keywords: [
     "E-Pilketos",
     "E-Voting",

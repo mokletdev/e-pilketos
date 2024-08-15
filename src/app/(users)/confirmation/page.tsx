@@ -22,9 +22,6 @@ export default function Confirmation() {
                 <H1 className="text-primary-color font-bold text-center mb-[18px] 2xl:mb-[28px]">
                   Terima Kasih Telah Melakukan Voting
                 </H1>
-                <H5 className="text-center text-secondary-text-color font-semibold">
-                  Setelah selesai melakukan voting, akan dilakukan auto log out
-                </H5>
               </div>
             </div>
           </div>

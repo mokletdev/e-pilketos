@@ -16,32 +16,33 @@ model User_Auth {
 }
 
 model User {
-  id                  String               @id @default(uuid()) @map("user_id") @db.Char(36)
-  email               String               @unique
+  id                  String                @id @default(uuid()) @map("user_id") @db.Char(36)
+  email               String                @unique
   name                String
   user_pic            String?
-  role                Role                 @default(SISWA)
-  User_vote           User_vote?
-  vote_session_access vote_session_access?
+  kelas               String?
+  role                Role                  @default(SISWA)
+  User_vote           User_vote[]
+  vote_session_access vote_session_access[]
   User_Auth           User_Auth?
   Candidates          Candidates[]
 }
 
 model Candidates {
-  id                     String                  @id @default(uuid()) @map("id") @db.Char(36)
+  id                     String                   @id @default(uuid()) @map("id") @db.Char(36)
   img                    String
   name                   String
-  kelas                  String?
+  kandidat_kelas         String?
   visi                   String
   misi                   String
   pengalaman             Pengalaman[]
   motto                  String
   progja                 String
   video_profile          String?
-  user                   User?                   @relation(fields: [userId], references: [id])
-  User_vote              User_vote?
-  userId                 String?                 @db.Char(36)
-  Vote_session_candidate Vote_session_candidate?
+  user                   User?                    @relation(fields: [userId], references: [id])
+  User_vote              User_vote[]
+  userId                 String?                  @db.Char(36)
+  Vote_session_candidate Vote_session_candidate[]
 }
 
 model Pengalaman {
@@ -65,9 +66,9 @@ model Vote_session {
 
 model User_vote {
   id              String       @id @default(uuid()) @map("id") @db.Char(36)
-  vote_session_id String       @unique
-  candidate_id    String       @unique
-  user_Id         String       @unique
+  vote_session_id String
+  candidate_id    String
+  user_Id         String
   vote_session    Vote_session @relation(fields: [vote_session_id], references: [id])
   candidate       Candidates   @relation(fields: [candidate_id], references: [id])
   user            User         @relation(fields: [user_Id], references: [id])
@@ -75,8 +76,8 @@ model User_vote {
 
 model Vote_session_candidate {
   id                String       @id @default(uuid()) @map("id") @db.Char(36)
-  vote_session_id   String       @unique
-  candidate_id      String       @unique
+  vote_session_id   String
+  candidate_id      String
   vote_session      Vote_session @relation(fields: [vote_session_id], references: [id])
   candidate         Candidates   @relation(fields: [candidate_id], references: [id])
   candidates_number Int
@@ -84,8 +85,8 @@ model Vote_session_candidate {
 
 model vote_session_access {
   id              String       @id @default(uuid()) @map("id") @db.Char(36)
-  vote_session_id String       @unique
-  user_Id         String       @unique
+  vote_session_id String
+  user_Id         String
   vote_session    Vote_session @relation(fields: [vote_session_id], references: [id])
   user            User         @relation(fields: [user_Id], references: [id])
 }
@@ -94,4 +95,6 @@ enum Role {
   ADMIN
   GURU
   SISWA
+  OSIS
+  MPK
 }

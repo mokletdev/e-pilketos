@@ -1,29 +1,22 @@
 "use client";
 import { FormButton } from "@/app/components/general/Button";
-import {
-  SelectField,
-  TextArea,
-  TextField,
-} from "@/app/components/general/Input"; // No need for SelectField here
+import { SelectField, TextField } from "@/app/components/general/Input"; // No need for SelectField here
 import { AddModal } from "@/app/components/general/Modal";
 import { Medium_Text } from "@/app/components/general/Text";
-import { CandidatesPayload } from "@/utils/database/user.query";
 import React, {
   ChangeEvent,
   Dispatch,
   FormEvent,
   SetStateAction,
-  useEffect,
   useState,
 } from "react";
 import toast from "react-hot-toast";
 import {
   CandidatesWithVoteSessionCandidates,
-  getCandidatesWhereVoteSessionInput,
   VoteSessionWithCandidates,
 } from "@/utils/database/voteSession.query";
 import { upsertVoteSession } from "@/utils/database/getServerSession";
-import { Vote_session_candidate } from "@prisma/client";
+import { Candidates } from "@prisma/client";
 
 export default function VoteSessionModal({
   setIsOpenModal,
@@ -32,7 +25,7 @@ export default function VoteSessionModal({
 }: {
   setIsOpenModal: Dispatch<SetStateAction<boolean>>;
   data?: VoteSessionWithCandidates | null;
-  candidats?: CandidatesPayload[] | null;
+  candidats?: Candidates[] | null;
 }) {
   const [isLoading, setIsLoading] = useState(false);
   const [candidates, setCandidates] = useState<
@@ -56,24 +49,7 @@ export default function VoteSessionModal({
       const toastId = toast.loading("Loading...");
       const formdata = new FormData(e.target);
 
-      candidates.forEach((candidate, index) => {
-        formdata.append(`candidate_id`, candidate.candidate_id);
-        formdata.append(
-          `candidate_number`,
-          candidate.candidates_number?.toString(),
-        );
-      });
-
       const result = await upsertVoteSession(data?.id as string, formdata);
-      console.log(result);
-      console.log(candidates);
-      console.log(data?.vote_session_candidate);
-      console.log(data);
-      if (data?.vote_session_candidate.length === 0) {
-        setIsLoading(false);
-        toast.error("Tidak ada kandidat yang dipilih", { id: toastId });
-        return;
-      }
 
       if (!result.error) {
         toast.success(result.message, { id: toastId });
@@ -89,6 +65,11 @@ export default function VoteSessionModal({
       setIsLoading(false);
     }
   };
+
+  const openedAt = data?.openedAt;
+  const closedAt = data?.closeAt;
+  openedAt?.setMinutes(openedAt.getMinutes() - openedAt.getTimezoneOffset());
+  closedAt?.setMinutes(closedAt.getMinutes() - closedAt.getTimezoneOffset());
 
   return (
     <AddModal
@@ -110,7 +91,7 @@ export default function VoteSessionModal({
             type="datetime-local"
             label="Opened At"
             name="start_time"
-            value={data?.openedAt.toISOString().slice(0, 16)}
+            value={openedAt?.toISOString().slice(0, 16)}
             required
           />
           <TextField
@@ -118,7 +99,7 @@ export default function VoteSessionModal({
             type="datetime-local"
             label="Close At"
             name="end_time"
-            value={data?.closeAt.toISOString().slice(0, 16)}
+            value={closedAt?.toISOString().slice(0, 16)}
             required
           />
         </div>
@@ -142,13 +123,16 @@ export default function VoteSessionModal({
           value={data?.max_vote.toString()}
           required
         />
-        <p className="mt-6">Kandidat</p>
-        {candidates.map((can, index) => (
-          <div key={index}>
-            <div className="flex gap-x-3 items-center">
+        <div className="[&>*]:mt-4">
+          <p className="mt-6">Kandidat</p>
+          {candidates.map((can, index) => (
+            <div
+              key={can.candidate_id + index}
+              className="flex gap-x-3 items-center border-separate border border-black px-2 rounded-md"
+            >
               <div className="w-full">
                 <SelectField
-                  name={`candidate_id[]`}
+                  name={`candidate_id`}
                   className="w-full"
                   value={can.candidate_id}
                   options={
@@ -157,13 +141,14 @@ export default function VoteSessionModal({
                       value: x.id,
                     })) || []
                   }
+                  required
                 />
                 <TextField
                   variant="Rounded-sm"
                   type="text"
                   className="w-full"
-                  label="Nomor Kandidat"
-                  name={`candidate_number[]`}
+                  label="Nomor Urut Kandidat"
+                  name={`candidate_number`}
                   value={can.candidates_number?.toString()}
                   required
                 />
@@ -192,12 +177,12 @@ export default function VoteSessionModal({
                 </svg>
               </button>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
         <button
           onClick={() => AddCandidates()}
           type="button"
-          className="bg-primary-color group hover:bg-white rounded-full border-2 border-primary-color mt-3 mb-6 hover:border-primary-color p-2 duration-300"
+          className="bg-primary-color group text-white hover:text-primary-color hover:bg-white rounded-full border-2 border-primary-color mt-3 mb-6 hover:border-primary-color p-2 duration-150 flex gap-2"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -211,6 +196,7 @@ export default function VoteSessionModal({
               d="M440-440H200v-80h240v-240h80v240h240v80H520v240h-80v-240Z"
             />
           </svg>
+          Tambah Kandidat
         </button>
         <div className="w-full flex gap-x-4">
           <FormButton

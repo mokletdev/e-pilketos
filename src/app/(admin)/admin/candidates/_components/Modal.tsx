@@ -128,11 +128,11 @@ export default function Modal({
               required
             />
             <TextField
-              value={data?.kelas as string}
+              value={data?.kandidat_kelas as string}
               variant="Rounded-sm"
               type="text"
               label="Kelas"
-              name="kelas"
+              name="kandidat_kelas"
               required
             />
             <TextField
@@ -153,16 +153,6 @@ export default function Modal({
             />
           </div>
         </div>
-        <SelectField
-          label="Vote Session"
-          name="voteSessionId"
-          value={data?.User_vote?.vote_session.title || ""}
-          options={voteSessions.map((session) => ({
-            value: session.id,
-            label: session.title,
-          }))}
-          // required
-        />
         <p className="mb-3">Pengalaman</p>
         {pengalaman.map((peng, index) => (
           <div key={index} className="flex items-center gap-x-3">
