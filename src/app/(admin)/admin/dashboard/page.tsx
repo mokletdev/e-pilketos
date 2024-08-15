@@ -13,7 +13,7 @@ export default async function Dashboard() {
   const { user } = session!;
   const AllDataUserVote = [900, 300];
   const AllUser = AllDataUserVote.reduce((acc, cur) => acc + cur);
-  const VoteUser = [500, 50];
+  const VoteUser = [0, 0];
   const AllVote = VoteUser.reduce((acc, cur) => acc + cur);
   const percentGuru = Math.floor((VoteUser[0] / AllDataUserVote[0]) * 100);
   const percentSiswa = Math.floor((VoteUser[1] / AllDataUserVote[1]) * 100);

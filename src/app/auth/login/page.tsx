@@ -6,10 +6,6 @@ import { signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import React, { FormEvent, useState } from "react";
 import toast from "react-hot-toast";
-import imgLeft from "@/../public/images/LoginUserLeft.png";
-import imgRight from "@/../public/images/LoginUserRight.png";
-import Image from "next/image";
-import HeaderSect from "@/../public/images/headersection.png";
 
 export default function AdminLogin() {
   const router = useRouter();
@@ -61,6 +57,7 @@ export default function AdminLogin() {
       setError((error as Error).message);
     }
   };
+
   return (
     <main className="px-4 lg:px-20">
       <div className="w-full h-full my-20 z-20 relative">

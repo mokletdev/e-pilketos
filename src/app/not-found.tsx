@@ -19,7 +19,7 @@ const NotFound: NextPage = () => {
               <Image
                 src={NotFoundImage}
                 alt="gambar not found"
-                className="w-[410px] h-[314px] "
+                className="w-[410px] h-[314px]"
               />
             </div>
             <div>
