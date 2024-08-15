@@ -15,8 +15,6 @@ import { createVoteSession, UpdateVoteSession } from "./voteSession.query";
 import { generatePassword } from "../generatePassword";
 import { EmailService } from "@/lib/emailService";
 import { newUserAccount } from "../emailTemplate";
-import CandidateCard from "@/app/(admin)/admin/liveCount/_components/CandidateCard";
-import CandidatesTable from "@/app/(admin)/admin/candidates/_components/Table";
 
 export const deleteUserById = async (id: string) => {
   try {
@@ -120,7 +118,11 @@ export const deleteCandidatesById = async (id: string) => {
     } else {
       const del = await deleteCandidate(id);
       if (!del) throw new Error("Delete Candidates failed");
+
       revalidatePath("/admin/candidates");
+      revalidatePath("/vote");
+      revalidatePath("/vote/[id]");
+
       return { message: "Success to Delete Candidates!", error: false };
     }
   } catch (e) {
@@ -136,7 +138,7 @@ export const updateCandidatesById = async (id: string, data: FormData) => {
   try {
     const name = data.get("candidatesName") as string;
     const img = data.get("img") as string;
-    const kandidat_kelas = data.get("kandidat_kelas") as string | null;
+    const kelas = data.get("kandidat_kelas") as string | null;
     const visi = data.get("visi") as string;
     const misi = data.get("misi") as string;
     const pengalaman = JSON.parse(data.get("pengalaman") as string) as {
@@ -164,12 +166,14 @@ export const updateCandidatesById = async (id: string, data: FormData) => {
         progja,
         video_profile,
         visi,
-        kandidat_kelas,
+        kandidat_kelas: kelas,
         user: { connect: { id: user?.id } },
       });
       if (!create) throw new Error("Create Candidate failed");
 
       revalidatePath("/admin/candidates");
+      revalidatePath("/vote");
+      revalidatePath("/vote/[id]");
       return {
         message: "Success to Create Candidate!",
         error: false,
@@ -181,14 +185,6 @@ export const updateCandidatesById = async (id: string, data: FormData) => {
       const pengalamanToConnectOrCreate = pengalaman.map((p) => ({
         desc: p.desc,
       }));
-      // .map((p) => {
-      //   const existingPengalaman = existingCandidate?.pengalaman;
-      //   return {
-      //     where: { id: existingPengalaman ? existingPengalaman : "" },
-      //     create: { desc: p.desc, candidatesId: id },
-      //   };
-      // })
-      // .filter((item) => item.where.id !== "");
 
       const update = await updateCandidate(id, {
         img: img ?? existingCandidate?.img,
@@ -202,11 +198,13 @@ export const updateCandidatesById = async (id: string, data: FormData) => {
         progja: progja ?? existingCandidate?.progja,
         video_profile: video_profile ?? existingCandidate?.video_profile,
         visi: visi ?? existingCandidate?.visi,
-        kandidat_kelas: kandidat_kelas ?? existingCandidate?.kandidat_kelas,
+        kandidat_kelas: kelas ?? existingCandidate?.kandidat_kelas,
       });
       if (!update) throw new Error("Update Candidate failed");
 
       revalidatePath("/admin/candidates");
+      revalidatePath("/vote");
+      revalidatePath("/vote/[id]");
       return { message: "Success to Update Candidate!", error: false };
     }
   } catch (error) {
@@ -230,14 +228,11 @@ export const upsertVoteSession = async (id: string | null, data: FormData) => {
     const isPublic = data.get("is_active") === "true";
     const max_vote = parseInt(data.get("max_vote") as string, 10);
     const candidates_id = data.getAll("candidate_id") as string[];
-    const candidates_number = parseInt(
-      data.get("candidate_number") as string,
-      10,
-    );
+    const candidates_number = data.getAll("candidate_number") as string[];
 
-    const vote_session_candidatesd = candidates_id.map((can) => ({
+    const vote_session_candidate = candidates_id.map((can, index) => ({
       candidate_id: can,
-      candidates_number: candidates_number,
+      candidates_number: parseInt(candidates_number[index]),
     }));
 
     if (id == null) {
@@ -248,20 +243,9 @@ export const upsertVoteSession = async (id: string | null, data: FormData) => {
         closeAt: end_time,
         isPublic,
         max_vote,
-        vote_session_candidate: vote_session_candidatesd.map((X) => ({
-          candidate_id: X.candidate_id,
-          candidates_number: X.candidates_number,
-        })),
+        vote_session_candidate,
       });
     } else {
-      const findVoteSession = await client.vote_session.findUnique({
-        where: { id: id },
-        include: { vote_session_candidate: true },
-      });
-      const oldVoteSession = await client.vote_session_candidate.findMany({
-        where: { vote_session_id: id },
-      });
-      console.log(findVoteSession);
       await UpdateVoteSession(id, {
         id: id ?? "",
         title,
@@ -269,38 +253,13 @@ export const upsertVoteSession = async (id: string | null, data: FormData) => {
         closeAt: end_time,
         isPublic,
         max_vote,
-        vote_session_candidate: vote_session_candidatesd.map((X) => ({
-          candidate_id: X.candidate_id,
-          candidates_number: X.candidates_number,
-        })),
+        vote_session_candidate,
       });
-      if (findVoteSession) {
-        // const update = await client.vote_session.update({
-        //   where: { id },
-        //   data: {
-        //     title: title ?? findVoteSession.title,
-        //     openedAt: start_time ?? findVoteSession.openedAt,
-        //     closeAt: end_time ?? findVoteSession.closeAt,
-        //     isPublic: isPublic ?? findVoteSession.isPublic,
-        //     max_vote: max_vote ?? findVoteSession.max_vote,
-        //     vote_session_candidate: {
-        //       disconnect: oldVoteSession.map((voteSession) => ({
-        //         id: voteSession.id,
-        //       })),
-        //       create: {
-        //         candidate_id: ,
-        //         candidates_number: vote_session_candidatesd.map(
-        //           (x) => x.candidates_number,
-        //         ),
-        //       },
-        //     },
-        //   },
-        // });
-      }
-      console.log(candidates_id);
     }
 
     revalidatePath("/admin/votesesion");
+    revalidatePath("/vote");
+    revalidatePath("/vote/[id]");
     return { message: "Vote session saved successfully!", error: false };
   } catch (e) {
     console.error(e);
@@ -318,7 +277,12 @@ export const deleteVoteSessionById = async (id: string) => {
   try {
     const del = await client.vote_session.delete({ where: { id: id } });
     if (!del) return { error: true, message: "Failed to Delete Vote Session" };
-    else return { error: false, message: "Vote session deleted successfully" };
+    else {
+      revalidatePath("/admin/votesession");
+      revalidatePath("/vote");
+      revalidatePath("/vote/[id]");
+      return { error: false, message: "Vote session deleted successfully" };
+    }
   } catch (error) {
     console.error(error);
     return {

@@ -3,12 +3,13 @@ import {
   VoteSessionGeneralPayload,
 } from "@/utils/database/voteSession.query";
 import VoteSessionTable from "./_components/Table";
-import { CandidatesPayload } from "@/utils/database/user.query";
-import { getAllCandidates } from "@/utils/database/candidates.query";
+import client from "@/lib/prisma";
 
 export default async function VotesesionPage() {
-  const data: VoteSessionGeneralPayload[] = await getAllVoteSession();
-  const candidates: CandidatesPayload[] = await getAllCandidates();
+  const data = await getAllVoteSession();
+  const candidates = await client.candidates.findMany({});
+
+  console.log(data);
 
   return (
     <div className="max-w-full min-h-screen">

@@ -1,12 +1,8 @@
 "use client";
 import { FormButton } from "@/app/components/general/Button";
 import { H2, Large_Text, Small_Text } from "@/app/components/general/Text";
-import { signIn, useSession } from "next-auth/react";
+import { signIn } from "next-auth/react";
 import React, { FormEvent, useState } from "react";
-import imgLeft from "@/../public/images/LoginUserLeft.png";
-import imgRight from "@/../public/images/LoginUserRight.png";
-import Image from "next/image";
-import HeaderSect from "@/../public/images/headersection.png";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import { TextField } from "@/app/components/general/Input";
@@ -26,28 +22,23 @@ export default function UserLogin() {
 
     try {
       const response = await signIn("credentials", {
-        callbackUrl: "/vote",
-        redirect: false,
+        redirect: true,
         email: data.email,
         password: data.password,
       });
 
-      if (!response?.ok) {
-        toast.error("Login Gagal");
-        setError("Gagal Login");
-      }
       if (response?.status === 401) {
         console.log(response);
+        toast.error("Email atau Password salah");
+        setError("Email atau Password salah");
+      } else if (!response?.ok) {
         toast.error("Login Gagal");
-        setError("Akun Tidak Terdaftar");
+        setError("Internal Server Error. Hubungi Admin");
       }
 
       if (response?.ok) {
         toast.success("Login Berhasil");
-        router.push("/vote");
-      } else {
-        toast.error("Login Gagal");
-        setError("");
+        router.push(response.url || "/");
       }
     } catch (error) {
       console.log(error);
