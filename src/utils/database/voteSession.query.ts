@@ -20,6 +20,36 @@ export const getAllVoteSession = async (
   }
 };
 
+export type VoteSessionAccessType = Prisma.Vote_sessionGetPayload<{
+  select: {
+    title: true;
+    vote_session_access: {
+      include: { user: { select: { name: true; role: true } } };
+    };
+  };
+}>;
+
+export const getVoteSessionAccess = async (
+  where?: Prisma.Vote_sessionWhereInput,
+) => {
+  try {
+    const voteSession = await client.vote_session.findFirst({
+      where,
+      select: {
+        title: true,
+        vote_session_access: {
+          include: { user: { select: { name: true, role: true } } },
+        },
+      },
+    });
+
+    return voteSession;
+  } catch (error) {
+    console.error((error as Error).message);
+    return null;
+  }
+};
+
 export const getAllVoteSessionCandidates = async () => {
   try {
     const voteSessionCandidates =
