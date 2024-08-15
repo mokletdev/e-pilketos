@@ -32,10 +32,10 @@ model Candidates {
   id                     String                   @id @default(uuid()) @map("id") @db.Char(36)
   img                    String
   name                   String
-  kandidat_kelas         String?
   visi                   String
   misi                   String
   pengalaman             Pengalaman[]
+  kandidat_kelas         String?
   motto                  String
   progja                 String
   video_profile          String?

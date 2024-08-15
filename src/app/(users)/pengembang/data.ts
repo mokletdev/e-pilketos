@@ -10,7 +10,8 @@ export interface dataProps {
 export const Contributor: dataProps[] = [
   {
     name: "Naufal Nabil Ramadhan",
-    ImgUrl: "",
+    ImgUrl:
+      "https://res.cloudinary.com/dhjeoo1pm/image/upload/v1723467248/jlot15zjatamxxnxf7vf.png",
     gen: "32nd",
     job: "FullStack",
   },
@@ -28,7 +29,8 @@ export const Contributor: dataProps[] = [
   },
   {
     name: "Rakha Adrian Nur Tanaya",
-    ImgUrl: "",
+    ImgUrl:
+      "https://res.cloudinary.com/dhjeoo1pm/image/upload/v1723466735/vnewsiz0hjfiueajm8ko.png",
     gen: "32nd",
     job: "Frontend",
   },
@@ -40,7 +42,8 @@ export const Contributor: dataProps[] = [
   },
   {
     name: "Juang Bagus Arya Mukti",
-    ImgUrl: "",
+    ImgUrl:
+      "https://res.cloudinary.com/dhjeoo1pm/image/upload/v1723466734/zao5itrhlbz63okxxh9r.jpg",
     gen: "32nd",
     job: "UI UX Design",
   },
