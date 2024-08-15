@@ -2,25 +2,27 @@
 import { useEffect, useState } from "react";
 import DataTable, { TableColumn } from "react-data-table-component";
 import { FaPencilAlt, FaRegTrashAlt } from "react-icons/fa";
-import { VoteSessionGeneralPayload } from "../../../../../utils/database/voteSession.query"; // Adjust the import path as needed
+import { VoteSessionGeneralPayload } from "@/utils/database/voteSession.query"; // Adjust the import path as needed
 import VoteSessionModal from "./Modal"; // Adjust the import path as needed
 import toast from "react-hot-toast";
 import AddVoteSession from "./AddVoteSession";
-import { CandidatesPayload } from "@/utils/database/user.query";
 import { deleteVoteSessionById } from "@/utils/database/getServerSession";
+import { Candidates } from "@prisma/client";
+import { useRouter } from "next/navigation";
 
 export default function VoteSessionTable({
   data,
   candidates,
 }: {
   data: VoteSessionGeneralPayload[];
-  candidates: CandidatesPayload[];
+  candidates: Candidates[];
 }) {
   const [loader, setLoader] = useState(true);
   const [modalData, setModalData] = useState<VoteSessionGeneralPayload | null>(
     null,
   );
   const [isOpenModal, setIsOpenModal] = useState(false);
+  const router = useRouter();
 
   const columns: TableColumn<VoteSessionGeneralPayload>[] = [
     {
@@ -39,7 +41,7 @@ export default function VoteSessionTable({
       sortable: true,
     },
     {
-      name: "Active",
+      name: "Show Public",
       selector: (row) => row.isPublic,
       cell: (row) => <span>{row.isPublic ? "Yes" : "No"}</span>,
       sortable: true,
@@ -89,7 +91,7 @@ export default function VoteSessionTable({
   return (
     <div>
       <div className="flex w-full justify-end">
-        <AddVoteSession />
+        <AddVoteSession candidates={candidates} />
       </div>
       <section
         className={`max-w-full w-full grid grid-cols-1 xl:grid-cols-2 gap-6 mb-20 `}
@@ -102,7 +104,14 @@ export default function VoteSessionTable({
           />
         )}
       </section>
-      <DataTable columns={columns} data={data} pagination highlightOnHover />
+      <DataTable
+        columns={columns}
+        data={data}
+        pagination
+        highlightOnHover
+        onRowClicked={(row) => router.push(`/admin/votesesion/${row.id}`)}
+        customStyles={{ rows: { style: { cursor: "pointer" } } }}
+      />
     </div>
   );
 }

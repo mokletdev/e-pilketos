@@ -1,19 +1,15 @@
-"use client";
-import { useSession } from "next-auth/react";
-import { useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { redirect } from "next/navigation";
+import { nextGetServerSession } from "@/lib/AuthOptions";
 
-export default function Page() {
-  const { data: session } = useSession();
-  const router = useRouter();
+export default async function Page() {
+  const session = await nextGetServerSession();
+  console.log(session);
 
-  useEffect(() => {
-    if (session?.user?.role == "ADMIN") {
-      router.push("/admin/dashboard");
-    } else {
-      router.push("/auth/login");
-    }
-  }, [session, router]);
+  if (session?.user?.role == "ADMIN") {
+    redirect("/admin/dashboard");
+  } else {
+    redirect("/auth/login");
+  }
 
   return null;
 }

@@ -15,7 +15,7 @@ interface exampleSiswaProps {
 declare module "next-auth" {
   interface Session {
     user?: {
-      id: number;
+      id: string;
       email: string;
       password: string;
       name: string;
@@ -27,7 +27,7 @@ declare module "next-auth" {
 
 declare module "next-auth/jwt" {
   interface JWT extends DefaultJWT {
-    id: number;
+    id: string;
     name: string;
     email: string;
     password: string;
@@ -74,12 +74,8 @@ export const authOptions: AuthOptions = {
             credentials?.password as string,
             findUser.User_Auth?.password as string,
           );
-          if (!ComparePassword) return null;
 
-          const pass =
-            (credentials?.password as string,
-            findUser.User_Auth?.password as string);
-          if (!pass) return null;
+          if (!ComparePassword) return null;
 
           const user = {
             id: findUser.id,
@@ -131,6 +127,7 @@ export const authOptions: AuthOptions = {
             token.email = userDatabase.email;
             token.password = userDatabase.User_Auth?.password || "";
             token.role = userDatabase.role;
+            token.id = userDatabase.id;
           }
         }
         return token;

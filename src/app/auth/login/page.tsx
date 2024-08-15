@@ -23,29 +23,22 @@ export default function AdminLogin() {
 
     try {
       const response = await signIn("credentials", {
-        callbackUrl: "/admin/dashboard",
-        redirect: false,
+        redirect: true,
         email: data.email,
         password: data.password,
       });
 
-      if (!response?.ok) {
-        toast.error("Login Gagal");
-        setError("Gagal Login");
-      }
       if (response?.status === 401) {
         console.log(response);
+        toast.error("Email atau Password salah");
+        setError("Email atau Password salah");
+      } else if (!response?.ok) {
         toast.error("Login Gagal");
-        setError("Akun Tidak Terdaftar Sebagai Admin E-Pilketos");
-      }
-
-      if (response?.ok) {
-        if (
-          (session && session?.user?.role === "ADMIN") ||
-          (session && session?.user?.role === "GURU")
-        ) {
+        setError("Gagal Login");
+      } else if (response?.ok) {
+        if (session && session?.user?.role === "ADMIN") {
           toast.success("Login Berhasil");
-          router.push("/admin/dashboard");
+          router.push(response.url || "/admin/dashboard");
         } else if (session && session?.user?.role === "SISWA") {
           toast.error("Login Gagal");
           setError("Akun Tidak Terdaftar Sebagai Admin E-Pilketos");

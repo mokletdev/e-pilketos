@@ -47,7 +47,9 @@ function withAuth(middleware: NextMiddleware, requireAuth: string[] = []) {
       }
     } else if (requireAuth.includes(pathname)) {
       if (!authPage.includes(pathname)) {
-        return NextResponse.redirect(new URL("/auth/login", req.url));
+        const url = new URL("/auth/login", req.url);
+        url.searchParams.set("callbackUrl", pathname);
+        return NextResponse.redirect(url);
       }
     }
 
