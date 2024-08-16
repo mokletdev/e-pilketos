@@ -149,7 +149,6 @@ export default function Modal({
               type="link"
               label="Video Profil"
               name="video_profile"
-              required
             />
           </div>
         </div>

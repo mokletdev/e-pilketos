@@ -26,7 +26,7 @@ export default function CardVote({
       days + hours + minutes + seconds <= 0 ||
         voteSession.openedAt.getTime() > new Date().getTime(),
     );
-  }, [seconds]);
+  }, [days, hours, minutes, seconds, voteSession.openedAt]);
 
   useEffect(() => {
     setLoading(false);
@@ -49,7 +49,7 @@ export default function CardVote({
         </Medium_Text>
         <div className="border border-bottom border-solid w-full border-black my-4"></div>
         <LinkButton
-          variant="PRIMARY"
+          variant={closed ? "DISABLE" : alreadyVote ? "DISABLE" : "PRIMARY"}
           className={clsx(
             "w-full text-center",
             (closed || alreadyVote) && "pointer-events-none",

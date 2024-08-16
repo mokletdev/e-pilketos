@@ -15,25 +15,18 @@ export default async function CandidateCard() {
       },
     },
   });
-  const findCandidates1 = GetCandidates.find(
-    (can) => can.Vote_session_candidate?.candidates_number === 1,
+  const findCandidates1 = GetCandidates.find((can) =>
+    can.Vote_session_candidate.find((vote) => vote.candidates_number === 1),
   );
-  const findCandidates2 = GetCandidates.find(
-    (can) => can.Vote_session_candidate?.candidates_number === 2,
+  const findCandidates2 = GetCandidates.find((can) =>
+    can.Vote_session_candidate.find((vote) => vote.candidates_number === 2),
   );
   const mergeDataCandidate = [findCandidates1, findCandidates2];
 
   const filteredData = mergeDataCandidate.filter((dat) => dat);
 
-  const mapData = filteredData.map((item) => ({
-    candidate: item?.name,
-    totalVote: item?.User_vote,
-  }));
-  const one = mapData[0].totalVote;
-  const a = new Array(one);
-
-  let VoteCandidate1 = 1000; //not fix
-  const VoteCandidate2 = 1000; //not fix
+  let VoteCandidate1 = 10000; //!not fix
+  const VoteCandidate2 = 1000; //!not fix
   const countPercent = VoteCandidate1 + VoteCandidate2;
   const fixCount = (VoteCandidate1 / countPercent) * 100;
   const totalVotes = Math.floor(fixCount);

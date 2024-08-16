@@ -32,15 +32,17 @@ export default function AdminLogin() {
         console.log(response);
         toast.error("Email atau Password salah");
         setError("Email atau Password salah");
-      } else if (!response?.ok) {
-        toast.error("Login Gagal");
-        setError("Gagal Login");
-      } else if (response?.ok) {
+      } else {
         if (session && session?.user?.role === "ADMIN") {
           toast.success("Login Berhasil");
-          router.push(response.url || "/admin/dashboard");
-        } else if (session && session?.user?.role === "SISWA") {
+          router.push("/admin/dashboard");
+        }
+        if (
+          (session && session?.user?.role === "SISWA") ||
+          (session && session?.user?.role === "GURU")
+        ) {
           toast.error("Login Gagal");
+          router.push("/AccessDenied");
           setError("Akun Tidak Terdaftar Sebagai Admin E-Pilketos");
         }
       }

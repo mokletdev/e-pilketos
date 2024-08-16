@@ -17,7 +17,7 @@ import {
   VoteSessionWithCandidates,
 } from "@/utils/database/voteSession.query";
 import { upsertVoteSession } from "@/utils/database/getServerSession";
-import { Candidates } from "@prisma/client";
+import { Candidates, Role } from "@prisma/client";
 import { submitAcess } from "@/utils/actions/voteSession.actions";
 
 const animatedComponents = makeAnimated();
@@ -28,7 +28,7 @@ export default function VoteSessionModal({
   id,
 }: {
   setIsOpenModal: Dispatch<SetStateAction<boolean>>;
-  users: { id: string; name: string; kelas: string | null }[];
+  users: { id: string; name: string; kelas: string | null; role: Role }[];
   id: string;
 }) {
   const [isLoading, setIsLoading] = useState(false);
@@ -57,7 +57,9 @@ export default function VoteSessionModal({
   };
 
   const userOptions = users.map((user) => ({
-    label: `${user.name} ${user.kelas ? " - " + user.kelas : ""}`,
+    label: `${user.name} ${
+      user.kelas ? " - " + user.kelas + " - " + user.role : ""
+    }`,
     value: user.id,
   }));
 

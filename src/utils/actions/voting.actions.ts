@@ -51,7 +51,7 @@ export const submitVote = async ({
   try {
     const session = await nextGetServerSession();
 
-    if (session?.user?.role !== "ADMIN")
+    if (!session?.user)
       return {
         success: false,
         message: "Akses tidak sah. Coba muat ulang halaman",

@@ -22,6 +22,9 @@ export default async function Dashboard() {
   const admin: userLastLoginPayload[] = await getAllUser({
     AND: [
       { NOT: { role: "SISWA" } },
+      { NOT: { role: "MPK" } },
+      { NOT: { role: "OSIS" } },
+      { NOT: { role: "GURU" } },
       {
         role:
           (user?.role as Role) === "ADMIN" ? undefined : (user?.role as Role),
