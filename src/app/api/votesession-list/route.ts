@@ -1,9 +1,9 @@
 import { NextApiRequest } from "next";
 import client from "@/lib/prisma";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(
-  req: NextApiRequest,
+  req: NextRequest,
   { params }: { params: { id: string } },
 ) {
   const data = await client.vote_session.findMany({

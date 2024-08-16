@@ -66,7 +66,7 @@ export default function Sidebar() {
     },
     {
       title: "Live Count",
-      href: "/admin/liveCount",
+      href: "/LiveCount2Kandidat",
     },
     {
       title: "Hasil Vote",
@@ -145,7 +145,7 @@ export default function Sidebar() {
                   </li>
                   <li>
                     <Link
-                      href="/admin/liveCount"
+                      href="/LiveCount2Kandidat"
                       className="group flex items-center rounded-[50px] px-5 py-3 text-base font-normal text-primary-400 hover:bg-secondary-color hover:text-white transition-all"
                     >
                       <LiveCountIcon />

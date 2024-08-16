@@ -1,34 +1,57 @@
 "use client";
 
+import { Medium_Text } from "@/app/components/general/Text";
+import { useRouter } from "next/navigation";
 import React, { useState, useEffect } from "react";
+import toast from "react-hot-toast";
 
 interface ProgressbarProps {
-  progress: number; // Progress value passed in
+  totalVotes: number;
+  duration: number;
 }
 
-export default function Progressbar({ progress }: ProgressbarProps) {
-  const [currentProgress, setCurrentProgress] = useState(progress);
+export default function Progressbar({
+  totalVotes,
+  duration,
+}: ProgressbarProps) {
+  const [currentProgress, setCurrentProgress] = useState(totalVotes);
+  const [countdown, setCountdown] = useState(duration);
+  const router = useRouter();
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentProgress((prev) => {
-        if (prev === progress) {
-          clearInterval(interval);
-          return prev;
-        }
-        return prev < progress ? prev + 1 : prev - 1;
-      });
-    }, 20); // Adjust the interval time to control speed
+    const timeInterval = 1000;
+    const updateInterval = duration * 1000;
+    const countdownInterval = setInterval(() => {
+      setCountdown((prev) => (prev > 0 ? prev - 1 : duration));
+    }, timeInterval);
 
-    return () => clearInterval(interval);
-  }, [progress]);
+    const progressInterval = setInterval(() => {
+      router.refresh();
+      setCurrentProgress(totalVotes);
+      setCountdown(duration);
+      toast.success("Data Terupdate!");
+    }, updateInterval);
+
+    return () => {
+      clearInterval(progressInterval);
+      clearInterval(countdownInterval);
+    };
+  }, [totalVotes, duration, router]);
 
   return (
-    <div className="w-full rounded-xl h-5 bg-white">
+    <div className="w-full rounded-xl h-5 bg-secondary-color">
       <div
-        className="h-full rounded-xl bg-red-light"
-        style={{ width: `${currentProgress}%` }}
+        className="h-full rounded-xl bg-red-light-2"
+        style={{
+          width: `${currentProgress}%`,
+          transition: "width 2s ease-in-out",
+        }}
       ></div>
+      <div className="mt-2 text-center">
+        <Medium_Text variant="MEDIUM">
+          Pembaruan dalam: {countdown} detik
+        </Medium_Text>
+      </div>
     </div>
   );
 }

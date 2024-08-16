@@ -36,7 +36,8 @@ export const Contributor: dataProps[] = [
   },
   {
     name: "Moh Abdul Aziz",
-    ImgUrl: "",
+    ImgUrl:
+      "https://res.cloudinary.com/dhjeoo1pm/image/upload/v1723558989/ql9k6nbco71tg4gjbugb.jpg",
     gen: "32nd",
     job: "UI UX Design",
   },
