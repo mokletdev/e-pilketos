@@ -83,7 +83,7 @@ export default function Navbar() {
           className={`fixed transition-transform bg-white duration-500   ${
             isScrolled
               ? "top-8 w-[90%] 2xl:max-w-[1440px] xl:max-w-[1322px] lg:max-w-[1024px]  sm:max-w-[480px] rounded-[64px] shadow-shadow-2  items-center py-4 px-8 right-10 left-10 place-self-center "
-              : " max-w-full top-0 py-4 px-8 w-full place-self-center"
+              : " max-w-full top-0 py-4 px-8 w-full left-10 right-10 place-self-center"
           }`}
           style={{ transition: "all 0.8s ease-in-out" }}
         >
