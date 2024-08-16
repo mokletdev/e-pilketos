@@ -1,4 +1,10 @@
-import { AuthOptions, getServerSession } from "next-auth";
+import {
+  Account,
+  AuthOptions,
+  getServerSession,
+  Profile,
+  User,
+} from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google";
 
@@ -6,16 +12,21 @@ import type { DefaultJWT } from "next-auth/jwt";
 import client from "./prisma";
 import { compareSync } from "bcrypt";
 import { createUser, findUser, updateUser } from "@/utils/database/user.query";
+import { AdapterUser } from "next-auth/adapters";
 
 interface exampleSiswaProps {
   name: string;
   email: string;
   password: string;
 }
+
+interface ExtendedUser extends AdapterUser {
+  role: string;
+}
 declare module "next-auth" {
   interface Session {
     user?: {
-      id: number;
+      id: string;
       email: string;
       password: string;
       name: string;
@@ -27,7 +38,7 @@ declare module "next-auth" {
 
 declare module "next-auth/jwt" {
   interface JWT extends DefaultJWT {
-    id: number;
+    id: string;
     name: string;
     email: string;
     password: string;
@@ -46,7 +57,7 @@ export const authOptions: AuthOptions = {
   },
   providers: [
     CredentialsProvider({
-      name: "PILKETOS Credentials",
+      name: "PILKETOS redentials",
       credentials: {
         email: {
           label: "Email",
@@ -74,12 +85,8 @@ export const authOptions: AuthOptions = {
             credentials?.password as string,
             findUser.User_Auth?.password as string,
           );
-          if (!ComparePassword) return null;
 
-          const pass =
-            (credentials?.password as string,
-            findUser.User_Auth?.password as string);
-          if (!pass) return null;
+          if (!ComparePassword) return null;
 
           const user = {
             id: findUser.id,
@@ -105,15 +112,11 @@ export const authOptions: AuthOptions = {
     async redirect({ url, baseUrl }) {
       return url.startsWith("/") ? new URL(url, baseUrl).toString() : url;
     },
-    async signIn({ user, profile, account }) {
+    async signIn({ user, account }) {
       try {
-        if (
-          account?.provider === "google" &&
-          !profile?.email?.endsWith("smktelkom-mlg.sch.id")
-        ) {
-          return false;
-        }
-
+        // if (!user?.email?.includes("smktelkom-mlg.sch.id")) {
+        //   return false;
+        // }
         if (account?.provider === "credentials" && !user.email) {
           return false;
         }
@@ -131,6 +134,7 @@ export const authOptions: AuthOptions = {
             token.email = userDatabase.email;
             token.password = userDatabase.User_Auth?.password || "";
             token.role = userDatabase.role;
+            token.id = userDatabase.id;
           }
         }
         return token;

@@ -21,6 +21,7 @@ const adminPage = [
 ];
 
 const authPage = ["/auth/login"];
+const LiveCountPage = ["/LiveCount2Kandidat"];
 
 function withAuth(middleware: NextMiddleware, requireAuth: string[] = []) {
   return async (req: NextRequest, next: NextFetchEvent) => {
@@ -30,6 +31,13 @@ function withAuth(middleware: NextMiddleware, requireAuth: string[] = []) {
       req,
       secret: process.env.NEXTAUTH_SECRET,
     });
+    if (LiveCountPage.includes(pathname)) {
+      if (token?.role !== "ADMIN") {
+        return NextResponse.redirect(new URL("/AccessDenied", req.url));
+      } else if (!token) {
+        return NextResponse.redirect(new URL("/AccessDenied", req.url));
+      }
+    }
 
     if (token) {
       if (authPage.includes(pathname)) {
@@ -39,7 +47,9 @@ function withAuth(middleware: NextMiddleware, requireAuth: string[] = []) {
       }
     } else if (requireAuth.includes(pathname)) {
       if (!authPage.includes(pathname)) {
-        return NextResponse.redirect(new URL("/auth/login", req.url));
+        const url = new URL("/auth/login", req.url);
+        url.searchParams.set("callbackUrl", pathname);
+        return NextResponse.redirect(url);
       }
     }
 

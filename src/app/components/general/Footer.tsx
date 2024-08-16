@@ -191,7 +191,7 @@ export default function Footer() {
               {/* Copy Right */}
               <div className="flex justify-center items-center pb-[28px]">
                 <p className="text-secondary-text-color text-[16px]">
-                  &copy; Pilketos 2024
+                  &copy; Mokletdev
                 </p>
               </div>
             </div>

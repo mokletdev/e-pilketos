@@ -6,10 +6,6 @@ import { signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import React, { FormEvent, useState } from "react";
 import toast from "react-hot-toast";
-import imgLeft from "@/../public/images/LoginUserLeft.png";
-import imgRight from "@/../public/images/LoginUserRight.png";
-import Image from "next/image";
-import HeaderSect from "@/../public/images/headersection.png";
 
 export default function AdminLogin() {
   const router = useRouter();
@@ -27,31 +23,26 @@ export default function AdminLogin() {
 
     try {
       const response = await signIn("credentials", {
-        callbackUrl: "/admin/dashboard",
-        redirect: false,
+        redirect: true,
         email: data.email,
         password: data.password,
       });
 
-      if (!response?.ok) {
-        toast.error("Login Gagal");
-        setError("Gagal Login");
-      }
       if (response?.status === 401) {
         console.log(response);
-        toast.error("Login Gagal");
-        setError("Akun Tidak Terdaftar Sebagai Admin E-Pilketos");
-      }
-
-      if (response?.ok) {
-        if (
-          (session && session?.user?.role === "ADMIN") ||
-          (session && session?.user?.role === "GURU")
-        ) {
+        toast.error("Email atau Password salah");
+        setError("Email atau Password salah");
+      } else {
+        if (session && session?.user?.role === "ADMIN") {
           toast.success("Login Berhasil");
           router.push("/admin/dashboard");
-        } else if (session && session?.user?.role === "SISWA") {
+        }
+        if (
+          (session && session?.user?.role === "SISWA") ||
+          (session && session?.user?.role === "GURU")
+        ) {
           toast.error("Login Gagal");
+          router.push("/AccessDenied");
           setError("Akun Tidak Terdaftar Sebagai Admin E-Pilketos");
         }
       }
@@ -61,6 +52,7 @@ export default function AdminLogin() {
       setError((error as Error).message);
     }
   };
+
   return (
     <main className="px-4 lg:px-20">
       <div className="w-full h-full my-20 z-20 relative">

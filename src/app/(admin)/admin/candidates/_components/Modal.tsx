@@ -149,20 +149,9 @@ export default function Modal({
               type="link"
               label="Video Profil"
               name="video_profile"
-              required
             />
           </div>
         </div>
-        <SelectField
-          label="Vote Session"
-          name="voteSessionId"
-          value={data?.User_vote?.vote_session.title || ""}
-          options={voteSessions.map((session) => ({
-            value: session.id,
-            label: session.title,
-          }))}
-          // required
-        />
         <p className="mb-3">Pengalaman</p>
         {pengalaman.map((peng, index) => (
           <div key={index} className="flex items-center gap-x-3">

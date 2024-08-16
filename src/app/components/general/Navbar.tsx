@@ -75,7 +75,7 @@ export default function Navbar() {
   ];
   return (
     <main className={`relative w-full h-auto lg:h-[60px] flex flex-col z-40`}>
-      <SectionsGap>
+      <div className="max-w-[94%] lg:max-w-[87.5%] xl:max-w-[1502px]">
         <nav
           data-aos="fade-down"
           data-aos-delay="500"
@@ -306,7 +306,7 @@ export default function Navbar() {
             )}
           </div>
         </nav>
-      </SectionsGap>
+      </div>
     </main>
   );
 }

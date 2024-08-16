@@ -2,7 +2,7 @@ import React from "react";
 import UserTable from "./_components/Table";
 import { getAllUser, userLastLoginPayload } from "@/utils/database/user.query";
 
-export default async function Candidates() {
+export default async function Users() {
   const users: userLastLoginPayload[] = await getAllUser();
 
   return (

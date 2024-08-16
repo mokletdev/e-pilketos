@@ -131,8 +131,6 @@ export default function UserTable({ data }: { data: userLastLoginPayload[] }) {
     (e: ChangeEvent<HTMLInputElement>) => {
       const value = e.target.value;
 
-      console.log(value);
-
       if (value.trim().length !== 0) {
         setUsersData(
           miniSearch

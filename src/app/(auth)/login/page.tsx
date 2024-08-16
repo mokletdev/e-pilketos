@@ -3,19 +3,16 @@ import { FormButton } from "@/app/components/general/Button";
 import { H2, Large_Text, Small_Text } from "@/app/components/general/Text";
 import { signIn, useSession } from "next-auth/react";
 import React, { FormEvent, useState } from "react";
-import imgLeft from "@/../public/images/LoginUserLeft.png";
-import imgRight from "@/../public/images/LoginUserRight.png";
-import Image from "next/image";
-import HeaderSect from "@/../public/images/headersection.png";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import { TextField } from "@/app/components/general/Input";
 
 export default function UserLogin() {
   const router = useRouter();
-  const [error, setError] = useState("");
+  const [error, setError] = useState<string>("");
   const [email, setEmail] = useState<string | undefined>("");
   const [password, setPassword] = useState<string | undefined>("");
+  const { data: session, status } = useSession();
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -26,28 +23,33 @@ export default function UserLogin() {
 
     try {
       const response = await signIn("credentials", {
-        callbackUrl: "/vote",
         redirect: false,
         email: data.email,
         password: data.password,
       });
-
-      if (!response?.ok) {
-        toast.error("Login Gagal");
-        setError("Gagal Login");
+      // alert(response);
+      if (!data.email?.includes("smktelkom-mlg.sch.id")) {
+        toast.error("Email tidak valid");
+        setError("Anda Tidak Diizinkan Akses Halaman Ini");
+        router.push("/AccessDenied");
       }
-      if (response?.status === 401) {
+      if (response?.status === 200) {
         console.log(response);
-        toast.error("Login Gagal");
-        setError("Akun Tidak Terdaftar");
-      }
-
-      if (response?.ok) {
         toast.success("Login Berhasil");
         router.push("/vote");
-      } else {
+      }
+
+      if (response?.status === 401) {
+        console.log(response);
+        toast.error("Email atau Password salah");
+        setError("Email atau Password salah");
+      } else if (!response?.ok) {
         toast.error("Login Gagal");
-        setError("");
+        setError("Internal Server Error. Hubungi Admin");
+        // alert("Internal Server Error. Hubungi Admin");
+      } else {
+        toast.success("Login Berhasil");
+        router.push(response.url || "/");
       }
     } catch (error) {
       console.log(error);
@@ -55,6 +57,9 @@ export default function UserLogin() {
       setError((error as Error).message);
     }
   };
+  if (status === "authenticated") {
+    router.push("/vote");
+  }
   return (
     <main className="px-4 lg:px-20">
       <div className="w-full h-full my-14 lg:my-28 z-20 relative">

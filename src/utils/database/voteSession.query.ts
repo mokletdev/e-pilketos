@@ -1,20 +1,52 @@
 import client from "@/lib/prisma";
 import { Prisma } from "@prisma/client";
-import { getAllCandidates } from "./candidates.query";
 
-export const getAllVoteSession = async () => {
+export const getAllVoteSession = async (
+  where?: Prisma.Vote_sessionWhereInput,
+) => {
   try {
     const voteSession = await client.vote_session.findMany({
+      where,
       include: {
         User_vote: { include: { candidate: true } },
         vote_session_access: true,
-        vote_session_candidate: true,
+        vote_session_candidate: { include: { candidate: true } },
       },
     });
     return voteSession;
   } catch (error) {
     console.error((error as Error).message);
     return [];
+  }
+};
+
+export type VoteSessionAccessType = Prisma.Vote_sessionGetPayload<{
+  select: {
+    title: true;
+    vote_session_access: {
+      include: { user: { select: { name: true; role: true } } };
+    };
+  };
+}>;
+
+export const getVoteSessionAccess = async (
+  where?: Prisma.Vote_sessionWhereInput,
+) => {
+  try {
+    const voteSession = await client.vote_session.findFirst({
+      where,
+      select: {
+        title: true,
+        vote_session_access: {
+          include: { user: { select: { name: true, role: true } } },
+        },
+      },
+    });
+
+    return voteSession;
+  } catch (error) {
+    console.error((error as Error).message);
+    return null;
   }
 };
 
@@ -215,22 +247,9 @@ export const UpdateVoteSession = async (
   data: VoteSessionGeneralPayload,
 ) => {
   try {
-    const oldVoteSession = await client.vote_session_candidate.findMany({
+    await client.vote_session_candidate.deleteMany({
       where: { vote_session_id: id },
     });
-    const findCandidates = await client.vote_session_candidate.findFirst({});
-    const findDataCandidate = await client.candidates.findFirst({
-      where: { Vote_session_candidate: { candidate: { id: id } } },
-      include: { Vote_session_candidate: true },
-    });
-    const findVoteSessionCandidate =
-      await client.vote_session_candidate.findUnique({
-        where: { vote_session_id: id },
-      });
-    console.log(findVoteSessionCandidate);
-    console.log(findCandidates);
-    console.log(oldVoteSession);
-    console.log(findDataCandidate);
 
     const voteSession = await client.vote_session.update({
       where: { id },
@@ -240,17 +259,15 @@ export const UpdateVoteSession = async (
         closeAt: data.closeAt,
         isPublic: data.isPublic,
         max_vote: data.max_vote,
-        vote_session_candidate: {
-          disconnect: oldVoteSession.map((voteSession) => ({
-            id: voteSession.id,
-          })),
-          create: {
-            candidate_id: findCandidates?.candidate_id as string,
-            candidates_number: findCandidates?.candidates_number || 0,
-            candidate: (findCandidates?.candidate_id as undefined) || undefined,
-          },
-        },
       },
+    });
+
+    await client.vote_session_candidate.createMany({
+      data: data.vote_session_candidate.map((can) => ({
+        candidate_id: can.candidate_id,
+        candidates_number: can.candidates_number,
+        vote_session_id: id,
+      })),
     });
 
     return voteSession;

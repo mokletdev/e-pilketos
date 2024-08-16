@@ -1,7 +1,7 @@
 import React from "react";
 import { H1, Large_Text } from "@/app/components/general/Text";
 import Image from "next/image";
-import TandaTanya from "@/../public/images/TandaTanyaIcon.png";
+import TandaTanya from "@public/images/TandaTanyaIcon.png";
 
 export default function EmptyCandidates() {
   return (
