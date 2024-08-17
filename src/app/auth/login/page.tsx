@@ -27,21 +27,22 @@ export default function AdminLogin() {
         email: data.email,
         password: data.password,
       });
+      const toastId = toast.loading("Loading...");
 
       if (response?.status === 401) {
         console.log(response);
-        toast.error("Email atau Password salah");
+        toast.error("Email atau Password salah", { id: toastId });
         setError("Email atau Password salah");
       } else {
         if (session && session?.user?.role === "ADMIN") {
-          toast.success("Login Berhasil");
+          toast.success("Login Berhasil", { id: toastId });
           router.push("/admin/dashboard");
         }
         if (
           (session && session?.user?.role === "SISWA") ||
           (session && session?.user?.role === "GURU")
         ) {
-          toast.error("Login Gagal");
+          toast.error("Login Gagal", { id: toastId });
           router.push("/AccessDenied");
           setError("Akun Tidak Terdaftar Sebagai Admin E-Pilketos");
         }
