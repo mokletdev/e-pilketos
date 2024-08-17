@@ -172,6 +172,7 @@ export const updateCandidatesById = async (id: string, data: FormData) => {
       if (!create) throw new Error("Create Candidate failed");
 
       revalidatePath("/admin/candidates");
+      revalidatePath("/admin/votesesion");
       revalidatePath("/vote");
       revalidatePath("/vote/[id]");
       return {
@@ -204,6 +205,7 @@ export const updateCandidatesById = async (id: string, data: FormData) => {
 
       revalidatePath("/admin/candidates");
       revalidatePath("/vote");
+      revalidatePath("/admin/votesesion");
       revalidatePath("/vote/[id]");
       return { message: "Success to Update Candidate!", error: false };
     }
@@ -258,6 +260,7 @@ export const upsertVoteSession = async (id: string | null, data: FormData) => {
     }
 
     revalidatePath("/admin/votesesion");
+    revalidatePath("/admin/candidates");
     revalidatePath("/vote");
     revalidatePath("/vote/[id]");
     return { message: "Vote session saved successfully!", error: false };
@@ -279,6 +282,7 @@ export const deleteVoteSessionById = async (id: string) => {
     if (!del) return { error: true, message: "Failed to Delete Vote Session" };
     else {
       revalidatePath("/admin/votesession");
+      revalidatePath("/admin/candidates");
       revalidatePath("/vote");
       revalidatePath("/vote/[id]");
       return { error: false, message: "Vote session deleted successfully" };
