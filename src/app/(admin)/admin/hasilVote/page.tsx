@@ -9,11 +9,10 @@ import ChartDougnuts from "./_components/ChartDougnuts";
 export default function HasilVote() {
   return (
     <>
-      <main className="min-h-screen flex">
+      {/* <main className="min-h-screen flex">
         <div className="my-auto gap-24 mx-auto">
           <div className="mb-24">
             <H1 className="text-center">Pemenang Pilketos 2024 adalah ...</H1>
-            {/*Ganti tahunnya :D*/}
             <Large_Text
               className="text-center text-secondary-text-color"
               variant="REGULAR"
@@ -59,12 +58,10 @@ export default function HasilVote() {
             </ProgessCard>
           </div>
         </div>
-      </main>
+      </main> */}
 
       <section>
-        <div className="max-w-3xl mx-auto my-10">
-          <ChartDougnuts />
-        </div>
+        <div className="max-w-3xl mx-auto my-10">{/* <ChartDougnuts /> */}</div>
       </section>
     </>
   );
