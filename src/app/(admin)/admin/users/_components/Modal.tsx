@@ -73,7 +73,6 @@ export default function Modal({
           label="Kelas"
           name="kelas"
           placeholder="Kelas"
-          required
         />
         <TextField
           type="password"
