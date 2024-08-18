@@ -20,6 +20,9 @@ export async function GET(
               kandidat_kelas: true,
               name: true,
               id: true,
+              User_vote: {
+                select: { user: { select: { role: true } } },
+              },
             },
           },
         },
@@ -35,14 +38,34 @@ export async function GET(
 
   const { vote_session_candidate, ...session } = voteData;
 
+  const weightByRole = {
+    GURU: 0.3,
+    OSIS: 0.4,
+    MPK: 0.3,
+    ADMIN: 0,
+    SISWA: 0,
+  };
+
   const totalVotes = vote_session_candidate.reduce(
     (acc, value) => acc + value.candidate._count.User_vote,
     0,
   );
-  const candidates = vote_session_candidate.map(({ candidate }) => ({
-    ...candidate,
-    percentage: (candidate._count.User_vote / totalVotes) * 100,
-  }));
+
+  const candidates = vote_session_candidate.map(({ candidate }) => {
+    const weightedVotes = candidate.User_vote.reduce((acc, vote) => {
+      const role = vote.user.role;
+      return acc + weightByRole[role];
+    }, 0);
+
+    const percentage = (candidate._count.User_vote / totalVotes) * 100;
+    const weightedPercentage = (weightedVotes / totalVotes) * 100;
+
+    return {
+      ...candidate,
+      percentage: percentage,
+      weightedPercentage: weightedPercentage,
+    };
+  });
 
   return NextResponse.json({ status: 200, data: { ...session, candidates } });
 }
