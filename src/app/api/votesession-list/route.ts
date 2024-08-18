@@ -7,7 +7,7 @@ export async function GET(
   { params }: { params: { id: string } },
 ) {
   const data = await client.vote_session.findMany({
-    select: { id: true, title: true },
+    select: { id: true, title: true, max_vote: true },
   });
   return NextResponse.json({ status: 200, data: data });
 }
