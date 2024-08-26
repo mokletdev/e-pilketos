@@ -13,6 +13,7 @@ import VoteSessionModal from "./Modal";
 import { FormButton } from "@/app/components/general/Button";
 import PlusIcon from "@/app/components/Icons/PlusIcon";
 import { deleteAcess } from "@/utils/actions/voteSession.actions";
+import { Role } from "@prisma/client";
 
 export default function VoteSessionAccessTable({
   data,
@@ -20,7 +21,12 @@ export default function VoteSessionAccessTable({
   id,
 }: {
   data: VoteSessionAccessType;
-  users: { id: string; name: string; kelas: string | null }[];
+  users: {
+    id: string;
+    name: string;
+    kelas: string | null;
+    role: Role;
+  }[];
   id: string;
 }) {
   const [loader, setLoader] = useState(true);

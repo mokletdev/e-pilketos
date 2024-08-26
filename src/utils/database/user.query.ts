@@ -56,7 +56,7 @@ export const updateUser = async (
 export const deleteUser = async (id: string) => {
   return await client.user.delete({
     where: {
-      id: id,
+      id: id as string,
     },
   });
 };

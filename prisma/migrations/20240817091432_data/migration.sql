@@ -15,7 +15,8 @@ CREATE TABLE `User` (
     `email` VARCHAR(191) NOT NULL,
     `name` VARCHAR(191) NOT NULL,
     `user_pic` VARCHAR(191) NULL,
-    `role` ENUM('ADMIN', 'GURU', 'SISWA') NOT NULL DEFAULT 'SISWA',
+    `kelas` VARCHAR(191) NULL,
+    `role` ENUM('ADMIN', 'GURU', 'SISWA', 'OSIS', 'MPK') NOT NULL DEFAULT 'SISWA',
 
     UNIQUE INDEX `User_email_key`(`email`),
     PRIMARY KEY (`user_id`)
@@ -26,9 +27,9 @@ CREATE TABLE `Candidates` (
     `id` CHAR(36) NOT NULL,
     `img` VARCHAR(191) NOT NULL,
     `name` VARCHAR(191) NOT NULL,
-    `kelas` VARCHAR(191) NULL,
     `visi` VARCHAR(191) NOT NULL,
     `misi` VARCHAR(191) NOT NULL,
+    `kandidat_kelas` VARCHAR(191) NULL,
     `motto` VARCHAR(191) NOT NULL,
     `progja` VARCHAR(191) NOT NULL,
     `video_profile` VARCHAR(191) NULL,

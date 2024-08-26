@@ -82,11 +82,11 @@ export default function CandidatesTable({
   if (loader) return <div>Loading</div>;
   return (
     <>
-      <div>{data.length === 0 && <EmptyCandidates />}</div>
-
       <div className="flex w-full justify-end mt-4">
         <AddCandidates />
       </div>
+      <div>{data.length === 0 && <EmptyCandidates />}</div>
+
       <section
         className={`max-w-full w-full grid grid-cols-1 xl:grid-cols-2 gap-6 mb-6`}
       >

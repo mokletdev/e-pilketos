@@ -6,10 +6,6 @@ import { signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import React, { FormEvent, useState } from "react";
 import toast from "react-hot-toast";
-import imgLeft from "@/../public/images/LoginUserLeft.png";
-import imgRight from "@/../public/images/LoginUserRight.png";
-import Image from "next/image";
-import HeaderSect from "@/../public/images/headersection.png";
 
 export default function AdminLogin() {
   const router = useRouter();
@@ -31,20 +27,23 @@ export default function AdminLogin() {
         email: data.email,
         password: data.password,
       });
+      const toastId = toast.loading("Loading...");
 
       if (response?.status === 401) {
         console.log(response);
-        toast.error("Email atau Password salah");
+        toast.error("Email atau Password salah", { id: toastId });
         setError("Email atau Password salah");
-      } else if (!response?.ok) {
-        toast.error("Login Gagal");
-        setError("Gagal Login");
-      } else if (response?.ok) {
+      } else {
         if (session && session?.user?.role === "ADMIN") {
-          toast.success("Login Berhasil");
-          router.push(response.url || "/admin/dashboard");
-        } else if (session && session?.user?.role === "SISWA") {
-          toast.error("Login Gagal");
+          toast.success("Login Berhasil", { id: toastId });
+          router.push("/admin/dashboard");
+        }
+        if (
+          (session && session?.user?.role === "SISWA") ||
+          (session && session?.user?.role === "GURU")
+        ) {
+          toast.error("Login Gagal", { id: toastId });
+          router.push("/AccessDenied");
           setError("Akun Tidak Terdaftar Sebagai Admin E-Pilketos");
         }
       }
@@ -54,6 +53,7 @@ export default function AdminLogin() {
       setError((error as Error).message);
     }
   };
+
   return (
     <main className="px-4 lg:px-20">
       <div className="w-full h-full my-20 z-20 relative">

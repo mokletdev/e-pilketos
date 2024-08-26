@@ -28,6 +28,7 @@ export const LinkButton = ({
 }: LinkButtonProops) => {
   const secondary = variant === "SECONDARY";
   const primary = variant === "PRIMARY";
+  const disable = variant === "DISABLE";
   if (secondary) {
     return (
       <Link
@@ -54,6 +55,20 @@ export const LinkButton = ({
           className,
           "transition-all duration-300 ease-in-out",
           "hover:bg-transparent hover:text-primary-color",
+        )}
+      >
+        {children}
+      </Link>
+    );
+  }
+  if (disable) {
+    return (
+      <Link
+        href={`${href}`}
+        target={target}
+        className={clsx(
+          "px-6 py-3 bg-dark-6 border-2 border-dark-6 text-white rounded-full",
+          className,
         )}
       >
         {children}
