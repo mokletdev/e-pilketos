@@ -59,6 +59,7 @@ model Vote_session {
   closeAt                DateTime
   isPublic               Boolean
   max_vote               Int
+  spreadsheetId          String?
   User_vote              User_vote[]
   vote_session_candidate Vote_session_candidate[]
   vote_session_access    vote_session_access[]
@@ -69,6 +70,7 @@ model User_vote {
   vote_session_id String
   candidate_id    String
   user_Id         String
+  timestamp       DateTime     @default(now())
   vote_session    Vote_session @relation(fields: [vote_session_id], references: [id])
   candidate       Candidates   @relation(fields: [candidate_id], references: [id])
   user            User         @relation(fields: [user_Id], references: [id])
