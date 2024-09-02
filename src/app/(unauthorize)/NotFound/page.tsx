@@ -1,7 +1,7 @@
 import React from "react";
 import { H1, Large_Text } from "@/app/components/general/Text";
 import Image from "next/image";
-import NotFoundImage from "@/../public/images/NotFoundIcon.png";
+import NotFoundImage from "@/../public/images/NotFoundIcon.svg";
 
 export default function NotFound() {
   return (
