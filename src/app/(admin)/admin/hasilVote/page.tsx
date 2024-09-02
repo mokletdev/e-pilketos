@@ -1,56 +1,23 @@
-"use client";
-import React, { useEffect, useState } from "react";
-import { VoteSessionListProps } from "./_components/DataTypes";
-import { getDataAPIMany } from "@/utils/DataFetching/getData";
+import React from "react";
 import DataTable, { TableColumn } from "react-data-table-component";
-import { LinkButton } from "@/app/components/general/Button";
 import clsx from "clsx";
-import { useRouter } from "next/navigation";
+import {
+  GetVoteSessionList,
+  VoteSessionListPayload,
+} from "@/utils/database/voteSession.query";
+import Link from "next/link";
+import DataVoteSesion from "./_components/DataVoteSesion";
+import { Large_Text } from "@/app/components/general/Text";
 
-export default function HasilVote() {
-  const [voteResult, setVoteResult] = useState<VoteSessionListProps[]>([]);
-  const router = useRouter();
-  useEffect(() => {
-    async function GetVoteSessionList() {
-      const res = await getDataAPIMany("/api/votesession-list");
-      const data = res.data || [];
-      setVoteResult(data);
-    }
-    GetVoteSessionList();
-  }, []);
+export default async function HasilVote() {
+  const data = await GetVoteSessionList();
 
-  const columns: TableColumn<VoteSessionListProps>[] = [
-    {
-      name: "Title",
-      selector: (row) => row.title,
-      sortable: true,
-    },
-    {
-      name: "Max Vote",
-      selector: (row) => row.max_vote,
-      sortable: true,
-    },
-    {
-      name: "Action",
-      cell: (row) => (
-        <button
-          className={clsx(
-            "px-6 py-2 bg-primary-color border-2 border-primary-color text-white rounded-full",
-            "transition-all duration-300 ease-in-out",
-            "hover:bg-transparent hover:text-primary-color",
-          )}
-          onClick={() => router.push(`/admin/hasilVote/${row.id}`)}
-        >
-          Detail
-        </button>
-      ),
-    },
-  ];
   return (
     <>
-      <div className="mt-10">
-        <DataTable columns={columns} data={voteResult} />
-      </div>
+      <Large_Text className="mt-12" variant="SEMIBOLD">
+        Data Hasil Vote
+      </Large_Text>
+      <DataVoteSesion data={data!} />
     </>
   );
 }

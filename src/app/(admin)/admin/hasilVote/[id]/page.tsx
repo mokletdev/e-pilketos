@@ -5,8 +5,6 @@ import ChartDougnuts from "../_components/ChartDougnuts";
 import { getDataAPIMany } from "@/utils/DataFetching/getData";
 import clsx from "clsx";
 import { color } from "../_components/color";
-import { useRouter } from "next/navigation";
-import toast from "react-hot-toast";
 import { HasilProps } from "../_components/DataTypes";
 
 export default function DetailHasilVote({
@@ -15,7 +13,6 @@ export default function DetailHasilVote({
   params: { id: string };
 }) {
   const [candidates, setCandidates] = useState<HasilProps[]>([]);
-  const router = useRouter();
 
   useEffect(() => {
     async function GetDataCandidates() {
@@ -29,7 +26,6 @@ export default function DetailHasilVote({
     }
     GetDataCandidates();
   }, [params.id]);
-  console.log(candidates);
 
   return (
     <>

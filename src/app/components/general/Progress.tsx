@@ -28,7 +28,7 @@ export default function Progress({ percent }: ProgressProps) {
           r="16"
           fill="none"
           className="stroke-current text-primary-color duration-500"
-          stroke-width="4"
+          strokeWidth="4"
           strokeDasharray="100"
           strokeDashoffset={percentage}
           strokeLinecap="round"

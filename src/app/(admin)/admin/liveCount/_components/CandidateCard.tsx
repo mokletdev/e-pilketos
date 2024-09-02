@@ -5,28 +5,19 @@ import Progressbar from "./Progressbar";
 import { H3, H4, H5, Large_Text } from "@/app/components/general/Text";
 import client from "@/lib/prisma";
 import CountCandidatesInterval from "./CountCandidatesInterval";
+import { LiveCountPayload } from "@/utils/database/voteSession.query";
+import { VoteSessionResponse } from "@/types/liveCount";
 
-export default async function CandidateCard() {
-  const GetCandidates = await client.candidates.findMany({
-    include: {
-      User_vote: { select: { user_Id: true } },
-      Vote_session_candidate: {
-        select: { candidates_number: true },
-      },
-    },
-  });
-  const findCandidates1 = GetCandidates.find((can) =>
-    can.Vote_session_candidate.find((vote) => vote.candidates_number === 1),
+export default function CandidateCard({ data }: { data: VoteSessionResponse }) {
+  const firstFilteredCandidates = data?.candidates?.find((x) =>
+    x.Vote_session_candidate.find((cn) => cn.candidates_number === 1),
   );
-  const findCandidates2 = GetCandidates.find((can) =>
-    can.Vote_session_candidate.find((vote) => vote.candidates_number === 2),
+  const secondFilteredCandidates = data?.candidates?.find((x) =>
+    x.Vote_session_candidate.find((cn) => cn.candidates_number === 2),
   );
-  const mergeDataCandidate = [findCandidates1, findCandidates2];
 
-  const filteredData = mergeDataCandidate.filter((dat) => dat);
-
-  let VoteCandidate1 = 10000; //!not fix
-  const VoteCandidate2 = 1000; //!not fix
+  let VoteCandidate1 = firstFilteredCandidates?._count.User_vote || 0; //!not fix
+  const VoteCandidate2 = secondFilteredCandidates?._count.User_vote || 0; //!not fix
   const countPercent = VoteCandidate1 + VoteCandidate2;
   const fixCount = (VoteCandidate1 / countPercent) * 100;
   const totalVotes = Math.floor(fixCount);
@@ -40,21 +31,22 @@ export default async function CandidateCard() {
     <main className="flex flex-col gap-7">
       <div className="p-14 bg-white rounded-xl shadow-shadow-2">
         <div className="justify-between flex items-center">
-          <ImageProfile src={FotoKandidat} />
+          <ImageProfile
+            src={
+              firstFilteredCandidates?.img ||
+              "https://res.cloudinary.com/dhjeoo1pm/image/upload/v1725282073/ntfe8e9jczuwhc3kzeug.jpg"
+            }
+          />
           <div className="flex flex-col max-w-[800px] w-full mx-4 gap-8">
             <div className="grid grid-cols-3 justify-center gap-x-2">
               <div className="flex flex-col gap-30 justify-between">
                 <div>
-                  <H4>{findCandidates1?.name ? findCandidates1?.name : "-"}</H4>
-                  <H5>
-                    {findCandidates1?.kandidat_kelas
-                      ? findCandidates1?.kandidat_kelas
-                      : "-"}
-                  </H5>
+                  <H4>{firstFilteredCandidates?.name}</H4>
+                  <H5>{firstFilteredCandidates?.kandidat_kelas}</H5>
                 </div>
                 <H3 className="text-primary-color -mb-6 mt-5">
                   <CountCandidatesInterval
-                    candidatesVote={can1Vote}
+                    candidatesVote={can1Vote || 0}
                     duration={duration}
                   />
                 </H3>
@@ -64,17 +56,13 @@ export default async function CandidateCard() {
               </div>
               <div className="flex flex-col gap-30 text-right justify-between">
                 <div>
-                  <H4>{findCandidates2?.name ? findCandidates2?.name : "-"}</H4>
-                  <H5>
-                    {findCandidates2?.kandidat_kelas
-                      ? findCandidates2?.kandidat_kelas
-                      : "-"}
-                  </H5>
+                  <H4>{secondFilteredCandidates?.name}</H4>
+                  <H5>{secondFilteredCandidates?.kandidat_kelas}</H5>
                 </div>
                 <H3 className="text-primary-color -mb-6 mt-5">
                   {" "}
                   <CountCandidatesInterval
-                    candidatesVote={can2Vote}
+                    candidatesVote={can2Vote || 0}
                     duration={duration}
                   />
                 </H3>
@@ -84,20 +72,25 @@ export default async function CandidateCard() {
               <Progressbar totalVotes={totalVotes} duration={duration} />
             </div>
           </div>
-          <ImageProfile src={FotoKandidat} />
+          <ImageProfile
+            src={
+              secondFilteredCandidates?.img ||
+              "https://res.cloudinary.com/dhjeoo1pm/image/upload/v1725282073/ntfe8e9jczuwhc3kzeug.jpg"
+            }
+          />
         </div>
       </div>
       <div className="bg-white rounded-xl shadow-shadow-2 justify-between flex items-center px-12 py-7">
         <div className="flex items-center gap-4">
           <div className="rounded-full size-4 bg-red-light-2"></div>
           <Large_Text variant="REGULAR">
-            {findCandidates1?.name ? findCandidates1?.name : "-"}
+            {firstFilteredCandidates?.name || "Tidak ada kandidat"}
           </Large_Text>
         </div>
         <div className="flex flex-row-reverse  items-center gap-4">
           <div className="rounded-full size-4 bg-secondary-color"></div>
           <Large_Text variant="REGULAR">
-            {findCandidates2?.name ? findCandidates2?.name : "-"}
+            {secondFilteredCandidates?.name || "Tidak ada kandidat"}
           </Large_Text>
         </div>
       </div>

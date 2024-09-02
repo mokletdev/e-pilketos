@@ -223,9 +223,6 @@ export default function Navbar() {
                   className="cursor-pointer border rounded-full hidden xl:block"
                 >
                   <div className="flex items-center gap-x-3">
-                    {/* <Small_Text variant="REGULAR">
-                      {session.user?.name}
-                    </Small_Text> */}
                     <svg
                       className="w-6 h-6 text-black m-1"
                       aria-hidden="true"

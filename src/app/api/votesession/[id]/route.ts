@@ -1,6 +1,7 @@
 import { NextApiRequest } from "next";
 import client from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
+import { Role } from "@prisma/client";
 
 export async function GET(
   req: NextRequest,
@@ -23,6 +24,7 @@ export async function GET(
               User_vote: {
                 select: { user: { select: { role: true } } },
               },
+              Vote_session_candidate: true,
             },
           },
         },

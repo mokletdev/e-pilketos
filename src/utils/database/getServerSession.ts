@@ -1,7 +1,7 @@
 "use server";
 import { createUser, deleteUser, findUser, updateUser } from "./user.query";
 import { revalidatePath } from "next/cache";
-import { Role } from "@prisma/client";
+import { Prisma, Role } from "@prisma/client";
 import client from "@/lib/prisma";
 import {
   createCandidate,
@@ -11,7 +11,11 @@ import {
 } from "./candidates.query";
 import { hash } from "bcrypt";
 import { nextGetServerSession } from "@/lib/AuthOptions";
-import { createVoteSession, UpdateVoteSession } from "./voteSession.query";
+import {
+  createVoteSession,
+  getVoteSession,
+  UpdateVoteSession,
+} from "./voteSession.query";
 import { generatePassword } from "../generatePassword";
 import { EmailService } from "@/lib/emailService";
 import { newUserAccount } from "../emailTemplate";
@@ -22,10 +26,19 @@ export const deleteUserById = async (id: string) => {
     if (session?.user?.role != "ADMIN") {
       return { error: true, message: "Unauthorized" };
     }
+    const delUserAccess = await client.vote_session_access.deleteMany({
+      where: { user_Id: id },
+    });
+    const delVote = await client.user_vote.deleteMany({
+      where: { user_Id: id },
+    });
     const del = await deleteUser(id);
+    if (!delUserAccess) throw new Error("Delete failed");
+    if (!delVote) throw new Error("Delete failed");
     if (!del) throw new Error("Delete failed");
     else {
       revalidatePath("/admin/users");
+      revalidatePath("/admin/dashboard");
       return { message: "Success to Delete!", error: false };
     }
   } catch (e) {
@@ -100,6 +113,7 @@ export const updateUserById = async (id: string | null, data: FormData) => {
       } else throw new Error("User not found");
     }
     revalidatePath("/admin/users");
+    revalidatePath("/admin/dashboard");
     return { message: "Success to update Users", error: false };
   } catch (error) {
     console.error((error as Error).message);
@@ -237,6 +251,8 @@ export const upsertVoteSession = async (id: string | null, data: FormData) => {
       candidates_number: parseInt(candidates_number[index]),
     }));
 
+    const spreadId = await getVoteSession(id as string);
+
     if (id == null) {
       await createVoteSession({
         id: id ?? "",
@@ -246,6 +262,7 @@ export const upsertVoteSession = async (id: string | null, data: FormData) => {
         isPublic,
         max_vote,
         vote_session_candidate,
+        spreadsheetId: (spreadId?.spreadsheetId as string) || "",
       });
     } else {
       await UpdateVoteSession(id, {
@@ -256,6 +273,7 @@ export const upsertVoteSession = async (id: string | null, data: FormData) => {
         isPublic,
         max_vote,
         vote_session_candidate,
+        spreadsheetId: (spreadId?.spreadsheetId as string) || "",
       });
     }
 
@@ -263,6 +281,9 @@ export const upsertVoteSession = async (id: string | null, data: FormData) => {
     revalidatePath("/admin/candidates");
     revalidatePath("/vote");
     revalidatePath("/vote/[id]");
+    revalidatePath("/api/votesession-list");
+    revalidatePath("/api/votesession/[id]");
+    revalidatePath("/admin/hasilVote");
     return { message: "Vote session saved successfully!", error: false };
   } catch (e) {
     console.error(e);
@@ -278,15 +299,27 @@ export const upsertVoteSession = async (id: string | null, data: FormData) => {
 
 export const deleteVoteSessionById = async (id: string) => {
   try {
-    const del = await client.vote_session.delete({ where: { id: id } });
-    if (!del) return { error: true, message: "Failed to Delete Vote Session" };
-    else {
-      revalidatePath("/admin/votesession");
-      revalidatePath("/admin/candidates");
-      revalidatePath("/vote");
-      revalidatePath("/vote/[id]");
-      return { error: false, message: "Vote session deleted successfully" };
-    }
+    await client.vote_session_candidate.deleteMany({
+      where: { vote_session_id: id },
+    });
+    await client.vote_session_access.deleteMany({
+      where: { vote_session_id: id },
+    });
+    await client.user_vote.deleteMany({
+      where: { vote_session_id: id },
+    });
+    await client.vote_session.delete({
+      where: { id: id },
+    });
+
+    revalidatePath("/admin/votesesion");
+    revalidatePath("/admin/candidates");
+    revalidatePath("/vote");
+    revalidatePath("/vote/[id]");
+    revalidatePath("/api/votesession-list");
+    revalidatePath("/api/votesession/[id]");
+    revalidatePath("/admin/hasilVote");
+    return { error: false, message: "Vote session deleted successfully" };
   } catch (error) {
     console.error(error);
     return {
