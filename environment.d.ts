@@ -7,6 +7,7 @@ declare global {
       SMTP_USER: string;
       SMTP_PASS: string;
       EMAIL_FROM: string;
+      GOOGLE_DRIVE_FOLDER_ID: string;
       APP_ENV: "development" | "staging" | "production";
       [key: string]: string | undefined;
     }

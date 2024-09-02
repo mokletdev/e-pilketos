@@ -21,6 +21,7 @@
     "cloudinary": "^2.2.0",
     "clsx": "^2.1.1",
     "dotenv": "^16.4.5",
+    "googleapis": "^142.0.0",
     "install": "^0.13.0",
     "keen-slider": "^6.8.6",
     "minisearch": "^7.1.0",
