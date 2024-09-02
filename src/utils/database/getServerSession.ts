@@ -22,10 +22,19 @@ export const deleteUserById = async (id: string) => {
     if (session?.user?.role != "ADMIN") {
       return { error: true, message: "Unauthorized" };
     }
+    const delUserAccess = await client.vote_session_access.deleteMany({
+      where: { user_Id: id },
+    });
+    const delVote = await client.user_vote.deleteMany({
+      where: { user_Id: id },
+    });
     const del = await deleteUser(id);
+    if (!delUserAccess) throw new Error("Delete failed");
+    if (!delVote) throw new Error("Delete failed");
     if (!del) throw new Error("Delete failed");
     else {
       revalidatePath("/admin/users");
+      revalidatePath("/admin/dashboard");
       return { message: "Success to Delete!", error: false };
     }
   } catch (e) {
@@ -100,6 +109,7 @@ export const updateUserById = async (id: string | null, data: FormData) => {
       } else throw new Error("User not found");
     }
     revalidatePath("/admin/users");
+    revalidatePath("/admin/dashboard");
     return { message: "Success to update Users", error: false };
   } catch (error) {
     console.error((error as Error).message);
@@ -263,6 +273,9 @@ export const upsertVoteSession = async (id: string | null, data: FormData) => {
     revalidatePath("/admin/candidates");
     revalidatePath("/vote");
     revalidatePath("/vote/[id]");
+    revalidatePath("/api/votesession-list");
+    revalidatePath("/api/votesession/[id]");
+    revalidatePath("/admin/hasilVote");
     return { message: "Vote session saved successfully!", error: false };
   } catch (e) {
     console.error(e);
@@ -278,15 +291,27 @@ export const upsertVoteSession = async (id: string | null, data: FormData) => {
 
 export const deleteVoteSessionById = async (id: string) => {
   try {
-    const del = await client.vote_session.delete({ where: { id: id } });
-    if (!del) return { error: true, message: "Failed to Delete Vote Session" };
-    else {
-      revalidatePath("/admin/votesession");
-      revalidatePath("/admin/candidates");
-      revalidatePath("/vote");
-      revalidatePath("/vote/[id]");
-      return { error: false, message: "Vote session deleted successfully" };
-    }
+    await client.vote_session_candidate.deleteMany({
+      where: { vote_session_id: id },
+    });
+    await client.vote_session_access.deleteMany({
+      where: { vote_session_id: id },
+    });
+    await client.user_vote.deleteMany({
+      where: { vote_session_id: id },
+    });
+    await client.vote_session.delete({
+      where: { id: id },
+    });
+
+    revalidatePath("/admin/votesesion");
+    revalidatePath("/admin/candidates");
+    revalidatePath("/vote");
+    revalidatePath("/vote/[id]");
+    revalidatePath("/api/votesession-list");
+    revalidatePath("/api/votesession/[id]");
+    revalidatePath("/admin/hasilVote");
+    return { error: false, message: "Vote session deleted successfully" };
   } catch (error) {
     console.error(error);
     return {

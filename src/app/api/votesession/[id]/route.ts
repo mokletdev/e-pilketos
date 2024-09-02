@@ -1,6 +1,7 @@
 import { NextApiRequest } from "next";
 import client from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
+import { Role } from "@prisma/client";
 
 export async function GET(
   req: NextRequest,

@@ -1,5 +1,8 @@
 export const getDataAPIMany = async (str: string) => {
-  const response = await fetch(str);
+  const response = await fetch(str, {
+    method: "GET",
+    cache: "no-cache",
+  });
   try {
     const data = await response.json();
     return data;
@@ -8,7 +11,13 @@ export const getDataAPIMany = async (str: string) => {
   }
 };
 
-export const getDataAPIOne = async ({ slug, str }: { slug: string; str: string }) => {
+export const getDataAPIOne = async ({
+  slug,
+  str,
+}: {
+  slug: string;
+  str: string;
+}) => {
   const response = await fetch(`${str}/${slug}`);
   try {
     const data = await response.json();

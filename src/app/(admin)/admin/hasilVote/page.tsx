@@ -6,8 +6,13 @@ import DataTable, { TableColumn } from "react-data-table-component";
 import { LinkButton } from "@/app/components/general/Button";
 import clsx from "clsx";
 import { useRouter } from "next/navigation";
+import useSWR from "swr";
+
+const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
 export default function HasilVote() {
+  const { data, error } = useSWR("/api/votesession-list", fetcher);
+
   const [voteResult, setVoteResult] = useState<VoteSessionListProps[]>([]);
   const router = useRouter();
   useEffect(() => {
@@ -18,6 +23,8 @@ export default function HasilVote() {
     }
     GetVoteSessionList();
   }, []);
+  if (error) return <div>Error loading data</div>;
+  if (!data) return <div>Loading...</div>;
 
   const columns: TableColumn<VoteSessionListProps>[] = [
     {
