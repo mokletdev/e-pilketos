@@ -24,6 +24,7 @@ export async function GET(
               User_vote: {
                 select: { user: { select: { role: true } } },
               },
+              Vote_session_candidate: true,
             },
           },
         },

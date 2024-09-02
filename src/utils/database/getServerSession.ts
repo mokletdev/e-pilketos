@@ -1,7 +1,7 @@
 "use server";
 import { createUser, deleteUser, findUser, updateUser } from "./user.query";
 import { revalidatePath } from "next/cache";
-import { Role } from "@prisma/client";
+import { Prisma, Role } from "@prisma/client";
 import client from "@/lib/prisma";
 import {
   createCandidate,
@@ -11,7 +11,11 @@ import {
 } from "./candidates.query";
 import { hash } from "bcrypt";
 import { nextGetServerSession } from "@/lib/AuthOptions";
-import { createVoteSession, UpdateVoteSession } from "./voteSession.query";
+import {
+  createVoteSession,
+  getVoteSession,
+  UpdateVoteSession,
+} from "./voteSession.query";
 import { generatePassword } from "../generatePassword";
 import { EmailService } from "@/lib/emailService";
 import { newUserAccount } from "../emailTemplate";
@@ -247,6 +251,8 @@ export const upsertVoteSession = async (id: string | null, data: FormData) => {
       candidates_number: parseInt(candidates_number[index]),
     }));
 
+    const spreadId = await getVoteSession(id as string);
+
     if (id == null) {
       await createVoteSession({
         id: id ?? "",
@@ -256,6 +262,7 @@ export const upsertVoteSession = async (id: string | null, data: FormData) => {
         isPublic,
         max_vote,
         vote_session_candidate,
+        spreadsheetId: (spreadId?.spreadsheetId as string) || "",
       });
     } else {
       await UpdateVoteSession(id, {
@@ -266,6 +273,7 @@ export const upsertVoteSession = async (id: string | null, data: FormData) => {
         isPublic,
         max_vote,
         vote_session_candidate,
+        spreadsheetId: (spreadId?.spreadsheetId as string) || "",
       });
     }
 

@@ -98,57 +98,17 @@ export const createVoteSession = async (data: VoteSessionGeneralPayload) => {
   }
 };
 
-// export const upsertVoteSession = async (
-//   id: string | undefined,
-//   formData: FormData,
-// ) => {
-//   try {
-//     const title = formData.get("title") as string;
-//     const start_time = new Date(formData.get("start_time") as string);
-//     const end_time = new Date(formData.get("end_time") as string);
-//     const is_active = formData.get("is_active") === "true";
-//     const max_vote = parseInt(formData.get("max_vote") as string, 10) || 1000;
-
-//     if (id) {
-//       const updatedVoteSession = await client.vote_session.update({
-//         where: { id },
-//         data: {
-//           title: title,
-//           openedAt: start_time,
-//           closeAt: end_time,
-//           isPublic: is_active,
-//           max_vote: max_vote,
-//         },
-//       });
-//       return {
-//         error: false,
-//         message: "Vote session updated successfully",
-//         data: updatedVoteSession,
-//       };
-//     } else {
-//       const newVoteSession = await client.vote_session.create({
-//         data: {
-//           title: title,
-//           openedAt: start_time,
-//           closeAt: end_time,
-//           isPublic: is_active,
-//           max_vote: max_vote,
-//         },
-//       });
-//       return {
-//         error: false,
-//         message: "Vote session created successfully",
-//         data: newVoteSession,
-//       };
-//     }
-//   } catch (error) {
-//     console.error((error as Error).message);
-//     return {
-//       error: true,
-//       message: "An error occurred while upserting the vote session",
-//     };
-//   }
-// };
+export const GetVoteSessionList = async () => {
+  try {
+    const voteSessionList = await client.vote_session.findMany({
+      select: { id: true, title: true, max_vote: true },
+    });
+    return voteSessionList;
+  } catch (error) {
+    console.log(error as Error);
+    return;
+  }
+};
 
 export const updatedVoteSessionbyId = async (
   id: string,
@@ -294,6 +254,31 @@ export type VoteSessionWithCandidates = Prisma.Vote_sessionGetPayload<{
     // User_vote: true;
     // vote_session_access: true;
   };
+}>;
+
+export type LiveCountPayload = Prisma.Vote_session_candidateGetPayload<{
+  include: {
+    candidate: {
+      select: {
+        _count: { select: { User_vote: true } };
+        img: true;
+        kandidat_kelas: true;
+        name: true;
+        id: true;
+        User_vote: {
+          select: { user: { select: { role: true } } };
+        };
+        Vote_session_candidate: true;
+      };
+    };
+  };
+}>;
+
+export type VoteSessionListPayload = Prisma.Vote_sessionGetPayload<{
+  select: { id: true; title: true; max_vote: true };
+}>;
+export type VoteSessionLiveCountListPayload = Prisma.Vote_sessionGetPayload<{
+  select: { id: true; title: true; max_vote: true; isPublic: true };
 }>;
 
 export type VoteSessionWithUserVotePayload = Prisma.Vote_sessionGetPayload<{

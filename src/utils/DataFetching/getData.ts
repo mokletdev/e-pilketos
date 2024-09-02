@@ -2,6 +2,9 @@ export const getDataAPIMany = async (str: string) => {
   const response = await fetch(str, {
     method: "GET",
     cache: "no-cache",
+    headers: {
+      "content-type": "application/json",
+    },
   });
   try {
     const data = await response.json();

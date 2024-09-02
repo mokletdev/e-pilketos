@@ -15,7 +15,7 @@ export default function LiveCount2Kandidat() {
             Tayangan Live Pemilihan Ketua OSIS SMK Telkom Malang
           </Large_Text>
         </div>
-        <CandidateCard />
+        {/* <CandidateCard /> */}
       </div>
     </main>
   );
