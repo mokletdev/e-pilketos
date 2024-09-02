@@ -50,45 +50,40 @@ export default function Panduan() {
   ];
 
   return (
-    <>
-      <main className="bg-white w-full h-full flex py-24" id="panduan">
-        <SectionsGap>
-          <div className="flex flex-col mx-auto my-auto gap-[50px]">
-            <div className="text-center flex-col flex gap-[28px]">
-              <H2>Panduan</H2>
-              <Large_Text
-                variant="REGULAR"
-                className="text-secondary-text-color"
-              >
-                Sebelum melakukan vote ada beberapa hal yang harus diperhatikan
-                nih..
-              </Large_Text>
+    <main className="bg-white w-full h-full flex py-24" id="panduan">
+      <SectionsGap>
+        <div className="flex flex-col mx-auto my-auto gap-[50px]">
+          <div className="text-center flex-col flex gap-[28px]">
+            <H2>Panduan</H2>
+            <Large_Text variant="REGULAR" className="text-secondary-text-color">
+              Sebelum melakukan vote ada beberapa hal yang harus diperhatikan
+              nih..
+            </Large_Text>
+          </div>
+          <div className="w-full justify-between flex flex-col xl:flex-row gap-[50px]">
+            <div className="grid grid-cols-1 gap-[50px]">
+              {panduanR.map((item, index) => (
+                <PanduanCardR
+                  key={index}
+                  image={item.image}
+                  head={item.head}
+                  body={item.body}
+                />
+              ))}
             </div>
-            <div className="flex 2xl:gap-[200px] flex-col 2xl:flex-row gap-[50px]">
-              <div className="grid grid-cols-1 gap-[50px]">
-                {panduanR.map((item, index) => (
-                  <PanduanCardR
-                    key={index}
-                    image={item.image}
-                    head={item.head}
-                    body={item.body}
-                  />
-                ))}
-              </div>
-              <div className="grid grid-cols-1 gap-[50px]">
-                {panduanL.map((item, index) => (
-                  <PanduanCardL
-                    key={index}
-                    image={item.image}
-                    head={item.head}
-                    body={item.body}
-                  />
-                ))}
-              </div>
+            <div className="grid grid-cols-1 gap-[50px]">
+              {panduanL.map((item, index) => (
+                <PanduanCardL
+                  key={index}
+                  image={item.image}
+                  head={item.head}
+                  body={item.body}
+                />
+              ))}
             </div>
           </div>
-        </SectionsGap>
-      </main>
-    </>
+        </div>
+      </SectionsGap>
+    </main>
   );
 }
