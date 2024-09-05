@@ -1,12 +1,11 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import CandidateCard from "../_components/CandidateCard";
-import { H1, Large_Text, Medium_Text } from "@/app/components/general/Text";
-import { getDataAPIMany } from "@/utils/DataFetching/getData";
+import { H1, Large_Text } from "../../../components/general/Text";
+import CandidateCard from "../../../(admin)/admin/liveCount/_components/CandidateCard";
 import { VoteSessionResponse } from "@/types/liveCount";
-import Link from "next/link";
+import { getDataAPIMany } from "@/utils/DataFetching/getData";
 
-export default function DetailLiveCount({
+export default function LiveCount2Kandidat({
   params,
 }: {
   params: { id: string };
@@ -21,9 +20,8 @@ export default function DetailLiveCount({
     }
     GetDataLiveCount();
   }, [params.id]);
-
   return (
-    <main className="h-[100vh] flex">
+    <main className="h-[100vh] flex max-w-screen-2xl mx-auto">
       <div className="my-auto w-full mx-auto flex flex-col gap-10">
         <div>
           <H1 className="text-center">Live Count</H1>
@@ -33,12 +31,6 @@ export default function DetailLiveCount({
           >
             {liveCount?.title}
           </Large_Text>
-          <Medium_Text
-            variant="SEMIBOLD"
-            className="text-primary-color text-center hover:underline"
-          >
-            <Link href={`/LiveCount2Kandidat/${params.id}`}>Full Screen</Link>
-          </Medium_Text>
         </div>
         <CandidateCard data={liveCount!} />
       </div>

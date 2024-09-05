@@ -7,17 +7,45 @@ import { getAllUser, userLastLoginPayload } from "@/utils/database/user.query";
 import UserTable from "./_components/Table";
 import { nextGetServerSession } from "@/lib/AuthOptions";
 import { Role } from "@prisma/client";
+import client from "@/lib/prisma";
 
 export default async function Dashboard() {
   const session = await nextGetServerSession();
   const { user } = session!;
-  const AllDataUserVote = [900, 300];
-  const AllUser = AllDataUserVote.reduce((acc, cur) => acc + cur);
-  const VoteUser = [0, 0];
+  const VoteSiswa = await client.user_vote.findMany({
+    select: {
+      user: { select: { _count: { select: { User_vote: true } } } },
+    },
+    where: {
+      AND: [
+        { NOT: { user: { role: "GURU" } } },
+        { NOT: { user: { role: "ADMIN" } } },
+      ],
+    },
+  });
+  const VoteGuru = await client.user_vote.findMany({
+    select: { user: { select: { _count: { select: { User_vote: true } } } } },
+    where: {
+      AND: [
+        { NOT: { user: { role: "MPK" } } },
+        { NOT: { user: { role: "ADMIN" } } },
+        { NOT: { user: { role: "SISWA" } } },
+        { NOT: { user: { role: "OSIS" } } },
+      ],
+    },
+  });
+
+  // const AllDataUserVote = [100, 1000];
+  // const AllUser = VoteUser.reduce((acc, cur) => acc + cur);
+  const VoteUser = [VoteGuru.length, VoteSiswa.length];
+
   const AllVote = VoteUser.reduce((acc, cur) => acc + cur);
-  const percentGuru = Math.floor((VoteUser[0] / AllDataUserVote[0]) * 100);
-  const percentSiswa = Math.floor((VoteUser[1] / AllDataUserVote[1]) * 100);
-  const percentAll = Math.floor((AllVote / AllUser) * 100);
+  // const percentGuru = Math.floor((VoteUser[0] / AllDataUserVote[0]) * 100);
+  // const percentSiswa = Math.floor((VoteUser[1] / AllDataUserVote[1]) * 100);
+  // const percentAll = Math.floor((AllVote / AllUser) * 100);
+  const percentGuru = VoteUser[0];
+  const percentSiswa = VoteUser[1];
+  const percentAll = AllVote;
 
   const admin: userLastLoginPayload[] = await getAllUser({
     AND: [
@@ -36,15 +64,15 @@ export default async function Dashboard() {
     <main className="h-full overflow-x-hidden">
       <div className="w-full bg-red-light-6 gap-x-[28px] flex flex-col xl:flex-row">
         <ProgessCard target="Siswa" percent={percentSiswa}>
-          Persentase Siswa yang sudah vote.
+          Total Siswa yang sudah vote.
         </ProgessCard>
         <ProgessCard target="Guru" percent={percentGuru}>
-          Persentase Guru yang sudah vote.
+          Total Guru yang sudah vote.
         </ProgessCard>
       </div>
       <div className="mt-[28px] pb-[52px]">
         <ProgessCard target="Semua" percent={percentAll}>
-          Persentase Siswa dan Guru yang sudah vote.
+          Total Siswa dan Guru yang sudah vote.
         </ProgessCard>
       </div>
       <UserTable
