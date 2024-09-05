@@ -1,11 +1,8 @@
 import React from "react";
 import ImageProfile from "./ImageProfile";
-import FotoKandidat from "@/../public/images/FotoKandidat.png";
 import Progressbar from "./Progressbar";
 import { H3, H4, H5, Large_Text } from "@/app/components/general/Text";
-import client from "@/lib/prisma";
 import CountCandidatesInterval from "./CountCandidatesInterval";
-import { LiveCountPayload } from "@/utils/database/voteSession.query";
 import { VoteSessionResponse } from "@/types/liveCount";
 
 export default function CandidateCard({ data }: { data: VoteSessionResponse }) {
@@ -16,14 +13,13 @@ export default function CandidateCard({ data }: { data: VoteSessionResponse }) {
     x.Vote_session_candidate.find((cn) => cn.candidates_number === 2),
   );
 
-  let VoteCandidate1 = firstFilteredCandidates?._count.User_vote || 0; //!not fix
-  const VoteCandidate2 = secondFilteredCandidates?._count.User_vote || 0; //!not fix
+  let VoteCandidate1 = firstFilteredCandidates?._count.User_vote || 0;
+  const VoteCandidate2 = secondFilteredCandidates?._count.User_vote || 0;
   const countPercent = VoteCandidate1 + VoteCandidate2;
   const fixCount = (VoteCandidate1 / countPercent) * 100;
   const totalVotes = Math.floor(fixCount);
   const duration = 20;
   const calculateVote = 100 - totalVotes;
-
   let can1Vote = Math.floor(fixCount);
   let can2Vote = Math.floor(calculateVote);
 
