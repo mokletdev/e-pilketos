@@ -19,7 +19,7 @@ export default function ProgessCard({
         <div className="flex flex-col text-center xl:text-start gap-4">
           <div>
             <H3>Total Vote</H3>
-            <H4 className="">{target}</H4>
+            <H4>{target}</H4>
           </div>
           <Medium_Text variant="REGULAR" className="text-secondary-text-color">
             {children}
