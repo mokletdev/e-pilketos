@@ -4,11 +4,11 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import Arrow from "../../general/Arrow";
 import "keen-slider/keen-slider.min.css";
-import img1 from "@/../public/images/IMG_3229.png";
-import img2 from "@/../public/images/IMG_3233.png";
-import img3 from "@/../public/images/IMG_3234.png";
-import img4 from "@/../public/images/IMG_3237.png";
-import img5 from "@/../public/images/IMG_3259.png";
+import img1 from "@/../public/images/dokum/DSC02089.webp";
+import img2 from "@/../public/images/dokum/IMG_3160.webp";
+import img3 from "@/../public/images/dokum/DSC02239.webp";
+import img4 from "@/../public/images/dokum/IMG_3259.webp";
+import img5 from "@/../public/images/dokum/IMG_3267.webp";
 
 interface GaleriProps {
   Image: any;
@@ -75,56 +75,53 @@ export default function GaleriCarousel() {
     return () => clearInterval(timer);
   }, [slider]);
   return (
-    <>
+    <div
+      data-aos="fade-up"
+      data-aos-duration="500"
+      data-aos-delay="500"
+      className="mt-[100px] relative"
+    >
       <div
-        data-aos="fade-up"
-        data-aos-duration="500"
-        data-aos-delay="500"
-        className="mt-[100px] relative"
+        ref={sliderRef}
+        className="keen-slider teams-wrapper max-w-full max-h-full group"
       >
-        <div
-          ref={sliderRef}
-          className="keen-slider teams-wrapper max-w-full max-h-full group"
-        >
-          {galeriCard.map((item, index) => (
-            <div
-              key={index}
-              className={`keen-slider__slide number-slide${
-                index + 1
-              } group-hover:scale-110 `}
-            >
-              <Image
-                src={item.Image}
-                alt={item.alt}
-                className={`rounded-2xl`}
-                width={800}
-                height={600}
-              />
-            </div>
-          ))}
-          {loaded && slider.current && (
-            <>
-              <Arrow
-                left
-                onClick={(e: any) =>
-                  e.stopPropagation() || slider.current?.prev()
-                }
-                disabled={currentSlide === 0}
-              />
+        {galeriCard.map((item, index) => (
+          <div
+            key={index}
+            className={`keen-slider__slide number-slide${
+              index + 1
+            } group-hover:scale-110`}
+          >
+            <Image
+              src={item.Image}
+              alt={item.alt}
+              className={`rounded-2xl`}
+              width={800}
+              height={600}
+            />
+          </div>
+        ))}
+        {loaded && slider.current && (
+          <>
+            <Arrow
+              left
+              onClick={(e: any) =>
+                e.stopPropagation() || slider.current?.prev()
+              }
+              disabled={currentSlide === 0}
+            />
 
-              <Arrow
-                onClick={(e: any) =>
-                  e.stopPropagation() || slider.current?.next()
-                }
-                disabled={
-                  currentSlide ===
-                  slider.current.track.details.slides.length - 1
-                }
-              />
-            </>
-          )}
-        </div>
+            <Arrow
+              onClick={(e: any) =>
+                e.stopPropagation() || slider.current?.next()
+              }
+              disabled={
+                currentSlide === slider.current.track.details.slides.length - 1
+              }
+            />
+          </>
+        )}
       </div>
-    </>
+    </div>
   );
 }

@@ -1,6 +1,6 @@
 import React from "react";
 import Image from "next/image";
-import Denied from "@/../public/images/DeniedIcon.png";
+import Denied from "@/../public/images/DeniedIcon.svg";
 import { H1, Large_Text } from "@/app/components/general/Text";
 
 export default function AccessDenied() {

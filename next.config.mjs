@@ -9,5 +9,8 @@ const nextConfig = {
       },
     ],
   },
+  experimental: {
+    optimizePackageImports: ['googleapis']
+  }
 };
 export default nextConfig;
