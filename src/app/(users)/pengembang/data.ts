@@ -17,13 +17,14 @@ export const Contributor: dataProps[] = [
   },
   {
     name: "Muhammad Zuhair Zuhdi",
-    ImgUrl: "",
+    ImgUrl: "https://avatars.githubusercontent.com/u/67100526?v=4",
     gen: "32nd",
     job: "Backend",
   },
   {
     name: "Fahrell Shandy Zhariif",
-    ImgUrl: "",
+    ImgUrl:
+      "https://res.cloudinary.com/dhjeoo1pm/image/upload/v1725515829/ag9kuw3tgvdl41lygeyw.jpg",
     gen: "32nd",
     job: "Frontend",
   },
