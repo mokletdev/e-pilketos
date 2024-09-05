@@ -28,27 +28,27 @@ export default function UserLogin() {
         password: data.password,
       });
       const toastId = toast.loading("Loading...");
+
       if (!data.email?.includes("smktelkom-mlg.sch.id")) {
         toast.error("Email tidak valid", { id: toastId });
         setError("Anda Tidak Diizinkan Akses Halaman Ini");
         router.push("/AccessDenied");
       }
+
+      if (response?.status === 401) {
+        toast.error("Email atau Password salah", { id: toastId });
+        setError("Email atau Password salah");
+      }
       if (response?.status === 200) {
-        console.log(response);
         toast.success("Login Berhasil", { id: toastId });
         router.push("/vote");
       }
-
-      if (response?.status === 401) {
-        console.log(response);
-        toast.error("Email atau Password salah", { id: toastId });
-        setError("Email atau Password salah");
-      } else if (!response?.ok) {
+      if (!response?.ok) {
         toast.error("Login Gagal", { id: toastId });
         setError("Internal Server Error. Hubungi Admin");
-      } else {
+      } else if (response.ok) {
         toast.success("Login Berhasil", { id: toastId });
-        router.push(response.url || "/");
+        router.push(response?.url || "/vote");
       }
     } catch (error) {
       console.log(error);
