@@ -112,7 +112,7 @@ export const updateUserById = async (id: string | null, data: FormData) => {
         if (!update) throw new Error("Update failed");
       } else throw new Error("User not found");
     }
-    revalidatePath("/admin/users", "page");
+    revalidatePath("/admin/users");
     revalidatePath("/admin/dashboard");
     return { message: "Success to update Users", error: false };
   } catch (error) {
