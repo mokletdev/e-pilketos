@@ -203,6 +203,20 @@ export default function UserTable({ data }: { data: userLastLoginPayload[] }) {
             Select Guru
           </button>
           <button
+            title="Select all MPK"
+            onClick={() => setRoleSelected("MPK")}
+            className="p-2 bg-gray-500 text-xs text-white rounded-lg hover:scale-110 hover:-translate-y-0.5 hover:shadow-md active:scale-105 duration-150"
+          >
+            Select MPK
+          </button>
+          <button
+            title="Select all OSIS"
+            onClick={() => setRoleSelected("OSIS")}
+            className="p-2 bg-gray-500 text-xs text-white rounded-lg hover:scale-110 hover:-translate-y-0.5 hover:shadow-md active:scale-105 duration-150"
+          >
+            Select OSIS
+          </button>
+          <button
             title="Select all ADMIN"
             onClick={() => setRoleSelected("ADMIN")}
             className="p-2 bg-gray-500 text-xs text-white rounded-lg hover:scale-110 hover:-translate-y-0.5 hover:shadow-md active:scale-105 duration-150"
