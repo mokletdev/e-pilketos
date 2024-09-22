@@ -48,7 +48,7 @@ export default function UserLogin() {
         setError("Internal Server Error. Hubungi Admin");
       } else if (response.ok) {
         toast.success("Login Berhasil", { id: toastId });
-        router.push(response?.url || "/vote");
+        router.push("/vote");
       }
     } catch (error) {
       console.log(error);
