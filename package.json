@@ -12,7 +12,7 @@
     "prisma:studio": "npx prisma studio"
   },
   "dependencies": {
-    "@prisma/client": "^5.19.0",
+    "@prisma/client": "^5.19.1",
     "@types/aos": "^3.0.7",
     "@types/bcrypt": "^5.0.2",
     "aos": "^2.3.4",
