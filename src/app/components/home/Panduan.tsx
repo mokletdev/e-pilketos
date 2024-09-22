@@ -17,7 +17,7 @@ export default function Panduan() {
   const panduanR: PanduanCardProps[] = [
     {
       image: Icon1,
-      head: "Username dan Password",
+      head: "Email dan Password",
       body: "Pastikan Anda memasukkan username dan password dengan benar. Periksa kembali karakter, termasuk huruf besar dan kecil.",
     },
     {
