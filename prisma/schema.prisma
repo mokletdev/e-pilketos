@@ -32,12 +32,12 @@ model Candidates {
   id                     String                   @id @default(uuid()) @map("id") @db.Char(36)
   img                    String
   name                   String
-  visi                   String
-  misi                   String
+  visi                   String                   @db.LongText()
+  misi                   String                   @db.LongText()
   pengalaman             Pengalaman[]
   kandidat_kelas         String?
   motto                  String
-  progja                 String
+  progja                 String                   @db.LongText()
   video_profile          String?
   user                   User?                    @relation(fields: [userId], references: [id])
   User_vote              User_vote[]
