@@ -34,7 +34,6 @@ export default function UserLogin() {
         setError("Anda Tidak Diizinkan Akses Halaman Ini");
         router.push("/AccessDenied");
       }
-
       if (response?.status === 401) {
         toast.error("Email atau Password salah", { id: toastId });
         setError("Email atau Password salah");
