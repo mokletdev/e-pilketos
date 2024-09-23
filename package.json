@@ -2,6 +2,7 @@
   "name": "e-pilketos-moklet",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -9,7 +10,12 @@
     "lint": "next lint",
     "prisma": "npx prisma migrate dev",
     "prisma:push": "npx prisma db push",
-    "prisma:studio": "npx prisma studio"
+    "prisma:studio": "npx prisma studio",
+    "prisma:generate": "npx prisma generate",
+    "seed": "node --loader ts-node/esm ./prisma/seed.ts"
+  },
+  "prisma" : {
+    "seed" : "node --loader ts-node/esm ./prisma/seed.ts"
   },
   "dependencies": {
     "@prisma/client": "^5.19.1",
@@ -25,7 +31,7 @@
     "install": "^0.13.0",
     "keen-slider": "^6.8.6",
     "minisearch": "^7.1.0",
-    "next": "14.2.4",
+    "next": "^14.2.13",
     "next-auth": "^4.24.7",
     "next-cloudinary": "^6.6.2",
     "next-nprogress-bar": "^2.3.12",
@@ -50,7 +56,7 @@
     "uuid": "^10.0.0"
   },
   "devDependencies": {
-    "@types/node": "^20",
+    "@types/node": "^20.16.5",
     "@types/nodemailer": "^6.4.15",
     "@types/react": "^18",
     "@types/react-dom": "^18",
@@ -61,6 +67,7 @@
     "postcss": "^8",
     "prisma": "^5.19.1",
     "tailwindcss": "^3.4.1",
-    "typescript": "^5"
+    "ts-node": "^10.9.2",
+    "typescript": "^5.6.2"
   }
 }
