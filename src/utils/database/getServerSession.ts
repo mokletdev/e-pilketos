@@ -284,6 +284,9 @@ export const upsertVoteSession = async (id: string | null, data: FormData) => {
     revalidatePath("/api/votesession-list");
     revalidatePath("/api/votesession/[id]");
     revalidatePath("/admin/hasilVote");
+    revalidatePath("/admin/liveCount");
+    revalidatePath("/admin/liveCount/[id]", "page");
+    revalidatePath("/LiveCount2Kandidat/[id]", "page");
     return { message: "Vote session saved successfully!", error: false };
   } catch (e) {
     console.error(e);
@@ -319,6 +322,9 @@ export const deleteVoteSessionById = async (id: string) => {
     revalidatePath("/api/votesession-list");
     revalidatePath("/api/votesession/[id]");
     revalidatePath("/admin/hasilVote");
+    revalidatePath("/admin/liveCount");
+    revalidatePath("/admin/liveCount/[id]", "page");
+    revalidatePath("/LiveCount2Kandidat/[id]", "page");
     return { error: false, message: "Vote session deleted successfully" };
   } catch (error) {
     console.error(error);
