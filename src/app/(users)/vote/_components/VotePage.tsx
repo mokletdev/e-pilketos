@@ -64,7 +64,7 @@ export default function VotePage({
   return (
     <SectionsGap>
       <section
-        className={`max-w-full w-full mx-auto grid grid-cols-1 xl:grid-cols-2 gap-6 mt-20 mb-20 px-8 min-h-[60vh]`}
+        className={`max-w-full w-full mx-auto grid grid-cols-1 xl:grid-cols-2 gap-6 mt-20 mb-20 lg:px-8 min-h-[60vh]`}
       >
         {candidates.map((candidate, i) => (
           <div key={candidate.id} className={`relative mx-5 lg:mx-0 `}>
