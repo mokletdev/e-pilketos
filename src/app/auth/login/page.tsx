@@ -28,9 +28,7 @@ export default function AdminLogin() {
         password: data.password,
       });
       const toastId = toast.loading("Loading...");
-
       if (response?.status === 401) {
-        console.log(response);
         toast.error("Email atau Password salah", { id: toastId });
         setError("Email atau Password salah");
       } else {

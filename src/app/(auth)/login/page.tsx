@@ -44,7 +44,7 @@ export default function UserLogin() {
       }
       if (!response?.ok) {
         toast.error("Login Gagal", { id: toastId });
-        setError("Internal Server Error. Hubungi Admin");
+        setError("Email atau Password salah");
       } else if (response.ok) {
         toast.success("Login Berhasil", { id: toastId });
         router.push("/vote");
