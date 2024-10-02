@@ -55,62 +55,36 @@ async function vote(
   voteSessionId: string,
   candidateId: string,
   userId: string,
-  retryCount = 0,
 ) {
-  const maxRetries = 3;
+  return client.$transaction(
+    async (tx) => {
+      const voteSession = await tx.vote_session.findUnique({
+        where: { id: voteSessionId },
+      });
 
-  try {
-    return await client.$transaction(
-      async (tx) => {
-        const voteSession = await tx.vote_session.findUnique({
-          where: { id: voteSessionId },
-        });
+      if (!voteSession) {
+        throw new Error(`Vote session with ID ${voteSessionId} not found`);
+      }
 
-        if (!voteSession) {
-          throw new Error(`Vote session with ID ${voteSessionId} not found`);
-        }
+      if (
+        await hasUserExceededVotes(
+          tx,
+          voteSessionId,
+          userId,
+          voteSession.max_vote,
+        )
+      ) {
+        throw new Error(`User ${userId} has reached the maximum allowed votes`);
+      }
 
-        if (
-          await hasUserExceededVotes(
-            tx,
-            voteSessionId,
-            userId,
-            voteSession.max_vote,
-          )
-        ) {
-          throw new Error(
-            `User ${userId} has reached the maximum allowed votes`,
-          );
-        }
-
-        return await saveUserVote(tx, voteSessionId, candidateId, userId);
-      },
-      {
-        isolationLevel: Prisma.TransactionIsolationLevel.Serializable,
-        maxWait: 10000,
-        timeout: 10000,
-      },
-    );
-  } catch (error) {
-    const isDeadlockOrWriteConflict =
-      (error as Prisma.PrismaClientKnownRequestError).code === "P2034";
-
-    if (isDeadlockOrWriteConflict && retryCount < maxRetries) {
-      console.warn(
-        `Write conflict detected, retrying transaction... Attempt ${
-          retryCount + 1
-        }`,
-      );
-      await new Promise((resolve) =>
-        setTimeout(resolve, (retryCount + 1) * 1000),
-      );
-      return vote(voteSessionId, candidateId, userId, retryCount + 1);
-    }
-
-    throw new Error(
-      `Transaction failed after ${retryCount + 1} attempts: ${error}`,
-    );
-  }
+      return await saveUserVote(tx, voteSessionId, candidateId, userId);
+    },
+    {
+      isolationLevel: Prisma.TransactionIsolationLevel.RepeatableRead,
+      maxWait: 5000,
+      timeout: 10000,
+    },
+  );
 }
 
 export const submitVote = async ({
@@ -150,25 +124,9 @@ export const submitVote = async ({
       };
     }
 
-    if (candidateId.length !== voteSession.max_vote) {
-      return {
-        success: false,
-        message: `You must select exactly ${voteSession.max_vote} candidates.`,
-      };
-    }
-
-    const voting = await Promise.all(
-      candidateId.map((id) => vote(voteSessionId, id, userId)),
-    );
-    if (voting.some((result) => !result)) {
-      return {
-        success: false,
-        message: "Failed to submit vote. Please try again.",
-      };
-    }
+    await Promise.all(candidateId.map((id) => vote(voteSessionId, id, userId)));
 
     if (voteSession.spreadsheetId) await syncSpreadsheet(voteSessionId);
-
     return { success: true, message: "Vote successfully submitted." };
   } catch (error) {
     console.error("Error during vote submission:", (error as Error).message);
