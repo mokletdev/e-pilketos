@@ -41,12 +41,6 @@ export default function DetailLiveCount({
           >
             {liveCount?.title}
           </Large_Text>
-          <Medium_Text
-            variant="SEMIBOLD"
-            className="text-primary-color text-center hover:underline"
-          >
-            <Link href={`/LiveCount2Kandidat/${params.id}`}>Full Screen</Link>
-          </Medium_Text>
         </div>
         {liveCount && <CandidateCard data={liveCount} />}
       </div>
