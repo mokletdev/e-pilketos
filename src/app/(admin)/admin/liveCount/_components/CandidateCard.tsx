@@ -18,42 +18,11 @@ export default function CandidateCard({ data }: { data: VoteSessionResponse }) {
   const countPercent = VoteCandidate1 + VoteCandidate2;
   const fixCount = (VoteCandidate1 / countPercent) * 100;
   const totalVotes = Math.floor(fixCount);
-  const duration = 20;
+  const duration = 5;
   const calculateVote = 100 - totalVotes;
 
   let can1Vote = Math.floor(fixCount);
   let can2Vote = Math.floor(calculateVote);
-
-  // const totalVoteCandidates = data?.candidates.map((x) => ({
-  //   count: x._count.User_vote ?? 0,
-  //   id: x.id,
-  // }));
-  // const items = totalVoteCandidates?.map((us) => us) ?? [];
-
-  // const sortVote = items
-  //   .map((x) => x.count)
-  //   .sort((min, max) => {
-  //     return max - min;
-  //   })
-
-  // console.log(sortVote);
-
-  // const firstFilteredCandidates = data?.candidates?.find(
-  //   (x) => x._count.User_vote === sortVote[0],
-  // );
-  // const secondFilteredCandidates = data?.candidates?.find(
-  //   (x) => x._count.User_vote === sortVote[1],
-  // );
-
-  // let VoteCandidate1 = sortVote[0] || 0;
-  // const VoteCandidate2 = sortVote[1] || 0;
-  // const countPercent = VoteCandidate1 + VoteCandidate2;
-  // const fixCount = (VoteCandidate1 / countPercent) * 100;
-  // const totalVotes = Math.floor(fixCount);
-  // const duration = 20;
-  // const calculateVote = 100 - totalVotes;
-  // let can1Vote = Math.floor(fixCount);
-  // let can2Vote = Math.floor(calculateVote);
 
   return (
     <main className="flex flex-col gap-7">
@@ -74,7 +43,7 @@ export default function CandidateCard({ data }: { data: VoteSessionResponse }) {
                 </div>
                 <H3 className="text-primary-color -mb-6 mt-5">
                   <CountCandidatesInterval
-                    candidatesVote={can1Vote || 0}
+                    candidatesVote={can1Vote}
                     duration={duration}
                   />
                 </H3>
@@ -90,7 +59,7 @@ export default function CandidateCard({ data }: { data: VoteSessionResponse }) {
                 <H3 className="text-primary-color -mb-6 mt-5">
                   {" "}
                   <CountCandidatesInterval
-                    candidatesVote={can2Vote || 0}
+                    candidatesVote={can2Vote}
                     duration={duration}
                   />
                 </H3>

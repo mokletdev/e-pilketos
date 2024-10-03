@@ -47,11 +47,6 @@ export default function Progressbar({
           transition: "width 2s ease-in-out",
         }}
       ></div>
-      <div className="mt-2 text-center">
-        <Medium_Text variant="MEDIUM">
-          Pembaruan dalam: {countdown} detik
-        </Medium_Text>
-      </div>
     </div>
   );
 }

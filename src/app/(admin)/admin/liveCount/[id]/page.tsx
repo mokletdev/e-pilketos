@@ -12,6 +12,7 @@ export default function DetailLiveCount({
   params: { id: string };
 }) {
   const [liveCount, setLiveCount] = useState<VoteSessionResponse>();
+  const duration = 5;
 
   useEffect(() => {
     async function GetDataLiveCount() {
@@ -19,8 +20,15 @@ export default function DetailLiveCount({
       const result: VoteSessionResponse = responses.data || [];
       setLiveCount(result);
     }
+
     GetDataLiveCount();
-  }, [params.id]);
+
+    const intervalId = setInterval(() => {
+      GetDataLiveCount();
+    }, duration * 1000);
+
+    return () => clearInterval(intervalId);
+  }, [params.id, duration]);
 
   return (
     <main className="h-[100vh] flex">
@@ -40,7 +48,7 @@ export default function DetailLiveCount({
             <Link href={`/LiveCount2Kandidat/${params.id}`}>Full Screen</Link>
           </Medium_Text>
         </div>
-        <CandidateCard data={liveCount!} />
+        {liveCount && <CandidateCard data={liveCount} />}
       </div>
     </main>
   );
