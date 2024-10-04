@@ -62,7 +62,7 @@ export default async function Dashboard() {
 
   return (
     <main className="h-full overflow-x-hidden">
-      <div className="w-full bg-red-light-6 gap-x-[28px] flex flex-col xl:flex-row">
+      {/* <div className="w-full bg-red-light-6 gap-x-[28px] flex flex-col xl:flex-row">
         <ProgessCard target="Siswa" percent={percentSiswa}>
           Total Siswa yang sudah vote.
         </ProgessCard>
@@ -74,7 +74,7 @@ export default async function Dashboard() {
         <ProgessCard target="Semua" percent={percentAll}>
           Total Siswa dan Guru yang sudah vote.
         </ProgessCard>
-      </div>
+      </div> */}
       <UserTable
         roles="Admin"
         desc="Bertugas Untuk Mengontrol dan Mengawasi Sepenuhnya atas Sistem yang sudah di buat"
