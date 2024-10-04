@@ -32,6 +32,7 @@ export default function DetailHasilVote({
       <section>
         <div className="max-w-full my-10 ">
           <H5 className="text-center">Hasil Voting 5 Kandidat</H5>
+
           <section className="max-w-4xl mx-auto">
             <ChartDougnuts id={params.id} />
             <div>
