@@ -3,7 +3,6 @@ import React, { useEffect, useState } from "react";
 import { H1, Large_Text, Medium_Text } from "@/app/components/general/Text";
 import { getDataAPIMany } from "@/utils/DataFetching/getData";
 import { VoteSessionResponse } from "@/types/liveCount";
-import Link from "next/link";
 import CandidateCard from "@/app/(admin)/admin/liveCount/_components/CandidateCard";
 
 export default function DetailLiveCount({

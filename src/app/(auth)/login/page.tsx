@@ -31,8 +31,7 @@ export default function UserLogin() {
 
       if (!data.email?.includes("smktelkom-mlg.sch.id")) {
         toast.error("Email tidak valid", { id: toastId });
-        setError("Anda Tidak Diizinkan Akses Halaman Ini");
-        router.push("/AccessDenied");
+        setError("Email tidak valid");
       }
       if (response?.status === 401) {
         toast.error("Email atau Password salah", { id: toastId });
