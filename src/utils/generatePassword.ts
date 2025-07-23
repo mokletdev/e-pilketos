@@ -3,12 +3,10 @@ export function generatePassword(
   includeUppercase: boolean = true,
   includeLowercase: boolean = true,
   includeNumbers: boolean = true,
-  includeSymbols: boolean = true,
 ): string {
   const uppercaseCharset = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
   const lowercaseCharset = "abcdefghijklmnopqrstuvwxyz";
   const numberCharset = "0123456789";
-  const symbolCharset = "!@#$%^&*()-_=+";
 
   let charset = "";
   let password = "";
@@ -26,10 +24,6 @@ export function generatePassword(
   if (includeNumbers) {
     charset += numberCharset;
     password += numberCharset[Math.floor(Math.random() * numberCharset.length)];
-  }
-  if (includeSymbols) {
-    charset += symbolCharset;
-    password += symbolCharset[Math.floor(Math.random() * symbolCharset.length)];
   }
 
   if (charset === "") {

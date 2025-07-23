@@ -97,9 +97,9 @@ export async function bulkAddUsers(data: FormData) {
                 name,
                 role: role || email.includes("student.") ? "SISWA" : "GURU",
                 User_Auth: {
-                  connectOrCreate: {
-                    create: { password: hashedPassword },
+                  update: {
                     where: { user_Id: existingUser.id },
+                    data: { password: hashedPassword },
                   },
                 },
               },
