@@ -15,7 +15,7 @@ export default function Header() {
         <div className="flex xl:flex-row flex-col-reverse items-center overflow-hidden xl:max-h-[800px] gap-[40px] py-32">
           <div className="max-w-[648px] xl:items-start items-center flex-col flex gap-[28px] text-center xl:text-start">
             <h1 className="text-[48px] md:text-[60px] font-bold leading-[58px] md:leading-[72px]">
-              Pemilihan Ketua OSIS SMK Telkom Malang 2024
+              Pemilihan Ketua OSIS SMK Telkom Malang {new Date().getFullYear()}
             </h1>
             <Large_Text
               variant="REGULAR"
@@ -47,7 +47,7 @@ export default function Header() {
               </div>
               <div className="w-[260px] h-[330px] rounded-2xl overflow-hidden">
                 <Image
-                  src="/images/dokum/DSC02279.webp"
+                  src="/images/dokum/2024/IMG_4851.webp"
                   alt="img"
                   width={200}
                   height={300}
@@ -56,7 +56,7 @@ export default function Header() {
               </div>
               <div className="w-[260px] h-[330px] rounded-2xl overflow-hidden">
                 <Image
-                  src="/images/dokum/IMG_3259.webp"
+                  src="/images/dokum/2024/IMG_4863.webp"
                   alt="img"
                   width={200}
                   height={300}
@@ -67,7 +67,7 @@ export default function Header() {
             <div className="flex flex-col gap-5 absolute right-12 top-[12rem]">
               <div className="w-[260px] h-[330px] rounded-2xl overflow-hidden">
                 <Image
-                  src="/images/dokum/IMG_3189.webp"
+                  src="/images/dokum/2024/DSC_3589.webp"
                   alt="img"
                   width={200}
                   height={300}
@@ -76,7 +76,7 @@ export default function Header() {
               </div>
               <div className="w-[260px] h-[330px] rounded-2xl overflow-hidden">
                 <Image
-                  src="/images/dokum/DSC02311.webp"
+                  src="/images/dokum/2024/DSC_3570.webp"
                   alt="img"
                   width={200}
                   height={300}

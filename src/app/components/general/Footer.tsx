@@ -196,7 +196,7 @@ export default function Footer() {
             {/* Copy Right */}
             <div className="flex justify-center items-center pb-[28px]">
               <p className="text-secondary-text-color text-[16px]">
-                &copy; 2024 Mokletdev
+                &copy; {new Date().getFullYear()} Mokletdev
               </p>
             </div>
           </div>

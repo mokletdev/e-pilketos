@@ -13,7 +13,7 @@ export default function Pengembang() {
             <H1 className="text-center">Tim Kami</H1>
             <Large_Text variant="REGULAR" className="text-center">
               beberapa siswa yang ikut berkontribusi atau mengembangkan website
-              Pilketos 2024{" "}
+              Pilketos {new Date().getFullYear()}{" "}
             </Large_Text>
             <div className="my-14 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
               {Contributor.map((student, index) => (
