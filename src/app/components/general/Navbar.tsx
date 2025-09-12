@@ -83,13 +83,13 @@ export default function Navbar() {
           data-aos-duration="500"
           className={`fixed transition-transform bg-white duration-500   ${
             isScrolled
-              ? "top-8 w-[90%] 2xl:max-w-[1440px] xl:max-w-[1322px] lg:max-w-[1024px]  sm:max-w-[480px] rounded-[64px] shadow-shadow-2  items-center py-4 px-8 right-10 left-10 place-self-center "
-              : " max-w-full top-0 py-4 px-8 w-full left-10 right-10 place-self-center"
+              ?  "top-4 w-[92%] 2xl:max-w-[1440px] xl:max-w-[1322px] lg:max-w-[1024px]  sm:max-w-[480px] rounded-[64px] shadow-shadow-2  items-center py-3 px-6 right-4 left-4 place-self-center "
+              : " max-w-full top-0 py-3 px-6 w-full left-4 right-4 place-self-center"
           }`}
           style={{ transition: "all 0.8s ease-in-out" }}
         >
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-x-7">
+            <div className="flex items-center gap-x-5">
               <div className="block xl:hidden 2xl:hidden">
                 <button onClick={handleClick} title="Hamburger">
                   <svg
