@@ -151,7 +151,6 @@ export const deleteCandidatesById = async (id: string) => {
 export const updateCandidatesById = async (id: string, data: FormData) => {
   try {
     const name = data.get("candidatesName") as string;
-    const img = data.get("img") as string;
     const kelas = data.get("kandidat_kelas") as string | null;
     const visi = data.get("visi") as string;
     const misi = data.get("misi") as string;
@@ -168,9 +167,40 @@ export const updateCandidatesById = async (id: string, data: FormData) => {
     const userId = session?.user?.id;
     const user = await findUser({ id: userId?.toString() });
 
+    // Handle image upload
+    let imgUrl = existingCandidate?.img || "";
+    const imageFile = data.get("imageFile") as File;
+
+    if (imageFile && imageFile.size > 0) {
+      // Upload image to uploader API
+      const uploadFormData = new FormData();
+      uploadFormData.append("file", imageFile);
+
+      const uploadResponse = await fetch(`${process.env.NEXTAUTH_URL || 'http://localhost:3000'}/api/uploader`, {
+        method: "POST",
+        body: uploadFormData,
+      });
+
+      if (!uploadResponse.ok) {
+        throw new Error("Failed to upload image");
+      }
+
+      const uploadResult = await uploadResponse.json();
+      if (uploadResult.error) {
+        throw new Error(uploadResult.message || "Upload failed");
+      }
+
+      imgUrl = uploadResult.url;
+    }
+
+    // For new candidates, ensure we have an image URL
+    if (!id && !imgUrl) {
+      throw new Error("Image is required for new candidates");
+    }
+
     if (!id) {
       const create = await createCandidate({
-        img,
+        img: imgUrl,
         misi,
         motto,
         name,
@@ -202,7 +232,7 @@ export const updateCandidatesById = async (id: string, data: FormData) => {
       }));
 
       const update = await updateCandidate(id, {
-        img: img ?? existingCandidate?.img,
+        img: imgUrl || existingCandidate?.img,
         misi: misi ?? existingCandidate?.misi,
         motto: motto ?? existingCandidate?.motto,
         name: name ?? existingCandidate?.name,
