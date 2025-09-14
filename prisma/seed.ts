@@ -5,11 +5,11 @@ const client = new PrismaClient();
 
 const createSeed = async () => {
   await client.user.upsert({
-    where: { email: "x3mnaufalnabilramadhan@gmail.com" },
+    where: { email: "baratrahjaga@gmail.com" },
     update: {},
     create: {
-      name: "Naufal Nabil Ramadhan | ADMIN",
-      email: "x3mnaufalnabilramadhan@gmail.com",
+      name: "Jean Richnerd Rantabaratrahjaga | ADMIN",
+      email: "baratrahjaga@gmail.com",
       User_Auth: {
         create: {
           password: await hash(process.env.SEED_PASSWORD as string, 10),
