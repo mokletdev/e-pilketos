@@ -157,93 +157,7 @@ export default function VotePage({
                   </div>
                 </div>
               </div>
-              <div className="z-40">
-                {modal === candidate.id && (
-                  <VoteModal onClose={() => setModal(null)}>
-                    <div className="my-3">
-                      <Large_Text variant="BOLD" className="mb-2 text-center">
-                        Visi
-                      </Large_Text>
-                      <Medium_Text
-                        variant="REGULAR"
-                        className="text-center my-3 bg-dark-8 py-2 rounded-md"
-                      >
-                        {candidate.candidate.visi}
-                      </Medium_Text>
-                    </div>
-                    <div className="my-3">
-                      <Large_Text variant="BOLD" className="mb-2 text-center">
-                        Misi
-                      </Large_Text>
-                      <Medium_Text
-                        variant="REGULAR"
-                        className="text-center my-3 bg-dark-8 py-2 rounded-md"
-                      >
-                        {candidate.candidate.misi}
-                      </Medium_Text>
-                    </div>
-                    <div className="my-3">
-                      <Large_Text variant="BOLD" className="mb-2 text-center">
-                        Motto
-                      </Large_Text>
-                      <Medium_Text
-                        variant="REGULAR"
-                        className="text-center my-3 bg-dark-8 py-2 rounded-md"
-                      >
-                        {candidate.candidate.motto}
-                      </Medium_Text>
-                    </div>
-                    <Large_Text variant="BOLD" className="mb-2 text-center">
-                      Pengalaman
-                    </Large_Text>
-                    {candidate.candidate.pengalaman.map((pengalaman, index) => {
-                      return (
-                        <div
-                          key={index}
-                          className="my-3 bg-dark-8 py-2 rounded-md"
-                        >
-                          <Medium_Text
-                            variant="REGULAR"
-                            className="text-center"
-                          >
-                            {`${pengalaman.desc}`}
-                          </Medium_Text>
-                        </div>
-                      );
-                    })}
-                    <div className="my-3">
-                      <Large_Text variant="BOLD" className="mb-2 text-center">
-                        Program Kerja
-                      </Large_Text>
-                      <Medium_Text
-                        variant="REGULAR"
-                        className="text-center my-3 bg-dark-8 py-2 rounded-md"
-                      >
-                        {candidate.candidate.progja}
-                      </Medium_Text>
-                    </div>
-                    {candidate.candidate.video_profile ? (
-                      <div className="mb-3 mt-6">
-                        <Large_Text variant="BOLD" className="mb-2 text-center">
-                          Video Profil Kandidat
-                        </Large_Text>
-                        {candidate.candidate.video_profile && (
-                          <iframe
-                            src={candidate.candidate.video_profile}
-                            title="YouTube video player"
-                            className="rounded-[15px] w-full h-[320px] mx-auto duration-500 ease-in-out"
-                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                            referrerPolicy="strict-origin-when-cross-origin"
-                            allowFullScreen
-                          ></iframe>
-                        )}
-                      </div>
-                    ) : (
-                      <></>
-                    )}
-                  </VoteModal>
-                )}
-              </div>
+
             </div>
           </div>
         ))}
@@ -262,6 +176,99 @@ export default function VotePage({
           />
         )}
       </section>
+      {modal && (
+        <VoteModal onClose={() => setModal(null)}>
+          {(() => {
+            const candidate = candidates.find(c => c.id === modal);
+            if (!candidate) return null;
+            return (
+              <>
+                <div className="my-3">
+                  <Large_Text variant="BOLD" className="mb-2 text-center">
+                    Visi
+                  </Large_Text>
+                  <Medium_Text
+                    variant="REGULAR"
+                    className="text-center my-3 bg-dark-8 py-2 rounded-md"
+                  >
+                    {candidate.candidate.visi}
+                  </Medium_Text>
+                </div>
+                <div className="my-3">
+                  <Large_Text variant="BOLD" className="mb-2 text-center">
+                    Misi
+                  </Large_Text>
+                  <Medium_Text
+                    variant="REGULAR"
+                    className="text-center my-3 bg-dark-8 py-2 rounded-md"
+                  >
+                    {candidate.candidate.misi}
+                  </Medium_Text>
+                </div>
+                <div className="my-3">
+                  <Large_Text variant="BOLD" className="mb-2 text-center">
+                    Motto
+                  </Large_Text>
+                  <Medium_Text
+                    variant="REGULAR"
+                    className="text-center my-3 bg-dark-8 py-2 rounded-md"
+                  >
+                    {candidate.candidate.motto}
+                  </Medium_Text>
+                </div>
+                <Large_Text variant="BOLD" className="mb-2 text-center">
+                  Pengalaman
+                </Large_Text>
+                {candidate.candidate.pengalaman.map((pengalaman, index) => {
+                  return (
+                    <div
+                      key={index}
+                      className="my-3 bg-dark-8 py-2 rounded-md"
+                    >
+                      <Medium_Text
+                        variant="REGULAR"
+                        className="text-center"
+                      >
+                        {`${pengalaman.desc}`}
+                      </Medium_Text>
+                    </div>
+                  );
+                })}
+                <div className="my-3">
+                  <Large_Text variant="BOLD" className="mb-2 text-center">
+                    Program Kerja
+                  </Large_Text>
+                  <Medium_Text
+                    variant="REGULAR"
+                    className="text-center my-3 bg-dark-8 py-2 rounded-md"
+                  >
+                    {candidate.candidate.progja}
+                  </Medium_Text>
+                </div>
+                {candidate.candidate.video_profile ? (
+                  <div className="mb-3 mt-6">
+                    <Large_Text variant="BOLD" className="mb-2 text-center">
+                      Video Profil Kandidat
+                    </Large_Text>
+                    {candidate.candidate.video_profile && (
+                      <iframe
+                        src={candidate.candidate.video_profile}
+                        title="YouTube video player"
+                        className="rounded-[15px] w-full h-[320px] mx-auto duration-500 ease-in-out"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                        referrerPolicy="strict-origin-when-cross-origin"
+                        allowFullScreen
+                      ></iframe>
+                    )}
+                  </div>
+                ) : (
+                  <></>
+                )}
+              </>
+            );
+          })()}
+        </VoteModal>
+      )}
     </SectionsGap>
   );
 }
