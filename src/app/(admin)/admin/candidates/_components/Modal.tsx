@@ -1,9 +1,10 @@
+// components/Modal.tsx
 "use client";
 import { FormButton } from "@/app/components/general/Button";
-import { 
-  TextArea, 
-  TextField, 
-  SelectField, 
+import {
+  TextArea,
+  TextField,
+  SelectField,
 } from "@/app/components/general/Input"; // Add SelectField
 import { AddModal } from "@/app/components/general/Modal";
 import { Medium_Text } from "@/app/components/general/Text";
@@ -30,6 +31,8 @@ import {
   getCreatePengalamanCandidates,
   getPengalamanCandidates,
 } from "@/utils/database/candidates.query";
+import { uploadImageToCloudinary } from "@/utils/cloudinary.utils";
+import { v4 as uuidv4 } from "uuid";
 
 // Define the type for the vote session
 
@@ -41,12 +44,13 @@ export default function Modal({
   data?: CandidatesPayload | null;
 }) {
   const [pengalaman, setPengalaman] = useState<getCreatePengalamanCandidates[]>(
-    data?.pengalaman ?? []
-  )
-  const [isLoading, setIsLoading] = useState(false)
-  const [voteSessions, setVoteSessions] = useState<VoteSessionGeneralPayload[]>([])
-  const [selectedImage, setSelectedImage] = useState<File | null>(null)
-  const [imagePreview, setImagePreview] = useState<string>(data?.img || "")
+    data?.pengalaman ?? [],
+  );
+  const [isLoading, setIsLoading] = useState(false);
+  const [voteSessions, setVoteSessions] = useState<VoteSessionGeneralPayload[]>(
+    [],
+  );
+  const [image, setImage] = useState<File | null>();
 
   useEffect(() => {
     async function fetchVoteSessions() {
@@ -73,31 +77,30 @@ export default function Modal({
     console.log(newPengalaman);
   };
 
-  const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0]
-    if (file) {
-      setSelectedImage(file)
-      const reader = new FileReader()
-      reader.onloadend = () => {
-        setImagePreview(reader.result as string)
-      }
-      reader.readAsDataURL(file)
-    }
-  }
-
-  const HandleSubmit = async (e: FormEvent<HTMLFormElement> | ChangeEvent<HTMLInputElement | any>) => {
-    e.preventDefault()
-    setIsLoading(true)
-    console.log(pengalaman)
+  const HandleSubmit = async (
+    e: FormEvent<HTMLFormElement> | ChangeEvent<HTMLInputElement | any>,
+  ) => {
+    e.preventDefault();
+    setIsLoading(true);
+    console.log(pengalaman);
 
     try {
-      const formData = new FormData(e.target)
-      formData.append("pengalaman", JSON.stringify(pengalaman))
-      if (selectedImage) {
-        formData.append("imageFile", selectedImage)
-      }
-      const toastId = toast.loading("Loading...")
-      const update = await updateCandidatesById(data?.id as string, formData)
+      const formData = new FormData(e.target);
+      formData.append("pengalaman", JSON.stringify(pengalaman));
+      const toastId = toast.loading("Loading...");
+      const base64 = await new Promise<string>((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onloadend = () => resolve(reader.result as string);
+        reader.onerror = reject;
+        reader.readAsDataURL(image!);
+      });
+      const result = await uploadImageToCloudinary({
+        base64,
+        publicId: `e-pilketos-${uuidv4()}`,
+      });
+      formData.append("img", result?.url as string);
+
+      const update = await updateCandidatesById(data?.id as string, formData);
       if (!update?.error) {
         toast.success(update?.message as string, { id: toastId });
         console.log(update);
@@ -120,19 +123,38 @@ export default function Modal({
       <form onSubmit={HandleSubmit} className="pb-4">
         <div className="grid xl:grid-cols-2 grid-cols-1 gap-x-7">
           <div>
+            {/* <TextField
+              variant="Rounded-sm"
+              value={data?.img}
+              type="text"
+              label="Foto"
+              name="img"
+              className="rounded-[8px]"
+              required
+            /> */}
             <div className="mb-4">
-              <label className="block text-sm font-medium text-gray-700 mb-2">Foto Kandidat</label>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Foto Kandidat
+              </label>
               <input
                 type="file"
                 accept="image/*"
-                onChange={handleImageChange}
+                onChange={(e) => {
+                  const file = e.target.files?.[0];
+                  if (file) {
+                    if (file.size > 5 * 1024 * 1024) {
+                      toast.error("File size should be less than 5MB");
+                      return;
+                    }
+                    setImage(file);
+                  }
+                }}
                 className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-primary-color file:text-white hover:file:bg-primary-color/80"
-                required={!data?.img}
               />
-              {imagePreview && (
+              {image && (
                 <div className="mt-2">
                   <img
-                    src={imagePreview || "/placeholder.svg"}
+                    src={URL.createObjectURL(image) || "/placeholder.svg"}
                     alt="Preview"
                     className="w-32 h-40 object-cover rounded-md"
                   />
@@ -245,7 +267,7 @@ export default function Modal({
                     xmlns="http://www.w3.org/2000/svg"
                   >
                     <path
-                      d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 90.9186 27.9921 90.9186 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
+                      d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
                       fill="currentColor"
                     />
                     <path

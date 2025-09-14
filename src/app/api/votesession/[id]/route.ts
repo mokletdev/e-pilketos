@@ -1,4 +1,3 @@
-import { NextApiRequest } from "next";
 import client from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
 import { Role } from "@prisma/client";
@@ -24,7 +23,6 @@ export async function GET(
               User_vote: {
                 select: { user: { select: { role: true } } },
               },
-              Vote_session_candidate: true,
             },
           },
         },
@@ -32,15 +30,17 @@ export async function GET(
     },
   });
 
-  if (!voteData)
+  if (!voteData) {
     return NextResponse.json(
       { status: 404, message: "Data not found" },
       { status: 404 },
     );
+  }
 
   const { vote_session_candidate, ...session } = voteData;
 
-  const weightByRole = {
+  // default bobot
+  const weightByRole: Record<Role, number> = {
     GURU: 0.3,
     OSIS: 0.4,
     MPK: 0.3,
@@ -48,26 +48,47 @@ export async function GET(
     SISWA: 0,
   };
 
+  const candidateCount = vote_session_candidate.length;
+
   const totalVotes = vote_session_candidate.reduce(
     (acc, value) => acc + value.candidate._count.User_vote,
     0,
   );
 
-  const candidates = vote_session_candidate.map(({ candidate }) => {
-    const weightedVotes = candidate.User_vote.reduce((acc, vote) => {
-      const role = vote.user.role;
-      return acc + weightByRole[role];
-    }, 0);
+  let candidates;
 
-    const percentage = (candidate._count.User_vote / totalVotes) * 100;
-    const weightedPercentage = (weightedVotes / totalVotes) * 100;
+  if (candidateCount === 5) {
+    candidates = vote_session_candidate.map(({ candidate }) => {
+      const weightedVotes = candidate.User_vote.reduce((acc, vote) => {
+        const role = vote.user.role;
+        return acc + weightByRole[role];
+      }, 0);
 
-    return {
-      ...candidate,
-      percentage: percentage,
-      weightedPercentage: weightedPercentage,
-    };
-  });
+      const percentage = totalVotes
+        ? (candidate._count.User_vote / totalVotes) * 100
+        : 0;
+      const weightedPercentage = totalVotes
+        ? (weightedVotes / totalVotes) * 100
+        : 0;
+
+      return {
+        ...candidate,
+        percentage,
+        weightedPercentage,
+      };
+    });
+  } else {
+    candidates = vote_session_candidate.map(({ candidate }) => {
+      const percentage = totalVotes
+        ? (candidate._count.User_vote / totalVotes) * 100
+        : 0;
+
+      return {
+        ...candidate,
+        percentage,
+      };
+    });
+  }
 
   return NextResponse.json({ status: 200, data: { ...session, candidates } });
 }
