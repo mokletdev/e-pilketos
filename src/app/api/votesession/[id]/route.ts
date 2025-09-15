@@ -1,5 +1,5 @@
-import client from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
+import client from "@/lib/prisma";
 import { Role } from "@prisma/client";
 
 export async function GET(
@@ -23,6 +23,7 @@ export async function GET(
               User_vote: {
                 select: { user: { select: { role: true } } },
               },
+              Vote_session_candidate: true,
             },
           },
         },
@@ -30,16 +31,14 @@ export async function GET(
     },
   });
 
-  if (!voteData) {
+  if (!voteData)
     return NextResponse.json(
       { status: 404, message: "Data not found" },
       { status: 404 },
     );
-  }
 
   const { vote_session_candidate, ...session } = voteData;
 
-  // default bobot
   const weightByRole: Record<Role, number> = {
     GURU: 0.3,
     OSIS: 0.4,
@@ -48,47 +47,52 @@ export async function GET(
     SISWA: 0,
   };
 
-  const candidateCount = vote_session_candidate.length;
-
+  // hitung total vote normal
   const totalVotes = vote_session_candidate.reduce(
     (acc, value) => acc + value.candidate._count.User_vote,
     0,
   );
 
-  let candidates;
+  // hitung weightedVotes per kandidat
+  const candidateResults = vote_session_candidate.map(({ candidate }) => {
+    // normal percentage
+    const percentage =
+      totalVotes > 0 ? (candidate._count.User_vote / totalVotes) * 100 : 0;
 
-  if (candidateCount === 5) {
-    candidates = vote_session_candidate.map(({ candidate }) => {
-      const weightedVotes = candidate.User_vote.reduce((acc, vote) => {
+    // weighted calculation hanya berlaku kalau kandidat = 5
+    let weightedVotes = 0;
+    if (vote_session_candidate.length === 5) {
+      // kelompokkan votes per role
+      const roleCount: Record<string, number> = {};
+      candidate.User_vote.forEach((vote) => {
         const role = vote.user.role;
-        return acc + weightByRole[role];
-      }, 0);
+        roleCount[role] = (roleCount[role] || 0) + 1;
+      });
 
-      const percentage = totalVotes
-        ? (candidate._count.User_vote / totalVotes) * 100
-        : 0;
-      const weightedPercentage = totalVotes
-        ? (weightedVotes / totalVotes) * 100
-        : 0;
+      // kalikan dengan bobot
+      Object.entries(roleCount).forEach(([role, count]) => {
+        weightedVotes += count * (weightByRole[role as Role] || 0);
+      });
+    }
 
-      return {
-        ...candidate,
-        percentage,
-        weightedPercentage,
-      };
-    });
-  } else {
-    candidates = vote_session_candidate.map(({ candidate }) => {
-      const percentage = totalVotes
-        ? (candidate._count.User_vote / totalVotes) * 100
-        : 0;
+    return {
+      ...candidate,
+      percentage,
+      weightedVotes,
+    };
+  });
 
-      return {
-        ...candidate,
-        percentage,
-      };
-    });
-  }
+  // hitung weightedPercentage dari total weightedVotes
+  const totalWeightedVotes = candidateResults.reduce(
+    (acc, c) => acc + c.weightedVotes,
+    0,
+  );
+
+  const candidates = candidateResults.map((c) => ({
+    ...c,
+    weightedPercentage:
+      totalWeightedVotes > 0 ? (c.weightedVotes / totalWeightedVotes) * 100 : 0,
+  }));
 
   return NextResponse.json({ status: 200, data: { ...session, candidates } });
 }
