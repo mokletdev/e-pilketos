@@ -7,10 +7,10 @@ import { VoteSessionResponse } from "@/types/liveCount";
 
 export default function CandidateCard({ data }: { data: VoteSessionResponse }) {
   const firstFilteredCandidates = data?.candidates?.find((x) =>
-    x.Vote_session_candidate.find((cn) => cn.candidates_number === 1),
+    x.Vote_session_candidate?.find((cn) => cn.candidates_number === 1),
   );
   const secondFilteredCandidates = data?.candidates?.find((x) =>
-    x.Vote_session_candidate.find((cn) => cn.candidates_number === 2),
+    x.Vote_session_candidate?.find((cn) => cn.candidates_number === 2),
   );
 
   let VoteCandidate1 = firstFilteredCandidates?._count.User_vote || 0;
