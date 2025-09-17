@@ -6,9 +6,22 @@ export interface HasilProps {
   _count: { User_vote: number };
   name: string;
   weightedPercentage: number;
-  User_vote?: { user?: { role?: Role } };
+  User_vote?: Array<{
+    user?: {
+      role?: Role;
+    };
+  }>;
+  rawVotes?: {
+    gukar: number;
+    mpk: number;
+    osis: number;
+  };
+  weightedVotesByRole?: {
+    gukar: number;
+    mpk: number;
+    osis: number;
+  };
 }
-
 export interface VoteSessionListProps {
   id: string;
   title: string;
