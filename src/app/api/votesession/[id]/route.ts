@@ -1,5 +1,6 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextApiRequest } from "next";
 import client from "@/lib/prisma";
+import { NextRequest, NextResponse } from "next/server";
 import { Role } from "@prisma/client";
 
 export async function GET(
@@ -15,12 +16,19 @@ export async function GET(
         select: {
           candidate: {
             select: {
-              _count: { select: { User_vote: true } },
+              _count: {
+                select: {
+                  User_vote: {
+                    where: { vote_session_id: id },
+                  },
+                },
+              },
               img: true,
               kandidat_kelas: true,
               name: true,
               id: true,
               User_vote: {
+                where: { vote_session_id: id },
                 select: { user: { select: { role: true } } },
               },
               Vote_session_candidate: true,
@@ -47,52 +55,62 @@ export async function GET(
     SISWA: 0,
   };
 
-  // hitung total vote normal
   const totalVotes = vote_session_candidate.reduce(
-    (acc, value) => acc + value.candidate._count.User_vote,
-    0,
+  (acc, value) => acc + value.candidate._count.User_vote,
+  0,
+);
+
+const totalWeightedVotes = vote_session_candidate.reduce((acc, value) => {
+  const gukar = value.candidate.User_vote.filter((v) => v.user.role === "GURU").length;
+  const mpk = value.candidate.User_vote.filter((v) => v.user.role === "MPK").length;
+  const osis = value.candidate.User_vote.filter((v) => v.user.role === "OSIS").length;
+
+  return (
+    acc +
+    gukar * weightByRole.GURU +
+    mpk * weightByRole.MPK +
+    osis * weightByRole.OSIS
   );
+}, 0);
 
-  // hitung weightedVotes per kandidat
-  const candidateResults = vote_session_candidate.map(({ candidate }) => {
-    // normal percentage
-    const percentage =
-      totalVotes > 0 ? (candidate._count.User_vote / totalVotes) * 100 : 0;
+const candidates = vote_session_candidate.map(({ candidate }) => {
+  const gukarCount = candidate.User_vote.filter((vote) => vote.user.role === "GURU").length ?? 0;
+  const mpkCount = candidate.User_vote.filter((vote) => vote.user.role === "MPK").length ?? 0;
+  const osisCount = candidate.User_vote.filter((vote) => vote.user.role === "OSIS").length ?? 0;
 
-    // weighted calculation hanya berlaku kalau kandidat = 5
-    let weightedVotes = 0;
-    if (vote_session_candidate.length === 5) {
-      // kelompokkan votes per role
-      const roleCount: Record<string, number> = {};
-      candidate.User_vote.forEach((vote) => {
-        const role = vote.user.role;
-        roleCount[role] = (roleCount[role] || 0) + 1;
-      });
+  const weightedByRole = {
+    gukar: gukarCount * weightByRole.GURU,
+    mpk: mpkCount * weightByRole.MPK,
+    osis: osisCount * weightByRole.OSIS,
+  };
 
-      // kalikan dengan bobot
-      Object.entries(roleCount).forEach(([role, count]) => {
-        weightedVotes += count * (weightByRole[role as Role] || 0);
-      });
-    }
+  const weightedVotes = weightedByRole.gukar + weightedByRole.mpk + weightedByRole.osis;
 
-    return {
-      ...candidate,
-      percentage,
-      weightedVotes,
-    };
-  });
+  const percentage =
+    totalVotes > 0 ? (candidate._count.User_vote / totalVotes) * 100 : 0;
 
-  // hitung weightedPercentage dari total weightedVotes
-  const totalWeightedVotes = candidateResults.reduce(
-    (acc, c) => acc + c.weightedVotes,
-    0,
-  );
+  const weightedPercentage =
+    totalWeightedVotes > 0 ? (weightedVotes / totalWeightedVotes) * 100 : 0;
 
-  const candidates = candidateResults.map((c) => ({
-    ...c,
-    weightedPercentage:
-      totalWeightedVotes > 0 ? (c.weightedVotes / totalWeightedVotes) * 100 : 0,
-  }));
+  return {
+    ...candidate,
+    percentage: parseFloat(percentage.toFixed(2)),
+    weightedPercentage: parseFloat(weightedPercentage.toFixed(2)),
+
+    rawVotes: {
+      gukar: gukarCount,
+      mpk: mpkCount,
+      osis: osisCount,
+    },
+    weightedVotesByRole: {
+      gukar: parseFloat(weightedByRole.gukar.toFixed(2)),
+      mpk: parseFloat(weightedByRole.mpk.toFixed(2)),
+      osis: parseFloat(weightedByRole.osis.toFixed(2)),
+    },
+  };
+});
+
 
   return NextResponse.json({ status: 200, data: { ...session, candidates } });
 }
+

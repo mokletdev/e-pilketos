@@ -36,7 +36,7 @@ export default function Video() {
           </div>
           <div className="shadow-b-to-t">
             <iframe
-              src="https://www.youtube.com/embed/9xofia597HI?si=wGP5Kb0411AMpg2n"
+              src="https://www.youtube.com/embed/o73LgJXZGF4?si=R6r9TA4Hl-J2eA5C"
               title="YouTube video player"
               className="rounded-[15px] lg:w-[692px] lg:h-[375px] w-[346px] h-[187px] duration-500 ease-in-out"
               frameBorder="0"

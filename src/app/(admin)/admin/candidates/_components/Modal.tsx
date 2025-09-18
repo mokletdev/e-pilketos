@@ -88,17 +88,25 @@ export default function Modal({
       const formData = new FormData(e.target);
       formData.append("pengalaman", JSON.stringify(pengalaman));
       const toastId = toast.loading("Loading...");
-      const base64 = await new Promise<string>((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onloadend = () => resolve(reader.result as string);
-        reader.onerror = reject;
-        reader.readAsDataURL(image!);
-      });
-      const result = await uploadImageToCloudinary({
-        base64,
-        publicId: `e-pilketos-${uuidv4()}`,
-      });
-      formData.append("img", result?.url as string);
+      let imageUrl = data?.img;
+      if (image) {
+        const base64 = await new Promise<string>((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onloadend = () => resolve(reader.result as string);
+          reader.onerror = reject;
+          reader.readAsDataURL(image);
+        });
+
+        const result = await uploadImageToCloudinary({
+          base64,
+          publicId: `e-pilketos-${uuidv4()}`,
+        });
+        imageUrl = result?.url as string;
+      }
+
+      if (imageUrl) {
+        formData.append("img", imageUrl);
+      }
 
       const update = await updateCandidatesById(data?.id as string, formData);
       if (!update?.error) {

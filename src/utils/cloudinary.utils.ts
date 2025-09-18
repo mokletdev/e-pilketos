@@ -20,7 +20,6 @@ export const uploadImageToCloudinary = async (input: {
       publicId: result.public_id,
     };
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
     console.error("Cloudinary upload error:", error);
     console.error("Cloudinary upload error:", {
