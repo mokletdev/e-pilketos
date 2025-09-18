@@ -13,7 +13,6 @@ import { generatePassword } from "../generatePassword";
 import { EmailService } from "@/lib/emailService";
 import { newUserAccount } from "../emailTemplate";
 import { revalidatePath } from "next/cache";
-
 const usersExcelSchema = {
   Email: {
     prop: "email",
@@ -28,20 +27,20 @@ const usersExcelSchema = {
   Role: {
     prop: "role",
     type: String,
-    oneOf: ["SISWA", "GURU", "ADMIN"],
+    oneOf: ["ADMIN", "GURU", "SISWA", "OSIS", "MPK"],
   },
   Password: {
     prop: "password",
     type: String,
-    oneOf: ["SISWA", "GURU", "ADMIN"],
+    required: false, // Make password optional
   },
 };
 
 interface UsersExcelSchema {
   email: string;
   name: string;
-  role: "SISWA" | "GURU" | "ADMIN";
-  password: string;
+  role?: "ADMIN" | "GURU" | "SISWA" | "OSIS" | "MPK";
+  password?: string;
 }
 
 export async function bulkAddUsers(data: FormData) {
@@ -84,8 +83,19 @@ export async function bulkAddUsers(data: FormData) {
       (excelRows as UsersExcelSchema[]).map(async (row) => {
         const { email, name, role, password } = row;
 
-        const userPassword = password || generatePassword();
+        // Use password from Excel if provided, otherwise generate one
+        const userPassword =
+          password && password.trim() !== "" ? password : generatePassword();
         const hashedPassword = await hash(userPassword, 10);
+
+        // Validate role from Excel or determine based on email pattern
+        let userRole = role;
+        if (
+          !userRole ||
+          !["ADMIN", "GURU", "SISWA", "OSIS", "MPK"].includes(userRole)
+        ) {
+          userRole = email.includes("student.") ? "SISWA" : "GURU";
+        }
 
         try {
           const existingUser = await findUser({ email });
@@ -95,7 +105,7 @@ export async function bulkAddUsers(data: FormData) {
               { email },
               {
                 name,
-                role: role || email.includes("student.") ? "SISWA" : "GURU",
+                role: userRole,
                 User_Auth: {
                   update: {
                     where: { user_Id: existingUser.id },
@@ -109,7 +119,7 @@ export async function bulkAddUsers(data: FormData) {
             const create = await createUser({
               email,
               name,
-              role: role || email.includes("student.") ? "SISWA" : "GURU",
+              role: userRole,
               User_Auth: { create: { password: hashedPassword } },
             });
 

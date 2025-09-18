@@ -26,6 +26,7 @@ export default function UserTable({ data }: { data: userLastLoginPayload[] }) {
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
   const [toggleCleared, setToggleCleared] = useState(false);
   const [selectedRole, setRoleSelected] = useState<Role | "ALL" | null>(null);
+  const [filteredData, setFilteredData] = useState(data);
   const router = useRouter();
 
   const columns: TableColumn<userLastLoginPayload>[] = [
@@ -118,6 +119,20 @@ export default function UserTable({ data }: { data: userLastLoginPayload[] }) {
     } else toast.error(result.message, { id: toastId });
   }
 
+  // Filter data based on selected role
+  const handleRoleSelect = (role: Role | "ALL") => {
+    setRoleSelected(role);
+    
+    if (role === "ALL") {
+      setFilteredData(data);
+      setUsersData(data);
+    } else {
+      const filtered = data.filter(user => user.role === role);
+      setFilteredData(filtered);
+      setUsersData(filtered);
+    }
+  };
+
   // eslint-disable-next-line react-hooks/exhaustive-deps
   let miniSearch = new MiniSearch({
     fields: ["name", "email", "role"],
@@ -125,7 +140,7 @@ export default function UserTable({ data }: { data: userLastLoginPayload[] }) {
       fuzzy: 0.2,
     },
   });
-  miniSearch.addAll(data);
+  miniSearch.addAll(filteredData);
 
   const handleSearch = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
@@ -136,19 +151,24 @@ export default function UserTable({ data }: { data: userLastLoginPayload[] }) {
           miniSearch
             .search(value)
             .map((result) =>
-              data.find((user) => result?.id == user.id),
+              filteredData.find((user) => result?.id == user.id),
             ) as userLastLoginPayload[],
         );
       } else {
-        setUsersData(data);
+        setUsersData(filteredData);
       }
     },
-    [data, miniSearch],
+    [filteredData, miniSearch],
   );
 
   useEffect(() => {
     setLoader(false);
   }, []);
+
+  useEffect(() => {
+    miniSearch.removeAll();
+    miniSearch.addAll(filteredData);
+  }, [filteredData, miniSearch]);
 
   if (loader) return <div>Loading</div>;
 
@@ -190,42 +210,42 @@ export default function UserTable({ data }: { data: userLastLoginPayload[] }) {
           </button>
           <button
             title="Select all SISWA"
-            onClick={() => setRoleSelected("SISWA")}
+            onClick={() => handleRoleSelect("SISWA")}
             className="p-2 bg-gray-500 text-xs text-white rounded-lg hover:scale-110 hover:-translate-y-0.5 hover:shadow-md active:scale-105 duration-150"
           >
             Select Siswa
           </button>
           <button
             title="Select all GURU"
-            onClick={() => setRoleSelected("GURU")}
+            onClick={() => handleRoleSelect("GURU")}
             className="p-2 bg-gray-500 text-xs text-white rounded-lg hover:scale-110 hover:-translate-y-0.5 hover:shadow-md active:scale-105 duration-150"
           >
             Select Guru
           </button>
           <button
             title="Select all MPK"
-            onClick={() => setRoleSelected("MPK")}
+            onClick={() => handleRoleSelect("MPK")}
             className="p-2 bg-gray-500 text-xs text-white rounded-lg hover:scale-110 hover:-translate-y-0.5 hover:shadow-md active:scale-105 duration-150"
           >
             Select MPK
           </button>
           <button
             title="Select all OSIS"
-            onClick={() => setRoleSelected("OSIS")}
+            onClick={() => handleRoleSelect("OSIS")}
             className="p-2 bg-gray-500 text-xs text-white rounded-lg hover:scale-110 hover:-translate-y-0.5 hover:shadow-md active:scale-105 duration-150"
           >
             Select OSIS
           </button>
           <button
             title="Select all ADMIN"
-            onClick={() => setRoleSelected("ADMIN")}
+            onClick={() => handleRoleSelect("ADMIN")}
             className="p-2 bg-gray-500 text-xs text-white rounded-lg hover:scale-110 hover:-translate-y-0.5 hover:shadow-md active:scale-105 duration-150"
           >
             Select Admin
           </button>
           <button
             title="Select all"
-            onClick={() => setRoleSelected("ALL")}
+            onClick={() => handleRoleSelect("ALL")}
             className="p-2 bg-gray-500 text-xs text-white rounded-lg hover:scale-110 hover:-translate-y-0.5 hover:shadow-md active:scale-105 duration-150"
           >
             Select All
@@ -236,6 +256,8 @@ export default function UserTable({ data }: { data: userLastLoginPayload[] }) {
               setToggleCleared(!toggleCleared);
               setRoleSelected(null);
               setSelectedRows([]);
+              setFilteredData(data);
+              setUsersData(data);
             }}
             className="p-2 bg-gray-500 text-xs text-white rounded-lg hover:scale-110 hover:-translate-y-0.5 hover:shadow-md active:scale-105 duration-150"
           >
