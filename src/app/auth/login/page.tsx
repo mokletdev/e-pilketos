@@ -58,7 +58,7 @@ export default function AdminLogin() {
         <form onSubmit={handleSubmit}>
           <div className="bg-white max-w-[624px] w-full py-[72px] md:py-[92px] px-[24px] md:px-[88px] flex-col items-center mx-auto shadow-shadow-2">
             <H2 className="text-center text-primary-text-color">
-              Yuk Login Untuk Pantau Kegiatan Pilketos 2024
+              Yuk Login Untuk Pantau Kegiatan Pilketos 2025
             </H2>
             <Large_Text
               variant="REGULAR"
