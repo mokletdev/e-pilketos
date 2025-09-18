@@ -136,21 +136,21 @@ export default function Footer() {
 
                 <div className="grid gap-y-[12px]">
                   <Link
-                    href="https://www.moklet.org/organisasi/2023-2024/OSIS"
+                    href="https://www.moklet.org/organisasi/2023-2025/OSIS"
                     className="font-medium text-[16px] text-secondary-text-color hover:text-primary-color hover:underline duration-200"
                     target="_blank"
                   >
                     OSIS
                   </Link>
                   <Link
-                    href="https://www.moklet.org/organisasi/2023-2024/MPK"
+                    href="https://www.moklet.org/organisasi/2023-2025/MPK"
                     className="font-medium text-[16px] text-secondary-text-color hover:text-primary-color hover:underline duration-200"
                     target="_blank"
                   >
                     MPK
                   </Link>
                   <Link
-                    href="https://www.moklet.org/organisasi/2023-2024/METIC"
+                    href="https://www.moklet.org/organisasi/2023-2025/METIC"
                     className="font-medium text-[16px] text-secondary-text-color hover:text-primary-color hover:underline duration-200"
                     target="_blank"
                   >
@@ -171,7 +171,7 @@ export default function Footer() {
                 <p className="font-semibold mb-[28px]">Didukung Oleh</p>
                 <div className="grid gap-y-[12px]">
                   <Link
-                    href="https://www.moklet.org/organisasi/2023-2024/METIC"
+                    href="https://www.moklet.org/organisasi/2023-2025/METIC"
                     className="font-medium text-[16px] text-secondary-text-color hover:text-primary-color hover:underline duration-200"
                     target="_blank"
                   >

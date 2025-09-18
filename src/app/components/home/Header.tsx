@@ -47,7 +47,7 @@ export default function Header() {
               </div>
               <div className="w-[260px] h-[330px] rounded-2xl overflow-hidden">
                 <Image
-                  src="/images/dokum/2024/IMG_4851.webp"
+                  src="/images/dokum/2025/IMG_4851.webp"
                   alt="img"
                   width={200}
                   height={300}
@@ -56,7 +56,7 @@ export default function Header() {
               </div>
               <div className="w-[260px] h-[330px] rounded-2xl overflow-hidden">
                 <Image
-                  src="/images/dokum/2024/IMG_4863.webp"
+                  src="/images/dokum/2025/IMG_4863.webp"
                   alt="img"
                   width={200}
                   height={300}
@@ -67,7 +67,7 @@ export default function Header() {
             <div className="flex flex-col gap-5 absolute right-12 top-[12rem]">
               <div className="w-[260px] h-[330px] rounded-2xl overflow-hidden">
                 <Image
-                  src="/images/dokum/2024/DSC_3589.webp"
+                  src="/images/dokum/2025/DSC_3589.webp"
                   alt="img"
                   width={200}
                   height={300}
@@ -76,7 +76,7 @@ export default function Header() {
               </div>
               <div className="w-[260px] h-[330px] rounded-2xl overflow-hidden">
                 <Image
-                  src="/images/dokum/2024/DSC_3570.webp"
+                  src="/images/dokum/2025/DSC_3570.webp"
                   alt="img"
                   width={200}
                   height={300}

@@ -12,7 +12,7 @@ const inter = Inter({ subsets: ["latin"] });
 export const metadata: Metadata = {
   title: "E-Pilketos Moklet",
   description:
-    "Aplikasi pemilihan Ketua OSIS SMK Telkom Malang Masa Bakti 2024/2025",
+    "Aplikasi pemilihan Ketua OSIS SMK Telkom Malang Masa Bakti 2025/2025",
   keywords: [
     "E-Pilketos",
     "E-Voting",
