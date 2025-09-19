@@ -11,6 +11,8 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "jsx": "preserve",
+    "target": "es2017",
+    "downlevelIteration": true,
     "incremental": true,
     "plugins": [
       {
