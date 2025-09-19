@@ -125,13 +125,13 @@ export default function DetailHasilVote({
                     OSIS
                   </th>
                   <th className="border border-gray-300 px-4 py-2 text-center">
-                    30% Gukar
+                    60% Gukar
                   </th>
                   <th className="border border-gray-300 px-4 py-2 text-center">
-                    30% MPK
+                    60% MPK
                   </th>
                   <th className="border border-gray-300 px-4 py-2 text-center">
-                    40% OSIS
+                    80% OSIS
                   </th>
                   <th className="border border-gray-300 px-4 py-2 text-center">
                     Total Votes

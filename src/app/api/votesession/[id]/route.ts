@@ -48,9 +48,9 @@ export async function GET(
   const { vote_session_candidate, ...session } = voteData;
 
   const weightByRole: Record<Role, number> = {
-    GURU: 0.3,
-    OSIS: 0.4,
-    MPK: 0.3,
+    GURU: 0.6,
+    OSIS: 0.8,
+    MPK: 0.6,
     ADMIN: 0,
     SISWA: 0,
   };
