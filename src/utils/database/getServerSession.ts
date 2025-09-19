@@ -277,10 +277,84 @@ export const upsertVoteSession = async (id: string | null, data: FormData) => {
     const candidates_id = data.getAll("candidate_id") as string[];
     const candidates_number = data.getAll("candidate_number") as string[];
 
-    const vote_session_candidate = candidates_id.map((can, index) => ({
-      candidate_id: can,
-      candidates_number: parseInt(candidates_number[index]),
-    }));
+    // Extract topik data from FormData
+    const topikData: { [candidateIndex: number]: any[] } = {};
+
+    // Parse all form data to extract topik information
+    for (const [key, value] of data.entries()) {
+      // Match patterns like "topik_0_0_situasi", "topik_0_0_pertanyaan", etc.
+      const topikMatch = key.match(/^topik_(\d+)_(\d+)_(\w+)$/);
+      if (topikMatch) {
+        const candidateIndex = parseInt(topikMatch[1]);
+        const topikIndex = parseInt(topikMatch[2]);
+        const field = topikMatch[3];
+
+        if (!topikData[candidateIndex]) {
+          topikData[candidateIndex] = [];
+        }
+        if (!topikData[candidateIndex][topikIndex]) {
+          topikData[candidateIndex][topikIndex] = { tanggapan: [] };
+        }
+
+        topikData[candidateIndex][topikIndex][field] = value as string;
+      }
+
+      // Match patterns like "tanggapan_0_0_0_pertanyaan", "tanggapan_0_0_0_tanggapan"
+      const tanggapanMatch = key.match(/^tanggapan_(\d+)_(\d+)_(\d+)_(\w+)$/);
+      if (tanggapanMatch) {
+        const candidateIndex = parseInt(tanggapanMatch[1]);
+        const topikIndex = parseInt(tanggapanMatch[2]);
+        const tanggapanIndex = parseInt(tanggapanMatch[3]);
+        const field = tanggapanMatch[4];
+
+        if (!topikData[candidateIndex]) {
+          topikData[candidateIndex] = [];
+        }
+        if (!topikData[candidateIndex][topikIndex]) {
+          topikData[candidateIndex][topikIndex] = { tanggapan: [] };
+        }
+        if (!topikData[candidateIndex][topikIndex].tanggapan[tanggapanIndex]) {
+          topikData[candidateIndex][topikIndex].tanggapan[tanggapanIndex] = {};
+        }
+
+        topikData[candidateIndex][topikIndex].tanggapan[tanggapanIndex][field] =
+          value as string;
+      }
+    }
+
+    const vote_session_candidate = candidates_id.map((can, index) => {
+      // Type annotation for topikArray
+      let topikArray: Array<{
+        situasi: string;
+        pertanyaan: string;
+        jawaban: string;
+        tanggapan: Array<{
+          pertanyaan: string;
+          tanggapan: string;
+        }>;
+      }> = [];
+
+      // Add topik data if exists for this candidate
+      if (topikData[index] && topikData[index].length > 0) {
+        topikArray = topikData[index].filter(Boolean).map((topik) => ({
+          situasi: topik.situasi || "",
+          pertanyaan: topik.pertanyaan || "",
+          jawaban: topik.jawaban || "",
+          tanggapan: (topik.tanggapan || [])
+            .filter(Boolean)
+            .map((tanggapan: any) => ({
+              pertanyaan: tanggapan.pertanyaan || "",
+              tanggapan: tanggapan.tanggapan || "",
+            })),
+        }));
+      }
+
+      return {
+        candidate_id: can,
+        candidates_number: parseInt(candidates_number[index]),
+        topik: topikArray,
+      };
+    });
 
     const spreadId = await getVoteSession(id as string);
 

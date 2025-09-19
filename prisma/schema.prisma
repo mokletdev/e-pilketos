@@ -77,12 +77,32 @@ model User_vote {
 }
 
 model Vote_session_candidate {
-  id                String       @id @default(uuid()) @map("id") @db.Char(36)
-  vote_session_id   String
-  candidate_id      String
+  id              String @id @default(uuid()) @map("id") @db.Char(36)
+  vote_session_id String
+  candidate_id    String
+
   vote_session      Vote_session @relation(fields: [vote_session_id], references: [id])
   candidate         Candidates   @relation(fields: [candidate_id], references: [id])
+  topik             Topik_vote[]
   candidates_number Int
+}
+
+model Topik_vote {
+  id                        String                  @id @default(uuid())
+  situasi                   String                  @db.LongText
+  pertanyaan                String
+  jawaban                   String
+  vote_session_candidate_id String
+  tanggapan                 Tanggapan[]
+  vote_session_candidate    Vote_session_candidate? @relation(fields: [vote_session_candidate_id], references: [id])
+}
+
+model Tanggapan {
+  id            String     @id @default(uuid())
+  pertanyaan    String
+  tanggapan     String
+  topik_vote_id String
+  topik_vote    Topik_vote @relation(references: [id], fields: [topik_vote_id], onDelete: Cascade)
 }
 
 model vote_session_access {

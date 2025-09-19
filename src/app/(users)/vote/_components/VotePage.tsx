@@ -245,6 +245,80 @@ export default function VotePage({
                     {candidate.candidate.progja}
                   </Medium_Text>
                 </div>
+
+                {/* Topik Section */}
+                {candidate.topik && candidate.topik.length > 0 && (
+                  <div className="my-6">
+                    <Large_Text variant="BOLD" className="mb-4 text-center">
+                      Topik Debat & Tanggapan
+                    </Large_Text>
+                    {candidate.topik.map((topik, topikIndex) => (
+                      <div key={topik.id} className="mb-6 border border-gray-200 rounded-lg p-4">
+                        {/* Situasi */}
+                        <div className="mb-3">
+                          <Medium_Text variant="SEMIBOLD" className="mb-2 text-primary-color">
+                            Situasi {topikIndex + 1}:
+                          </Medium_Text>
+                          <Medium_Text
+                            variant="REGULAR"
+                            className="bg-blue-50 p-3 rounded-md"
+                          >
+                            {topik.situasi}
+                          </Medium_Text>
+                        </div>
+
+                        {/* Pertanyaan */}
+                        <div className="mb-3">
+                          <Medium_Text variant="SEMIBOLD" className="mb-2 text-primary-color">
+                            Pertanyaan:
+                          </Medium_Text>
+                          <Medium_Text
+                            variant="REGULAR"
+                            className="bg-yellow-50 p-3 rounded-md"
+                          >
+                            {topik.pertanyaan}
+                          </Medium_Text>
+                        </div>
+
+                        {/* Jawaban */}
+                        <div className="mb-3">
+                          <Medium_Text variant="SEMIBOLD" className="mb-2 text-primary-color">
+                            Jawaban:
+                          </Medium_Text>
+                          <Medium_Text
+                            variant="REGULAR"
+                            className="bg-green-50 p-3 rounded-md"
+                          >
+                            {topik.jawaban}
+                          </Medium_Text>
+                        </div>
+
+                        {/* Tanggapan */}
+                        {topik.tanggapan && topik.tanggapan.length > 0 && (
+                          <div className="mt-4">
+                            <Medium_Text variant="SEMIBOLD" className="mb-3 text-primary-color">
+                              Tanggapan Lanjutan:
+                            </Medium_Text>
+                            {topik.tanggapan.map((tanggapan, tanggapanIndex) => (
+                              <div key={tanggapan.id} className="mb-3 ml-4 border-l-4 border-primary-color pl-3">
+                                <Medium_Text variant="MEDIUM" className="mb-1 text-gray-700">
+                                  Q{tanggapanIndex + 1}: {tanggapan.pertanyaan}
+                                </Medium_Text>
+                                <Medium_Text
+                                  variant="REGULAR"
+                                  className="bg-gray-50 p-2 rounded-md"
+                                >
+                                  {tanggapan.tanggapan}
+                                </Medium_Text>
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                )}
+
                 {candidate.candidate.video_profile ? (
                   <div className="mb-3 mt-6">
                     <Large_Text variant="BOLD" className="mb-2 text-center">

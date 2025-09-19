@@ -22,7 +22,14 @@ export default async function Vote({ params }: { params: { id: string } }) {
     include: {
       vote_session_candidate: {
         orderBy: { candidates_number: "asc" },
-        include: { candidate: { include: { pengalaman: true } } },
+        include: {
+          candidate: { include: { pengalaman: true } },
+          topik: {
+            include: {
+              tanggapan: true,
+            },
+          },
+        },
       },
     },
   });

@@ -92,7 +92,7 @@ export type userLastLoginPayload = Prisma.UserGetPayload<{
 
 export type VotesessionCandidateWithPengalaman =
   Prisma.Vote_session_candidateGetPayload<{
-    include: { candidate: { include: { pengalaman: true } } };
+    include: { candidate: { include: { pengalaman: true } }, topik:{include:{tanggapan: true}} };
   }>;
 
 export type CandidatesPayload = Prisma.CandidatesGetPayload<{

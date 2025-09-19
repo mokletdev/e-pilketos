@@ -1,6 +1,29 @@
 import client from "@/lib/prisma";
 import { Prisma } from "@prisma/client";
 
+// types.ts atau di file yang sama
+export type VoteSessionInput = {
+  title: string;
+  openedAt: Date;
+  closeAt: Date;
+  isPublic: boolean;
+  max_vote: number;
+  spreadsheetId?: string;
+  vote_session_candidate: {
+    candidate_id: string;
+    candidates_number: number;
+    topik: {
+      situasi: string;
+      pertanyaan: string;
+      jawaban: string;
+      tanggapan: {
+        pertanyaan: string;
+        tanggapan: string;
+      }[];
+    }[];
+  }[];
+};
+
 export const getAllVoteSession = async (
   where?: Prisma.Vote_sessionWhereInput,
 ) => {
@@ -10,7 +33,16 @@ export const getAllVoteSession = async (
       include: {
         User_vote: { include: { candidate: true } },
         vote_session_access: true,
-        vote_session_candidate: { include: { candidate: true } },
+        vote_session_candidate: {
+          include: {
+            candidate: true,
+            topik: {
+              include: {
+                tanggapan: true,
+              },
+            },
+          },
+        },
       },
     });
     return voteSession;
@@ -73,30 +105,30 @@ export const getVoteSessionById = async (id: string) => {
   }
 };
 
-export const createVoteSession = async (data: VoteSessionGeneralPayload) => {
-  try {
-    const voteSession = await client.vote_session.create({
-      data: {
-        title: data.title,
-        openedAt: data.openedAt,
-        closeAt: data.closeAt,
-        isPublic: data.isPublic,
-        max_vote: data.max_vote,
-        vote_session_candidate: {
-          create: data.vote_session_candidate.map((can) => ({
-            candidate_id: can.candidate_id,
-            candidates_number: can.candidates_number,
-          })),
-        },
-      },
-    });
+// export const createVoteSession = async (data: VoteSessionGeneralPayload) => {
+//   try {
+//     const voteSession = await client.vote_session.create({
+//       data: {
+//         title: data.title,
+//         openedAt: data.openedAt,
+//         closeAt: data.closeAt,
+//         isPublic: data.isPublic,
+//         max_vote: data.max_vote,
+//         vote_session_candidate: {
+//           create: data.vote_session_candidate.map((can) => ({
+//             candidate_id: can.candidate_id,
+//             candidates_number: can.candidates_number,
+//           })),
+//         },
+//       },
+//     });
 
-    return voteSession;
-  } catch (error) {
-    console.error((error as Error).message);
-    return null;
-  }
-};
+//     return voteSession;
+//   } catch (error) {
+//     console.error((error as Error).message);
+//     return null;
+//   }
+// };
 
 export const GetVoteSessionList = async () => {
   try {
@@ -202,9 +234,82 @@ export const getVoteSessionByPublic = async (isPublic: boolean) => {
   }
 };
 
+// export const UpdateVoteSession = async (
+//   id: string,
+//   data: VoteSessionGeneralPayload,
+// ) => {
+//   try {
+//     await client.vote_session_candidate.deleteMany({
+//       where: { vote_session_id: id },
+//     });
+
+//     const voteSession = await client.vote_session.update({
+//       where: { id },
+//       data: {
+//         title: data.title,
+//         openedAt: data.openedAt,
+//         closeAt: data.closeAt,
+//         isPublic: data.isPublic,
+//         max_vote: data.max_vote,
+//       },
+//     });
+
+//     await client.vote_session_candidate.createMany({
+//       data: data.vote_session_candidate.map((can) => ({
+//         candidate_id: can.candidate_id,
+//         candidates_number: can.candidates_number,
+//         vote_session_id: id,
+//       })),
+//     });
+
+//     return voteSession;
+//   } catch (error) {
+//     console.error((error as Error).message);
+//     return null;
+//   }
+// };
+
+export const createVoteSession = async (data: VoteSessionInputPayload) => {
+  try {
+    const voteSession = await client.vote_session.create({
+      data: {
+        title: data.title,
+        openedAt: data.openedAt,
+        closeAt: data.closeAt,
+        isPublic: data.isPublic,
+        max_vote: data.max_vote,
+        vote_session_candidate: {
+          create: data.vote_session_candidate.map((can) => ({
+            candidate_id: can.candidate_id,
+            candidates_number: can.candidates_number,
+            topik: {
+              create: can.topik.map((topik) => ({
+                situasi: topik.situasi,
+                pertanyaan: topik.pertanyaan,
+                jawaban: topik.jawaban,
+                tanggapan: {
+                  create: topik.tanggapan.map((tanggapan) => ({
+                    pertanyaan: tanggapan.pertanyaan,
+                    tanggapan: tanggapan.tanggapan,
+                  })),
+                },
+              })),
+            },
+          })),
+        },
+      },
+    });
+
+    return voteSession;
+  } catch (error) {
+    console.error((error as Error).message);
+    return null;
+  }
+};
+
 export const UpdateVoteSession = async (
   id: string,
-  data: VoteSessionGeneralPayload,
+  data: VoteSessionInputPayload,
 ) => {
   try {
     await client.vote_session_candidate.deleteMany({
@@ -219,15 +324,26 @@ export const UpdateVoteSession = async (
         closeAt: data.closeAt,
         isPublic: data.isPublic,
         max_vote: data.max_vote,
+        vote_session_candidate: {
+          create: data.vote_session_candidate.map((can) => ({
+            candidate_id: can.candidate_id,
+            candidates_number: can.candidates_number,
+            topik: {
+              create: can.topik.map((topik) => ({
+                situasi: topik.situasi,
+                pertanyaan: topik.pertanyaan,
+                jawaban: topik.jawaban,
+                tanggapan: {
+                  create: topik.tanggapan.map((tanggapan) => ({
+                    pertanyaan: tanggapan.pertanyaan,
+                    tanggapan: tanggapan.tanggapan,
+                  })),
+                },
+              })),
+            },
+          })),
+        },
       },
-    });
-
-    await client.vote_session_candidate.createMany({
-      data: data.vote_session_candidate.map((can) => ({
-        candidate_id: can.candidate_id,
-        candidates_number: can.candidates_number,
-        vote_session_id: id,
-      })),
     });
 
     return voteSession;
@@ -237,10 +353,36 @@ export const UpdateVoteSession = async (
   }
 };
 
+export type VoteSessionInputPayload = {
+  id?: string;
+  title: string;
+  openedAt: Date;
+  closeAt: Date;
+  isPublic: boolean;
+  max_vote: number;
+  spreadsheetId?: string;
+  vote_session_candidate: Array<{
+    candidate_id: string;
+    candidates_number: number;
+    topik: Array<{
+      situasi: string;
+      pertanyaan: string;
+      jawaban: string;
+      tanggapan: Array<{
+        pertanyaan: string;
+        tanggapan: string;
+      }>;
+    }>;
+  }>;
+};
+
 export type VoteSessionGeneralPayload = Prisma.Vote_sessionGetPayload<{
   include: {
     vote_session_candidate: {
       select: { candidate_id: true; candidates_number: true };
+      include: {
+        topik: { include: { tanggapan: true } };
+      };
     };
     // User_vote: true;
     // vote_session_access: true;
@@ -250,6 +392,7 @@ export type VoteSessionWithCandidates = Prisma.Vote_sessionGetPayload<{
   include: {
     vote_session_candidate: {
       select: { candidate_id: true; candidates_number: true };
+      include: { topik: { include: { tanggapan: true } } };
     };
     // User_vote: true;
     // vote_session_access: true;
