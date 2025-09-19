@@ -6,7 +6,7 @@ import { FaPencilAlt, FaTrash } from "react-icons/fa";
 import toast from "react-hot-toast";
 import MiniSearch from "minisearch";
 import clsx from "clsx";
-import AddUser from "./AddUser";
+import AddUser, { ExportUsers } from "./AddUser";
 import DataTable, { TableColumn } from "react-data-table-component";
 import { H5, Small_Text } from "@/app/components/general/Text";
 import { userLastLoginPayload } from "@/utils/database/user.query";
@@ -181,6 +181,7 @@ export default function UserTable({ data }: { data: userLastLoginPayload[] }) {
         <div className="flex gap-2">
           <AddBulk />
           <AddUser />
+          <ExportUsers />
         </div>
       </div>
       {modal && <Modal data={userData} setIsOpenModal={setModal} />}

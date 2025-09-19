@@ -27,6 +27,7 @@
     "cloudinary": "^2.2.0",
     "clsx": "^2.1.1",
     "dotenv": "^16.4.5",
+    "exceljs": "^4.4.0",
     "googleapis": "^142.0.0",
     "install": "^0.13.0",
     "keen-slider": "^6.8.6",
