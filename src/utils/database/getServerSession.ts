@@ -37,8 +37,7 @@ export const deleteUserById = async (id: string) => {
     if (!delVote) throw new Error("Delete failed");
     if (!del) throw new Error("Delete failed");
     else {
-      revalidatePath("/admin/users");
-      revalidatePath("/admin/dashboard");
+      revalidatePath("/admin", "layout");
       return { message: "Success to Delete!", error: false };
     }
   } catch (e) {
@@ -112,8 +111,7 @@ export const updateUserById = async (id: string | null, data: FormData) => {
         if (!update) throw new Error("Update failed");
       } else throw new Error("User not found");
     }
-    revalidatePath("/admin/users");
-    revalidatePath("/admin/dashboard");
+    revalidatePath("/admin", "layout");
     return { message: "Success to update Users", error: false };
   } catch (error) {
     console.error((error as Error).message);
@@ -133,7 +131,7 @@ export const deleteCandidatesById = async (id: string) => {
       const del = await deleteCandidate(id);
       if (!del) throw new Error("Delete Candidates failed");
 
-      revalidatePath("/admin/candidates");
+      revalidatePath("/admin", "layout");
       revalidatePath("/vote");
       revalidatePath("/vote/[id]");
 
@@ -216,8 +214,7 @@ export const updateCandidatesById = async (id: string, data: FormData) => {
       });
       if (!create) throw new Error("Create Candidate failed");
 
-      revalidatePath("/admin/candidates");
-      revalidatePath("/admin/votesesion");
+      revalidatePath("/admin", "layout");
       revalidatePath("/vote");
       revalidatePath("/vote/[id]");
       return {
@@ -248,9 +245,8 @@ export const updateCandidatesById = async (id: string, data: FormData) => {
       });
       if (!update) throw new Error("Update Candidate failed");
 
-      revalidatePath("/admin/candidates");
+      revalidatePath("/admin", "layout");
       revalidatePath("/vote");
-      revalidatePath("/admin/votesesion");
       revalidatePath("/vote/[id]");
       return { message: "Success to Update Candidate!", error: false };
     }
@@ -412,17 +408,8 @@ export const upsertVoteSession = async (id: string | null, data: FormData) => {
       });
     }
 
-    revalidatePath("/admin/votesesion");
-    revalidatePath("/admin/candidates");
-    revalidatePath("/vote");
-    revalidatePath("/vote/[id]");
-    revalidatePath("/api/votesession-list");
-    revalidatePath("/api/votesession/[id]");
-    revalidatePath("/admin/hasilVote");
-    revalidatePath("/admin/liveCount");
-    revalidatePath("/admin/liveCount/[id]", "page");
-    revalidatePath("/LiveCount2Kandidat/[id]", "page");
-    revalidatePath("/admin/recap");
+    revalidatePath("/admin", "layout");
+    revalidatePath("/api", "layout");
     return { message: "Vote session saved successfully!", error: false };
   } catch (e) {
     console.error(e);
@@ -488,17 +475,8 @@ export const deleteVoteSessionById = async (id: string) => {
       });
     });
 
-    revalidatePath("/admin/votesesion");
-    revalidatePath("/admin/candidates");
-    revalidatePath("/vote");
-    revalidatePath("/vote/[id]", "page");
-    revalidatePath("/api/votesession-list");
-    revalidatePath("/api/votesession/[id]", "page");
-    revalidatePath("/admin/hasilVote");
-    revalidatePath("/admin/liveCount");
-    revalidatePath("/admin/liveCount/[id]", "page");
-    revalidatePath("/LiveCount2Kandidat/[id]", "page");
-    revalidatePath("/admin/recap");
+    revalidatePath("/admin", "layout");
+    revalidatePath("/api", "layout");
     return { error: false, message: "Vote session deleted successfully" };
   } catch (error) {
     console.error("deleteVoteSessionById Error:", error);

@@ -184,10 +184,7 @@ export async function transferVote(data: TransferVoteData): Promise<TransferResu
       };
     });
 
-    // Revalidate relevant paths
-    revalidatePath("/transfer-vote");
-    revalidatePath(`/vote-session/${voteSessionId}`);
-
+    revalidatePath("/admin", "layout");
     return {
       success: true,
       message: `Berhasil transfer ${result.transferred} vote dari ${result.fromCandidate} ke ${result.toCandidate}`,
