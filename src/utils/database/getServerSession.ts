@@ -37,8 +37,7 @@ export const deleteUserById = async (id: string) => {
     if (!delVote) throw new Error("Delete failed");
     if (!del) throw new Error("Delete failed");
     else {
-      revalidatePath("/admin/users");
-      revalidatePath("/admin/dashboard");
+      revalidatePath("/admin", "layout");
       return { message: "Success to Delete!", error: false };
     }
   } catch (e) {
@@ -112,8 +111,7 @@ export const updateUserById = async (id: string | null, data: FormData) => {
         if (!update) throw new Error("Update failed");
       } else throw new Error("User not found");
     }
-    revalidatePath("/admin/users");
-    revalidatePath("/admin/dashboard");
+    revalidatePath("/admin", "layout");
     return { message: "Success to update Users", error: false };
   } catch (error) {
     console.error((error as Error).message);
@@ -133,7 +131,7 @@ export const deleteCandidatesById = async (id: string) => {
       const del = await deleteCandidate(id);
       if (!del) throw new Error("Delete Candidates failed");
 
-      revalidatePath("/admin/candidates");
+      revalidatePath("/admin", "layout");
       revalidatePath("/vote");
       revalidatePath("/vote/[id]");
 
@@ -216,8 +214,7 @@ export const updateCandidatesById = async (id: string, data: FormData) => {
       });
       if (!create) throw new Error("Create Candidate failed");
 
-      revalidatePath("/admin/candidates");
-      revalidatePath("/admin/votesesion");
+      revalidatePath("/admin", "layout");
       revalidatePath("/vote");
       revalidatePath("/vote/[id]");
       return {
@@ -248,9 +245,8 @@ export const updateCandidatesById = async (id: string, data: FormData) => {
       });
       if (!update) throw new Error("Update Candidate failed");
 
-      revalidatePath("/admin/candidates");
+      revalidatePath("/admin", "layout");
       revalidatePath("/vote");
-      revalidatePath("/admin/votesesion");
       revalidatePath("/vote/[id]");
       return { message: "Success to Update Candidate!", error: false };
     }
@@ -274,8 +270,13 @@ export const upsertVoteSession = async (id: string | null, data: FormData) => {
     const end_time = new Date(data.get("end_time") as string);
     const isPublic = data.get("is_active") === "true";
     const max_vote = parseInt(data.get("max_vote") as string, 10);
+
+    // Get all candidate data using getAll() since they have the same name
     const candidates_id = data.getAll("candidate_id") as string[];
     const candidates_number = data.getAll("candidate_number") as string[];
+
+    console.log("Candidates ID:", candidates_id);
+    console.log("Candidates Numbers:", candidates_number);
 
     // Extract topik data from FormData
     const topikData: { [candidateIndex: number]: any[] } = {};
@@ -322,7 +323,22 @@ export const upsertVoteSession = async (id: string | null, data: FormData) => {
       }
     }
 
-    const vote_session_candidate = candidates_id.map((can, index) => {
+    // Validate that we have matching arrays
+    if (candidates_id.length !== candidates_number.length) {
+      return {
+        error: true,
+        message: "Mismatch between candidate IDs and numbers",
+      };
+    }
+
+    // Filter out empty candidate IDs
+    const validCandidates = candidates_id
+      .map((id, index) => ({ id, number: candidates_number[index], index }))
+      .filter((candidate) => candidate.id && candidate.id.trim() !== "");
+
+    const vote_session_candidate = validCandidates.map((candidate) => {
+      const candidateIndex = candidate.index;
+
       // Type annotation for topikArray
       let topikArray: Array<{
         situasi: string;
@@ -335,8 +351,8 @@ export const upsertVoteSession = async (id: string | null, data: FormData) => {
       }> = [];
 
       // Add topik data if exists for this candidate
-      if (topikData[index] && topikData[index].length > 0) {
-        topikArray = topikData[index].filter(Boolean).map((topik) => ({
+      if (topikData[candidateIndex] && topikData[candidateIndex].length > 0) {
+        topikArray = topikData[candidateIndex].filter(Boolean).map((topik) => ({
           situasi: topik.situasi || "",
           pertanyaan: topik.pertanyaan || "",
           jawaban: topik.jawaban || "",
@@ -350,11 +366,21 @@ export const upsertVoteSession = async (id: string | null, data: FormData) => {
       }
 
       return {
-        candidate_id: can,
-        candidates_number: parseInt(candidates_number[index]),
+        candidate_id: candidate.id,
+        candidates_number: parseInt(candidate.number),
         topik: topikArray,
       };
     });
+
+    console.log(
+      "Vote session candidates:",
+      JSON.stringify(vote_session_candidate, null, 2),
+    );
+
+    // Validate that we have at least one candidate
+    if (vote_session_candidate.length === 0) {
+      return { error: true, message: "At least one candidate is required" };
+    }
 
     const spreadId = await getVoteSession(id as string);
 
@@ -382,17 +408,8 @@ export const upsertVoteSession = async (id: string | null, data: FormData) => {
       });
     }
 
-    revalidatePath("/admin/votesesion");
-    revalidatePath("/admin/candidates");
-    revalidatePath("/vote");
-    revalidatePath("/vote/[id]");
-    revalidatePath("/api/votesession-list");
-    revalidatePath("/api/votesession/[id]");
-    revalidatePath("/admin/hasilVote");
-    revalidatePath("/admin/liveCount");
-    revalidatePath("/admin/liveCount/[id]", "page");
-    revalidatePath("/LiveCount2Kandidat/[id]", "page");
-    revalidatePath("/admin/recap");
+    revalidatePath("/admin", "layout");
+    revalidatePath("/api", "layout");
     return { message: "Vote session saved successfully!", error: false };
   } catch (e) {
     console.error(e);
@@ -408,33 +425,61 @@ export const upsertVoteSession = async (id: string | null, data: FormData) => {
 
 export const deleteVoteSessionById = async (id: string) => {
   try {
-    await client.vote_session_candidate.deleteMany({
-      where: { vote_session_id: id },
-    });
-    await client.vote_session_access.deleteMany({
-      where: { vote_session_id: id },
-    });
-    await client.user_vote.deleteMany({
-      where: { vote_session_id: id },
-    });
-    await client.vote_session.delete({
-      where: { id: id },
+    await client.$transaction(async (tx) => {
+      // Get all vote_session_candidate IDs first
+      const candidateIds = await tx.vote_session_candidate.findMany({
+        where: { vote_session_id: id },
+        select: { id: true },
+      });
+
+      if (candidateIds.length > 0) {
+        const candidateIdList = candidateIds.map((c) => c.id);
+
+        // Get all topik_vote IDs
+        const topikIds = await tx.topik_vote.findMany({
+          where: { vote_session_candidate_id: { in: candidateIdList } },
+          select: { id: true },
+        });
+
+        if (topikIds.length > 0) {
+          const topikIdList = topikIds.map((t) => t.id);
+
+          // 1. Delete all tanggapan records first
+          await tx.tanggapan.deleteMany({
+            where: { topik_vote_id: { in: topikIdList } },
+          });
+        }
+
+        // 2. Delete all topik_vote records
+        await tx.topik_vote.deleteMany({
+          where: { vote_session_candidate_id: { in: candidateIdList } },
+        });
+
+        // 3. Delete vote_session_candidate records
+        await tx.vote_session_candidate.deleteMany({
+          where: { vote_session_id: id },
+        });
+      }
+
+      // 4. Delete other related records
+      await tx.vote_session_access.deleteMany({
+        where: { vote_session_id: id },
+      });
+      await tx.user_vote.deleteMany({
+        where: { vote_session_id: id },
+      });
+
+      // 5. Finally delete the vote_session itself
+      await tx.vote_session.delete({
+        where: { id: id },
+      });
     });
 
-    revalidatePath("/admin/votesesion");
-    revalidatePath("/admin/candidates");
-    revalidatePath("/vote");
-    revalidatePath("/vote/[id]");
-    revalidatePath("/api/votesession-list");
-    revalidatePath("/api/votesession/[id]");
-    revalidatePath("/admin/hasilVote");
-    revalidatePath("/admin/liveCount");
-    revalidatePath("/admin/liveCount/[id]", "page");
-    revalidatePath("/LiveCount2Kandidat/[id]", "page");
-    revalidatePath("/admin/recap");
+    revalidatePath("/admin", "layout");
+    revalidatePath("/api", "layout");
     return { error: false, message: "Vote session deleted successfully" };
   } catch (error) {
-    console.error(error);
+    console.error("deleteVoteSessionById Error:", error);
     return {
       error: true,
       message: "An error occurred while deleting the vote session",
