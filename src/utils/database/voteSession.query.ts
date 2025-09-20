@@ -312,43 +312,80 @@ export const UpdateVoteSession = async (
   data: VoteSessionInputPayload,
 ) => {
   try {
-    await client.vote_session_candidate.deleteMany({
-      where: { vote_session_id: id },
-    });
+    // Use transaction to ensure all operations succeed or fail together
+    const voteSession = await client.$transaction(async (tx) => {
+      // Get all vote_session_candidate IDs first
+      const candidateIds = await tx.vote_session_candidate.findMany({
+        where: { vote_session_id: id },
+        select: { id: true },
+      });
 
-    const voteSession = await client.vote_session.update({
-      where: { id },
-      data: {
-        title: data.title,
-        openedAt: data.openedAt,
-        closeAt: data.closeAt,
-        isPublic: data.isPublic,
-        max_vote: data.max_vote,
-        vote_session_candidate: {
-          create: data.vote_session_candidate.map((can) => ({
-            candidate_id: can.candidate_id,
-            candidates_number: can.candidates_number,
-            topik: {
-              create: can.topik.map((topik) => ({
-                situasi: topik.situasi,
-                pertanyaan: topik.pertanyaan,
-                jawaban: topik.jawaban,
-                tanggapan: {
-                  create: topik.tanggapan.map((tanggapan) => ({
-                    pertanyaan: tanggapan.pertanyaan,
-                    tanggapan: tanggapan.tanggapan,
-                  })),
-                },
-              })),
-            },
-          })),
+      if (candidateIds.length > 0) {
+        const candidateIdList = candidateIds.map((c) => c.id);
+
+        // Get all topik_vote IDs
+        const topikIds = await tx.topik_vote.findMany({
+          where: { vote_session_candidate_id: { in: candidateIdList } },
+          select: { id: true },
+        });
+
+        if (topikIds.length > 0) {
+          const topikIdList = topikIds.map((t) => t.id);
+
+          // 1. Delete all tanggapan records first
+          await tx.tanggapan.deleteMany({
+            where: { topik_vote_id: { in: topikIdList } },
+          });
+        }
+
+        // 2. Delete all topik_vote records
+        await tx.topik_vote.deleteMany({
+          where: { vote_session_candidate_id: { in: candidateIdList } },
+        });
+
+        // 3. Delete vote_session_candidate records
+        await tx.vote_session_candidate.deleteMany({
+          where: { vote_session_id: id },
+        });
+      }
+
+      // 4. Update the vote session with new data
+      const updatedSession = await tx.vote_session.update({
+        where: { id },
+        data: {
+          title: data.title,
+          openedAt: data.openedAt,
+          closeAt: data.closeAt,
+          isPublic: data.isPublic,
+          max_vote: data.max_vote,
+          vote_session_candidate: {
+            create: data.vote_session_candidate.map((can) => ({
+              candidate_id: can.candidate_id,
+              candidates_number: can.candidates_number,
+              topik: {
+                create: can.topik.map((topik) => ({
+                  situasi: topik.situasi,
+                  pertanyaan: topik.pertanyaan,
+                  jawaban: topik.jawaban,
+                  tanggapan: {
+                    create: topik.tanggapan.map((tanggapan) => ({
+                      pertanyaan: tanggapan.pertanyaan,
+                      tanggapan: tanggapan.tanggapan,
+                    })),
+                  },
+                })),
+              },
+            })),
+          },
         },
-      },
+      });
+
+      return updatedSession;
     });
 
     return voteSession;
   } catch (error) {
-    console.error((error as Error).message);
+    console.error("UpdateVoteSession Error:", error);
     return null;
   }
 };
