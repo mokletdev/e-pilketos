@@ -432,6 +432,7 @@ export const upsertVoteSession = async (id: string | null, data: FormData) => {
     revalidatePath("/vote/[id]");
     revalidatePath("/api/votesession-list");
     revalidatePath("/api/votesession/[id]");
+    revalidatePath("/api/export-user");
     revalidatePath("/admin/hasilVote");
     revalidatePath("/admin/liveCount");
     revalidatePath("/admin/liveCount/[id]", "page");
@@ -513,6 +514,7 @@ export const deleteVoteSessionById = async (id: string) => {
     revalidatePath("/vote/[id]", "page");
     revalidatePath("/api/votesession-list");
     revalidatePath("/api/votesession/[id]", "page");
+    revalidatePath("/api/export-user");
     revalidatePath("/admin/hasilVote");
     revalidatePath("/admin/liveCount");
     revalidatePath("/admin/liveCount/[id]", "page");
