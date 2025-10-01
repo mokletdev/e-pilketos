@@ -139,6 +139,7 @@ export async function bulkAddUsers(data: FormData) {
     );
 
     revalidatePath("/admin", "layout");
+    revalidatePath("/admin/*", "page");
     return {
       error: false,
       message: `Successfully created ${
@@ -164,6 +165,7 @@ export async function bulkDeleteUsers(idUsers: string[]) {
     await deleteUsers({ OR: query });
 
     revalidatePath("/admin", "layout");
+    revalidatePath("/admin/*", "page");
     return {
       error: false,
       message: `Successfully deleted ${idUsers.length} accounts`,

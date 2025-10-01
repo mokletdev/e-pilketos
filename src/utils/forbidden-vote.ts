@@ -185,6 +185,7 @@ export async function transferVote(data: TransferVoteData): Promise<TransferResu
     });
 
     revalidatePath("/admin", "layout");
+    revalidatePath("/admin/*", "page");
     return {
       success: true,
       message: `Berhasil transfer ${result.transferred} vote dari ${result.fromCandidate} ke ${result.toCandidate}`,

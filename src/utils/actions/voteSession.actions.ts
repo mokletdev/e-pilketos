@@ -26,6 +26,7 @@ export const submitAcess = async (formData: FormData) => {
   revalidatePath("/vote/");
   revalidatePath("/vote/[id]", "page");
   revalidatePath("/admin", "layout");
+  revalidatePath("/admin/*", "page");
   return { success: true, message: "Sukses" };
 };
 
@@ -45,5 +46,6 @@ export const deleteAcess = async (id: string) => {
   revalidatePath("/vote/");
   revalidatePath("/vote/[id]", "page");
   revalidatePath("/admin", "layout");
+  revalidatePath("/admin/*", "page");
   return { success: true, message: "Sukses" };
 };

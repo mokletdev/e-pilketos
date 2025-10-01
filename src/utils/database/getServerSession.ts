@@ -38,6 +38,7 @@ export const deleteUserById = async (id: string) => {
     if (!del) throw new Error("Delete failed");
     else {
       revalidatePath("/admin", "layout");
+      revalidatePath("/admin/*", "page");
       return { message: "Success to Delete!", error: false };
     }
   } catch (e) {
@@ -112,6 +113,7 @@ export const updateUserById = async (id: string | null, data: FormData) => {
       } else throw new Error("User not found");
     }
     revalidatePath("/admin", "layout");
+    revalidatePath("/admin/*", "page");
     return { message: "Success to update Users", error: false };
   } catch (error) {
     console.error((error as Error).message);
@@ -132,6 +134,7 @@ export const deleteCandidatesById = async (id: string) => {
       if (!del) throw new Error("Delete Candidates failed");
 
       revalidatePath("/admin", "layout");
+      revalidatePath("/admin/*", "page");
       revalidatePath("/vote");
       revalidatePath("/vote/[id]");
 
@@ -215,6 +218,7 @@ export const updateCandidatesById = async (id: string, data: FormData) => {
       if (!create) throw new Error("Create Candidate failed");
 
       revalidatePath("/admin", "layout");
+      revalidatePath("/admin/*", "page");
       revalidatePath("/vote");
       revalidatePath("/vote/[id]");
       return {
@@ -246,6 +250,7 @@ export const updateCandidatesById = async (id: string, data: FormData) => {
       if (!update) throw new Error("Update Candidate failed");
 
       revalidatePath("/admin", "layout");
+      revalidatePath("/admin/*", "page");
       revalidatePath("/vote");
       revalidatePath("/vote/[id]");
       return { message: "Success to Update Candidate!", error: false };
@@ -409,7 +414,9 @@ export const upsertVoteSession = async (id: string | null, data: FormData) => {
     }
 
     revalidatePath("/admin", "layout");
+    revalidatePath("/admin/*", "page");
     revalidatePath("/api", "layout");
+    revalidatePath("/api/*", "page");
     return { message: "Vote session saved successfully!", error: false };
   } catch (e) {
     console.error(e);
@@ -476,7 +483,9 @@ export const deleteVoteSessionById = async (id: string) => {
     });
 
     revalidatePath("/admin", "layout");
+    revalidatePath("/admin/*", "page");
     revalidatePath("/api", "layout");
+    revalidatePath("/api/*", "page");
     return { error: false, message: "Vote session deleted successfully" };
   } catch (error) {
     console.error("deleteVoteSessionById Error:", error);
